@@ -2,52 +2,54 @@
 
 
 namespace App\Services\Notification;
-use LaravelFCM\Message\OptionsBuilder;
-use LaravelFCM\Message\PayloadDataBuilder;
-use LaravelFCM\Message\PayloadNotificationBuilder;
-use LaravelFCM\Facades\FCM;
+use Illuminate\Notifications\Notification;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\AndroidConfig;
+use NotificationChannels\Fcm\Resources\AndroidFcmOptions;
+use NotificationChannels\Fcm\Resources\AndroidNotification;
+use NotificationChannels\Fcm\Resources\ApnsConfig;
+use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
 
-class FCMNotification
+
+class FCMNotification extends Notification
 {
-    public static function sendNotification($token, $title,$body){
-        $optionBuilder = new OptionsBuilder();
-        $optionBuilder->setTimeToLive(60*20);
-
-        $notificationBuilder = new PayloadNotificationBuilder($title);
-        $notificationBuilder->setBody($body)
-            ->setSound('default');
-
-        $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData([
-            'title'=>$title,
-            'body'=>$body
-        ]);
-
-        $option = $optionBuilder->build();
-        $notification = $notificationBuilder->build();
-        $data = $dataBuilder->build();
-
-        //$token = $event->notification['token'];
-
-        if(empty($token))
-            return;
-
-        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
-
-        $downstreamResponse->numberSuccess();
-        $downstreamResponse->numberFailure();
-        $downstreamResponse->numberModification();
-
-// return Array - you must remove all this tokens in your database
-        $downstreamResponse->tokensToDelete();
-
-// return Array (key : oldToken, value : new token - you must change the token in your database)
-        $downstreamResponse->tokensToModify();
-
-// return Array - you should try to resend the message to the tokens in the array
-        $downstreamResponse->tokensToRetry();
-
-// return Array (key:token, value:error) - in production you should remove from your database the tokens
-        $downstreamResponse->tokensWithError();
+    public function __construct($title, $body, $data, $action='notification_screen'){
+        $this->title=$title;
+        $this->body=$body;
+        $this->data=$data;
+        $this->action=$action;
     }
+
+    public function via($notifiable)
+    {
+        return [FcmChannel::class];
+    }
+
+    public function toFcm($notifiable)
+    {
+        return FcmMessage::create()
+            ->setData($this->data)
+            ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
+                ->setTitle($this->title)
+                ->setBody($this->body)
+            //    ->setImage('https://images.freekaamaal.com/common-images/fkm-logo.png')
+            )
+            ->setAndroid(
+                AndroidConfig::create()
+                    ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))
+                    ->setNotification(AndroidNotification::create()->setColor('#0A0A0A')->setClickAction($this->action))
+            )->setApns(
+                ApnsConfig::create()
+                    ->setFcmOptions(ApnsFcmOptions::create()->setAnalyticsLabel('analytics_ios')));
+    }
+
+    // optional method when using kreait/laravel-firebase:^3.0, this method can be omitted, defaults to the default project
+    public function fcmProject($notifiable, $message)
+    {
+        // $message is what is returned by `toFcm`
+        return 'app'; // name of the firebase project to use
+    }
+
+
 }
