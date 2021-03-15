@@ -95,7 +95,7 @@ class CartController extends Controller
                 ],
             [
                 'type'=>$request->type,
-                'start_date'=>date('d M', strtotime($ts['date'])),
+                'start_date'=>$ts['date'],
                 'time_slot'=>$ts['id'],
                 'no_of_days'=>($request->type=='subscriptions')?($request->no_of_days):1,
                 'quantity'=>$request->quantity,
@@ -214,6 +214,7 @@ class CartController extends Controller
                     'days'=>$c->days,
                     'timeslot'=>$c->timeslot,
                     'stock'=>$c->product->stock,
+                    'date_text'=>date('d M', strtotime($c->start_date)).' By'.' 7PM',
                 );
 
 
@@ -240,6 +241,7 @@ class CartController extends Controller
                     'days'=>$c->days,
                     'timeslot'=>$c->timeslot,
                     'stock'=>$c->product->stock,
+                    'date_text'=>date('d M', strtotime($c->start_date)).' By'.' 7PM',
                 );
             }
 
