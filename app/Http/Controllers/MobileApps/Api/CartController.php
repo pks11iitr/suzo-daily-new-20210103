@@ -95,7 +95,7 @@ class CartController extends Controller
                 ],
             [
                 'type'=>$request->type,
-                'start_date'=>$ts['date'],
+                'start_date'=>date('d M', strtotime($ts['date'])),
                 'time_slot'=>$ts['id'],
                 'no_of_days'=>($request->type=='subscriptions')?($request->no_of_days):1,
                 'quantity'=>$request->quantity,
