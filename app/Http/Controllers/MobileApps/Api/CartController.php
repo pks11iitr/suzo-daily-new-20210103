@@ -179,7 +179,8 @@ class CartController extends Controller
         $price_total=0;
         $price_total_discount=0;
         $cartitem=array();
-
+        $cartitem['subscriptions']=[];
+        $cartitem['once']=[];
         $out_of_stock=0;
 
         foreach($cartitems as $c){
@@ -195,32 +196,56 @@ class CartController extends Controller
                 $price_total=$price_total+($c->product->price??0)*$c->quantity*$c->no_of_days;
                 $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->quantity*$c->no_of_days;
 
+                $cartitem['subscriptions'][]=array(
+                    'id'=>$c->id,
+                    'name'=>$c->product->name??'',
+                    'company'=>$c->product->company??'',
+                    'image'=>$c->product->image,
+                    'product_id'=>$c->product->id??'',
+                    'unit'=>$c->product->unit??'',
+                    'quantity'=>$c->quantity,
+                    'type'=>$c->type,
+                    'start_date'=>$c->start_date,
+                    'time_slot'=>$c->time_slot,
+                    'no_of_days'=>$c->no_of_days,
+                    //    'discount'=>$c->sizeprice->discount,
+                    'price'=>$c->product->price,
+                    'cut_price'=>$c->product->cut_price,
+                    'days'=>$c->days,
+                    'timeslot'=>$c->timeslot,
+                    'stock'=>$c->product->stock,
+                );
+
+
             }else{
                 $total=$total+($c->product->price??0)*$c->quantity;
                 $quantity=$quantity+$c->quantity;
                 $price_total=$price_total+($c->product->price??0)*$c->quantity;
                 $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->quantity;
+                $cartitem['once'][]=array(
+                    'id'=>$c->id,
+                    'name'=>$c->product->name??'',
+                    'company'=>$c->product->company??'',
+                    'image'=>$c->product->image,
+                    'product_id'=>$c->product->id??'',
+                    'unit'=>$c->product->unit??'',
+                    'quantity'=>$c->quantity,
+                    'type'=>$c->type,
+                    'start_date'=>$c->start_date,
+                    'time_slot'=>$c->time_slot,
+                    'no_of_days'=>$c->no_of_days,
+                    //    'discount'=>$c->sizeprice->discount,
+                    'price'=>$c->product->price,
+                    'cut_price'=>$c->product->cut_price,
+                    'days'=>$c->days,
+                    'timeslot'=>$c->timeslot,
+                    'stock'=>$c->product->stock,
+                );
             }
 
-            $cartitem[]=array(
-                'id'=>$c->id,
-                'name'=>$c->product->name??'',
-                'company'=>$c->product->company??'',
-                'image'=>$c->product->image,
-                'product_id'=>$c->product->id??'',
-                'unit'=>$c->product->unit??'',
-                'quantity'=>$c->quantity,
-                'type'=>$c->type,
-                'start_date'=>$c->start_date,
-                'time_slot'=>$c->time_slot,
-                'no_of_days'=>$c->no_of_days,
-            //    'discount'=>$c->sizeprice->discount,
-                'price'=>$c->product->price,
-                'cut_price'=>$c->product->cut_price,
-                'days'=>$c->days,
-                'timeslot'=>$c->timeslot,
-                'stock'=>$c->product->stock,
-            );
+
+
+
             if(!$c->product->stock)
                 $out_of_stock=1;
         }
