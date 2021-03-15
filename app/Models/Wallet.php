@@ -97,7 +97,7 @@ class Wallet extends Model
 
     public function customer()
     {
-        return $this->belongsTo('App\Models\User', 'user_id');
+        return $this->belongsTo('App\Models\Customer', 'user_id');
     }
 
     public static function calculateEligibleCashback($price_total, $cashback_available){
