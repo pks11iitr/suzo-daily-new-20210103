@@ -41,13 +41,13 @@ class RechargeConfirmListner
 
             $user=$wallet->customer;
 
-        Notification::create([
-            'user_id'=>$wallet->user_id,
-            'title'=>'Recharge Confirmed',
-            'description'=>$message,
-            'data'=>null,
-            'type'=>'individual'
-        ]);
+//        Notification::create([
+//            'user_id'=>$wallet->user_id,
+//            'title'=>'Recharge Confirmed',
+//            'description'=>$message,
+//            'data'=>null,
+//            'type'=>'individual'
+//        ]);
 
         FCMNotification::sendNotification($user->notification_token, 'Recharge Confirmed', $message);
     }
