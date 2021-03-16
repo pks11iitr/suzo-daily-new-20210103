@@ -160,7 +160,7 @@ class ProductController extends Controller
                  'days'=>$item->days??[],
                  'timeslot'=>$timeslot,
                 'start_date_text'=>date('d M', strtotime($item->start_date??$next_slot['date'])),
-                'time_slot_text'=>isset($item->time_slot)?($item->timeslot->name):($next_slot['name']??'NA')
+                'time_slot_text'=>isset($item->time_slot)?($item->timeslot->name):($next_slot['time']??'NA')
     );
 
         return [
