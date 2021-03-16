@@ -156,15 +156,15 @@ class TimeSlot extends Model
         $time=date('H:i:s');
         if($time >= '00:00:01' && $time <= '13:00:00'){
             $date=date('Y-m-d');
-            if($selecteddate.' '.$this->from_date < $date.' '.'18:00:00')
+            if($selecteddate.' '.$this->from_time < $date.' '.'18:00:00')
                 return false;
         }else if($time >= '13:00:01' && $time <= '21:00:00'){
             $date=date('Y-m-d', strtotime('+1 days'));
-            if($selecteddate.' '.$this->from_date < $date.' '.'06:00:00')
+            if($selecteddate.' '.$this->from_time < $date.' '.'06:00:00')
                 return false;
         }else if($time >= '21:00:01' && $time <= '23:59:59'){
             $date=date('Y-m-d', strtotime('+1 days'));
-            if($selecteddate.' '.$this->from_date < $date.' '.'21:00:00')
+            if($selecteddate.' '.$this->from_time < $date.' '.'21:00:00')
                 return false;
         }
 

@@ -78,6 +78,7 @@ class CartController extends Controller
         if($request->start_date && $request->time_slot){
             $date=$request->start_date;
             $ts=TimeSlot::findOrFail($request->time_slot);
+
             if(!$ts->checkTimings($date))
                 return [
                     'status'=>'failed',
