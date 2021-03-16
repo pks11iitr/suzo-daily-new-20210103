@@ -156,7 +156,7 @@ class ProductController extends Controller
                  'type'=>$request->cart[$product->id]['cart_type']??'once',
                  'start_date'=>$item->start_date??$next_slot['date'],
                  'time_slot'=>$item->time_slot??$next_slot['id'],
-                 'no_of_days'=>$item->no_of_days??0,
+                 'no_of_days'=>$item->no_of_days??1,
                  'days'=>$item->days??[],
                  'timeslot'=>$timeslot,
                 'start_date_text'=>date('d M', strtotime($item->start_date??$next_slot['date'])),

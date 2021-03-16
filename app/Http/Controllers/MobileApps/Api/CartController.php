@@ -97,9 +97,9 @@ class CartController extends Controller
                 'type'=>$request->type,
                 'start_date'=>$ts['date'],
                 'time_slot'=>$ts['id'],
-                'no_of_days'=>($request->type=='subscriptions')?($request->no_of_days):1,
+                'no_of_days'=>($request->type=='subscription')?($request->no_of_days):1,
                 'quantity'=>$request->quantity,
-                'total_quantity'=>($request->type=='subscriptions')?($request->quantity*($request->no_of_days??0)):$request->quantity,
+                'total_quantity'=>($request->type=='subscription')?($request->quantity*($request->no_of_days??0)):$request->quantity,
                 ]);
 
         //adjust delivery days
