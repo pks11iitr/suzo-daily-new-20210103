@@ -124,9 +124,15 @@ class ProductController extends Controller
                 ->where('user_id', $user->id)
                 ->first();
 
-            if($item)
+            if($item){
                 Cart::updateSingleItemTimeSlot($item, $next_slot);
-            $item->days()->sync([3,4,5]);
+                $item=Cart::with(['days', 'timeslot'])
+                    ->where('product_id', $product->id)
+                    ->where('user_id', $user->id)
+                    ->first();
+            }
+
+            //$item->days()->sync([3,4,5]);
 
             return $item->toArray();
 
@@ -153,6 +159,8 @@ class ProductController extends Controller
                  'no_of_days'=>$item->no_of_days??0,
                  'days'=>$item->days??[],
                  'timeslot'=>$timeslot,
+                'start_date_text'=>date('d M', strtotime($item->start_date??$next_slot['date'])),
+                'time_slot_text'=>isset($item->time_slot)?($item->time_slot->name):($next_slot['name']??'NA')
     );
 
         return [
