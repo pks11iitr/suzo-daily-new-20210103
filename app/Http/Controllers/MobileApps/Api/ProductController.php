@@ -134,7 +134,7 @@ class ProductController extends Controller
 
             //$item->days()->sync([3,4,5]);
 
-            return $item->toArray();
+            //return $item->toArray();
 
         }
 
