@@ -27,12 +27,12 @@ class PaymentController extends Controller
             ->findOrFail($order_id);
 
         $payment_info=[
-            'total'=>$order_id->total_cost,
+            'total'=>$order->total_cost,
             'delivery_charge'=>$order->delivery_charges,
             'coupon_discount'=>$order->coupon_discount,
             'wallet_balance'=>$order->balance_used,
             'gold_cash'=>$order->points_used,
-            'to_be_paid'=>$order_id->total_cost+$order_id->delivery_charges-$order->coupon_discount-$order->cashback_used-$order->balance_used,
+            'to_be_paid'=>$order->total_cost+$order->delivery_charges-$order->coupon_discount-$order->cashback_used-$order->balance_used,
             'savings'=>$order->savings
         ];
 
