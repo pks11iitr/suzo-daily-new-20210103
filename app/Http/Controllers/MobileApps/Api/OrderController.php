@@ -56,7 +56,7 @@ class OrderController extends Controller
                 'message'=>'Cart is empty'
             ];
 
-        $refid=env('MACHINE_ID').rand(1,9).rand(1,9).time('his').rand(1,9).rand(1,9);
+        $refid=env('MACHINE_ID').rand(1,9).rand(1,9).date('his').rand(1,9).rand(1,9);
 
         foreach($cart as $item) {
             if($item->type=='subscription'){
