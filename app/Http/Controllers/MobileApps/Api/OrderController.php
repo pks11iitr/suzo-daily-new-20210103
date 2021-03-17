@@ -50,7 +50,7 @@ class OrderController extends Controller
             ->where('user_id', $user->id)
             ->get();
 
-        if(count($cart))
+        if(!count($cart))
             return [
                 'status'=>'failed',
                 'message'=>'Cart is empty'
