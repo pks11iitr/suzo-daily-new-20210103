@@ -153,7 +153,7 @@ class ProductController extends Controller
                  'max_qty'=>$product->max_qty,
                  'stock'=>$product->stock,
                  'quantity'=>$request->cart[$product->id]['cart_quantity']??0,
-                 'type'=>$request->cart[$product->id]['cart_type']??'once',
+                 'type'=>$request->cart[$product->id]['cart_type']??'subscription',
                  'start_date'=>$item->start_date??$next_slot['date'],
                  'time_slot'=>$item->time_slot??$next_slot['id'],
                  'no_of_days'=>$item->no_of_days??1,
