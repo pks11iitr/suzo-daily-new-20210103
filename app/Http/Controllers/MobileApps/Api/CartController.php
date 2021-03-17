@@ -106,7 +106,17 @@ class CartController extends Controller
         //adjust delivery days
         $cart->days()->sync([]);
         if($request->type=='subscription' && isset($request->days)){
-            $cart->days()->sync($request->days);
+            if(!empty($request->days)){
+                $seldays=[];
+                foreach($request->days as $d){
+                    if($d!=='' ){
+                        $seldays[]=$d;
+                        $cart->days()->sync($request->days);
+                    }
+                }
+
+            }
+
         }
 
         $cart=Cart::getUserCart($user);
