@@ -20,14 +20,6 @@ class CartController extends Controller
     public function addcart(Request $request){
 
         $user=$request->user;
-        //return $user;
-        $request->validate([
-            'quantity'=>'required|integer|min:0',
-            'product_id'=>'required|integer|min:1',
-            'type'=>'required|string|in:once,subscription',
-            'no_of_days'=>'required_if:type,subscription',
-            'days'=>'required_if:type,subscription'
-        ]);
 
         $product=Product::active()->find($request->product_id);
 
@@ -41,6 +33,15 @@ class CartController extends Controller
         if(!$request->quantity){
             return $this->deleteCartItem($request, $product, $user);
         }
+
+        //return $user;
+        $request->validate([
+            'quantity'=>'required|integer|min:0',
+            'product_id'=>'required|integer|min:1',
+            'type'=>'required|string|in:once,subscription',
+            'no_of_days'=>'required_if:type,subscription',
+            'days'=>'required_if:type,subscription'
+        ]);
 
         if(!$product->can_be_subscribed  && $request->type =='subscription')
             return [
