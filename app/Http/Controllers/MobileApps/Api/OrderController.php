@@ -94,7 +94,7 @@ class OrderController extends Controller
                 $d->days()->sync($days[$d->product_id]);
         }
 
-        $order=Order::with('details.product.subcategories')->find($order->id);
+        $order=Order::with('details.product.subcategory')->find($order->id);
 
         //find discount by applying coupon
         if($request->coupon){
