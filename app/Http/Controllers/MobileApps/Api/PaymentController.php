@@ -256,7 +256,7 @@ class PaymentController extends Controller
             'type'=>'verify'
         ]);
 
-        $order=Order::with('details')->where('order_id', $request->rzp_order_id)->first();
+        $order=Order::with('details')->where('rzp_order_id', $request->razorpay_order_id)->first();
 
         if(!$order || $order->status!='pending')
             return [
