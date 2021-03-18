@@ -9,7 +9,7 @@ class LogData extends Model
 {
     use HasFactory;
 
-    protected $table='lag_data';
+    protected $table='log_data';
 
     protected $fillable =['data', 'type'];
 }
