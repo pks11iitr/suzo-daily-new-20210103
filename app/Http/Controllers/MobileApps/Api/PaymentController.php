@@ -25,7 +25,10 @@ class PaymentController extends Controller
 
         $order=Order::where('user_id', $user->id)
             ->findOrFail($order_id);
-
+        $disable_cod='no';
+        if($order->total_cost+$order->delivery_charges-$order->coupon_discount-$order->cashback_used-$order->balance_used==0){
+            $disable_cod='yes';
+        }
         $payment_info=[
             'total'=>$order->total_cost,
             'delivery_charge'=>$order->delivery_charges,
@@ -33,7 +36,8 @@ class PaymentController extends Controller
             'wallet_balance'=>$order->balance_used,
             'gold_cash'=>$order->points_used,
             'to_be_paid'=>$order->total_cost+$order->delivery_charges-$order->coupon_discount-$order->cashback_used-$order->balance_used,
-            'savings'=>$order->savings
+            'savings'=>$order->savings,
+            'disable_cod'=>$disable_cod
         ];
 
         return [
