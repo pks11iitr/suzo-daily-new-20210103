@@ -179,8 +179,8 @@ class PaymentController extends Controller
         $responsearr=json_decode($response);
         //var_dump($responsearr);die;
         if(isset($responsearr->id)){
-            $order->order_id=$responsearr->id;
-            $order->order_id_response=$response;
+            $order->rzp_order_id=$responsearr->id;
+            $order->rzp_order_id_response=$response;
             $order->save();
             return [
                 'status'=>'success',
@@ -256,7 +256,7 @@ class PaymentController extends Controller
             'type'=>'verify'
         ]);
 
-        $order=Order::with('details')->where('order_id', $request->razorpay_order_id)->first();
+        $order=Order::with('details')->where('order_id', $request->rzp_order_id)->first();
 
         if(!$order || $order->status!='pending')
             return [
@@ -292,8 +292,8 @@ class PaymentController extends Controller
                 }
             }
             $order->status = 'confirmed';
-            $order->payment_id = $request->razorpay_payment_id;
-            $order->payment_id_response = $request->razorpay_signature;
+            $order->rzp_payment_id = $request->razorpay_payment_id;
+            $order->rzp_payment_id_response = $request->razorpay_signature;
             $order->payment_status = 'paid';
             $order->payment_mode = 'online';
             $order->save();
