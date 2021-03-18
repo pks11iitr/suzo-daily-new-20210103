@@ -8,7 +8,7 @@ use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\LogData;
 use App\Models\Order;
-use App\Models\OrderStatus;
+//use App\Models\OrderStatus;
 use App\Models\Wallet;
 use App\Services\Payment\RazorPayService;
 use Illuminate\Http\Request;
@@ -299,10 +299,10 @@ class PaymentController extends Controller
             $order->save();
 
 
-            OrderStatus::create([
-                'order_id'=>$order->id,
-                'current_status'=>$order->status
-            ]);
+//            OrderStatus::create([
+//                'order_id'=>$order->id,
+//                'current_status'=>$order->status
+//            ]);
 
             if($order->points_used > 0)
                 Wallet::updatewallet($order->user_id, 'Paid For Order ID: '.$order->refid, 'DEBIT',$order->points_used, 'POINT', $order->id);
