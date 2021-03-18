@@ -136,7 +136,7 @@ class PaymentController extends Controller
 
             Cart::deleteUserCart($user->id);
 
-            event(new OrderConfirmed($order));
+            //event(new OrderConfirmed($order));
 
             return [
                 'status'=>'success',
