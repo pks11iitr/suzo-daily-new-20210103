@@ -92,7 +92,7 @@ class PaymentController extends Controller
             $result=$this->payUsingBalance($order);
             if($result['status']=='success'){
 
-                event(new OrderConfirmed($order));
+                //event(new OrderConfirmed($order));
 
                 return [
                     'status'=>'success',
@@ -111,7 +111,7 @@ class PaymentController extends Controller
             $result=$this->payUsingPoints($order);
             if($result['status']=='success'){
 
-                event(new OrderConfirmed($order));
+                //event(new OrderConfirmed($order));
 
                 return [
                     'status'=>'success',
@@ -226,7 +226,7 @@ class PaymentController extends Controller
         if($order->balance_used > 0)
             Wallet::updatewallet($order->user_id, 'Paid For Order ID: '.$order->refid, 'DEBIT',$order->balance_used, 'CASH', $order->id);
 
-        event(new OrderConfirmed($order));
+        //event(new OrderConfirmed($order));
 
         Cart::deleteUserCart($user->id);
 
@@ -312,7 +312,7 @@ class PaymentController extends Controller
 
             Cart::deleteUserCart($order->user_id);
             //event(new OrderSuccessfull($order));
-            event(new OrderConfirmed($order));
+            //event(new OrderConfirmed($order));
             return [
                 'status'=>'success',
                 'message'=> 'Congratulations! Your order at Hallobasket is successful',
