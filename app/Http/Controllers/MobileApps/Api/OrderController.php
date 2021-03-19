@@ -36,6 +36,11 @@ class OrderController extends Controller
             ];
         }
 
+        return [
+            'status'=>'success',
+            'data'=>compact('orders')
+        ];
+
     }
 
     public function initiateOrder(Request $request){
