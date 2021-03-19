@@ -58,7 +58,7 @@ class ScheduleDeliveries extends Command
         $orders=Order::with(['details'=>function($details) use($ts){
                   $details->whereIn('time_slot', $ts)
                       ->where('scheduled_quantity', '<', DB::raw('total_quantity'))
-                      ->where('details.status', 'pending');
+                      ->where('order_details.status', 'pending');
                 }])
                 ->whereNotIn('orders.status', ['pending'])
                 ->get();
