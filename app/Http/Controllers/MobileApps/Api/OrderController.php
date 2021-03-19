@@ -6,6 +6,7 @@ use App\Events\OrderConfirmed;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Coupon;
+use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatus;
@@ -16,6 +17,24 @@ class OrderController extends Controller
 {
     public  function index(){
         $user = auth()->guard('customerapi')->user();
+
+        $ordersobj=Order::with('details.product')
+                    ->where('user_id', $user->id)
+                    ->where('status', '!=', 'pending')
+                    ->orderBy('id', 'desc')
+                    ->get();
+        $orders=[];
+        foreach($ordersobj as $order){
+
+            $orders[]=[
+                'id'=>$order->id,
+                'image'=>$order->details[0]->product->image??'',
+                'price'=>$order->total_cost,
+                'refid'=>$order->refid,
+                'order_text'=>($order->details[0]->product->name??'').' '.(count($order->details)>1?'+'.(count($order->details)-1).' more items':''),
+                 'date_time'=>date('D, d M,Y')
+            ];
+        }
 
     }
 
@@ -58,6 +77,10 @@ class OrderController extends Controller
 
         $refid=env('MACHINE_ID').rand(1,9).rand(1,9).date('his').rand(1,9).rand(1,9);
 
+        $address=CustomerAddress::where('delivery_active',1)
+            ->where('user_id',$user->id)
+            ->first();
+
         foreach($cart as $item) {
             if($item->type=='subscription'){
                 $total_cost=$total_cost+$item->quantity*($item->product->price??0)*$item->no_of_days;
@@ -85,7 +108,8 @@ class OrderController extends Controller
             'status'=>'pending',
             'total_cost'=>$total_cost,
             'delivery_charge'=>$delivery_charge,
-            'savings'=>$savings
+            'savings'=>$savings,
+            'address_id'=>$address->id
         ]);
 
         $order->details()->saveMany($items);

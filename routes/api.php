@@ -35,6 +35,8 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
     $api->get('get-cart', 'MobileApps\Api\CartController@getCartDetails');
     $api->post('update-customer-address/{id}', 'MobileApps\Api\CustomerAddressController@addressupdate');
     $api->get('get-address-detail/{id}', 'MobileApps\Api\CustomerAddressController@getaddressdetail');
+
+    $api->get('orders', 'MobileApps\Api\OrderController@index');
     $api->post('initiate-order', 'MobileApps\Api\OrderController@initiateOrder');
     $api->get('get-payment-info/{id}', 'MobileApps\Api\PaymentController@getPaymentInfo');
     $api->post('initiate-payment/{order_id}', 'MobileApps\Api\PaymentController@initiatePayment');
