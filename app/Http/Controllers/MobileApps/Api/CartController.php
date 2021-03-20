@@ -303,6 +303,7 @@ class CartController extends Controller
                 'club_membersip'=>round($club_membersip),
                 'delivery_charge'=>round($delivery_charge),
                 'quantity'=>$quantity,
+                'coupon_discount'=>0,
                 //'coupons'=>$coupon,
                 'out_of_stock'=>$out_of_stock
             ];

@@ -29,6 +29,16 @@ $api->post('gmail-login', 'MobileApps\Auth\LoginController@gmailLogin');
 $api->get('configurations', 'MobileApps\ConfigurationController@getFilters');
 
 $api->group(['middleware' => ['customer-api-auth']], function ($api) {
+
+    //$api->get('stores-list', 'MobileApps\Api\StoreController@index');
+    $api->get('get-profile', 'MobileApps\Api\ProfileController@index');
+    $api->post('update-profile', 'MobileApps\Api\ProfileController@update');
+    //$api->get('store-details/{id}', 'MobileApps\Api\StoreController@details');
+    $api->get('customer-balance', 'MobileApps\Api\WalletController@userbalance');
+    $api->get('wallet-history', 'MobileApps\Api\WalletController@index');
+    $api->post('recharge','MobileApps\Api\WalletController@addMoney');
+    $api->post('verify-recharge','MobileApps\Api\WalletController@verifyRecharge');
+
     $api->get('customer-address', 'MobileApps\Api\CustomerAddressController@getcustomeraddress');
     $api->post('add-customer-address', 'MobileApps\Api\CustomerAddressController@addcustomeraddress');
     $api->post('add-cart', 'MobileApps\Api\CartController@addcart');
@@ -41,17 +51,9 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
     $api->get('get-payment-info/{id}', 'MobileApps\Api\PaymentController@getPaymentInfo');
     $api->post('initiate-payment/{order_id}', 'MobileApps\Api\PaymentController@initiatePayment');
     $api->post('verify-payment', 'MobileApps\Api\PaymentController@verifyPayment');
-
-    //$api->get('stores-list', 'MobileApps\Api\StoreController@index');
-    $api->get('get-profile', 'MobileApps\Api\ProfileController@index');
-    $api->post('update-profile', 'MobileApps\Api\ProfileController@update');
-    //$api->get('store-details/{id}', 'MobileApps\Api\StoreController@details');
-    $api->get('customer-balance', 'MobileApps\Api\WalletController@userbalance');
-    $api->get('wallet-history', 'MobileApps\Api\WalletController@index');
-    $api->post('recharge','MobileApps\Api\WalletController@addMoney');
-    $api->post('verify-recharge','MobileApps\Api\WalletController@verifyRecharge');
-
     $api->get('coupons-list', ['as'=>'coupons.list', 'uses'=>'MobileApps\Api\CouponController@coupons']);
+
+    $api->post('apply-coupon', ['as'=>'order.apply.coupon', 'uses'=>'MobileApps\Api\CouponController@applyCoupon']);
 //
 
 });

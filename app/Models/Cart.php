@@ -125,4 +125,35 @@ class Cart extends Model
     }
 
 
+    public static function getCouponDiscount($cart, $coupon){
+        $eligible_amount=self::getDiscountEligibleAmount($cart, $coupon);
+        $discount=$coupon->getCouponDiscount($eligible_amount);
+        return $discount;
+    }
+
+    public static function getDiscountEligibleAmount($cart, $coupon){
+        $amount=0;
+        $coupon_cat=$coupon->categories->map(function($element){
+            return $element->id;
+        });
+        $coupon_cat=$coupon_cat->toArray();
+        foreach($cart as $detail){
+            if(count($coupon_cat)){
+                $product_cat=$detail->product->subcategory->map(function($element){
+                    return $element->id;
+                });
+                $product_cat=$product_cat->toArray();
+                if(count(array_intersect($product_cat,$coupon_cat))){
+                    if($detail->type=='subscription'){
+                        $amount=$amount+$detail->price*$detail->quantity*$detail->num_of_days;
+                    }else{
+                        $amount=$amount+$detail->price*$detail->quantity;
+                    }
+                }
+            }
+        }
+        return $amount;
+    }
+
+
 }
