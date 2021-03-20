@@ -145,9 +145,9 @@ class Cart extends Model
                 $product_cat=$product_cat->toArray();
                 if(count(array_intersect($product_cat,$coupon_cat))){
                     if($detail->type=='subscription'){
-                        $amount=$amount+$detail->price*$detail->quantity*$detail->no_of_days;
+                        $amount=$amount+$detail->product->price*$detail->quantity*$detail->no_of_days;
                     }else{
-                        $amount=$amount+$detail->price*$detail->quantity;
+                        $amount=$amount+$detail->product->price*$detail->quantity;
                     }
                 }
             }
