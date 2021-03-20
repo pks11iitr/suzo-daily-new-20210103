@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mobilepps\Api;
+namespace App\Http\Controllers\MobileApps\Api;
 
 use App\Models\Coupon;
 use Illuminate\Http\Request;
