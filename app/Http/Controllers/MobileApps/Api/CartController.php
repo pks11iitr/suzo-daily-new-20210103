@@ -304,7 +304,7 @@ class CartController extends Controller
                 'delivery_charge'=>round($delivery_charge),
                 'quantity'=>$quantity,
                 'coupon_discount'=>0,
-                'payble_amount'=>round($total),
+                'payble_amount'=>round($price_total),
                 //'coupons'=>$coupon,
                 'out_of_stock'=>$out_of_stock
             ];

@@ -7,6 +7,7 @@ use App\Models\Coupon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class CouponController extends Controller
 {
