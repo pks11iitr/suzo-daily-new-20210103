@@ -50,6 +50,8 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
     $api->get('wallet-history', 'MobileApps\Api\WalletController@index');
     $api->post('recharge','MobileApps\Api\WalletController@addMoney');
     $api->post('verify-recharge','MobileApps\Api\WalletController@verifyRecharge');
+
+    $api->get('coupons-list', ['as'=>'coupons.list', 'uses'=>'Customer\Api\CouponController@coupons']);
 //
 
 });

@@ -192,4 +192,26 @@ class OrderController extends Controller
         }
         return $order->points_used;
     }
+
+
+    public function orderdetails(Request $request, $id){
+
+        $user=$request->user;
+
+        $order=Order::with('details.product', 'details.days', 'details.timeslot')
+            ->where('user_id', $user->id)
+            ->findOrFail($id);
+
+        $items=[
+            'subscription'=>[],
+            'once'=>[]
+        ];
+
+        foreach($order->details as $d){
+
+        }
+
+
+    }
+
 }
