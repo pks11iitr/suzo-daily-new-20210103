@@ -106,7 +106,7 @@ class Cart extends Model
         //var_dump($item->timeslot->checkTimings($item->start_date));die;
             if(!$item->timeslot->checkTimings($item->start_date)){
                 //echo 'die';die;
-                $item->time_slot=$next_available_slot['id'];
+                $item->time_slot_id=$next_available_slot['id'];
                 $item->start_date=$next_available_slot['date'];
                 $item->save();
             }
