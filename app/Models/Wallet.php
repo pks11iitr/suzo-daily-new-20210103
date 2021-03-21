@@ -92,7 +92,7 @@ class Wallet extends Model
     }
 
     public function getDateAttribute($value){
-        return date('D, d-M-Y H:iA', strtotime($this->created_at));
+        return date('h:iA', strtotime($this->created_at));
     }
 
     public function customer()
