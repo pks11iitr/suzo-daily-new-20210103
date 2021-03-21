@@ -21,4 +21,8 @@ class OrderDetail extends Model
         return $this->belongsToMany('App\Models\BookDay', 'subscription_days', 'item_id','day');
     }
 
+    public function timeslot(){
+        return $this->belongsToMany('App\Models\TimeSlot', 'time_slot');
+    }
+
 }
