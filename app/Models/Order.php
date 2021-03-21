@@ -22,6 +22,10 @@ class Order extends Model
         return $this->belongsTo('App\Models\Customer', 'user_id');
     }
 
+    public function deliveryaddress(){
+        return $this->belongsTo('App\Models\CustomerAddress', 'address_id');
+    }
+
     public function applyCoupon($coupon){
         $discount=$this->getCouponDiscount($coupon);
         $this->coupon_applied=$coupon->code;

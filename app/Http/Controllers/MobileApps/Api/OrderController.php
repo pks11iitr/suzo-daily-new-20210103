@@ -198,7 +198,7 @@ class OrderController extends Controller
 
         $user=$request->user;
 
-        $order=Order::with('details.product', 'details.days', 'details.timeslot')
+        $order=Order::with('details.product', 'details.days', 'details.timeslot', 'deliveryaddress')
             ->where('user_id', $user->id)
             ->findOrFail($id);
 
@@ -207,9 +207,66 @@ class OrderController extends Controller
             'once'=>[]
         ];
 
-        foreach($order->details as $d){
+        foreach($order->details as $c){
+
+            if($c->type=='subscription'){
+                $items['subscriptions'][]=array(
+                    'id'=>$c->id,
+                    'name'=>$c->product->name??'',
+                    'company'=>$c->product->company??'',
+                    'image'=>$c->product->image,
+                    'product_id'=>$c->product->id??'',
+                    'unit'=>$c->product->unit??'',
+                    'quantity'=>$c->quantity,
+                    'type'=>$c->type,
+                    'start_date'=>$c->start_date,
+                    'time_slot'=>$c->time_slot,
+                    'no_of_days'=>$c->no_of_days,
+                    'price'=>$c->product->price,
+                    'cut_price'=>$c->product->cut_price,
+                    'date_text'=>date('d M', strtotime($c->start_date)).' By'.' 7PM',
+                );
+            }else{
+                $total=$total+($c->product->price??0)*$c->quantity;
+                $quantity=$quantity+$c->quantity;
+                $price_total=$price_total+($c->product->price??0)*$c->quantity;
+                $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->quantity;
+                $items['once'][]=array(
+                    'id'=>$c->id,
+                    'name'=>$c->product->name??'',
+                    'company'=>$c->product->company??'',
+                    'image'=>$c->product->image,
+                    'product_id'=>$c->product->id??'',
+                    'unit'=>$c->product->unit??'',
+                    'quantity'=>$c->quantity,
+                    'type'=>$c->type,
+                    'start_date'=>$c->start_date,
+                    'time_slot'=>$c->time_slot,
+                    'no_of_days'=>$c->no_of_days,
+                    //    'discount'=>$c->sizeprice->discount,
+                    'price'=>$c->product->price,
+                    'cut_price'=>$c->product->cut_price,
+                    'date_text'=>date('d M', strtotime($c->start_date)).' By'.' 7PM',
+                );
+            }
+
 
         }
+
+
+        return [
+            'deliveryaddress'=>$order->deliveryaddress,
+            'items'=>$items,
+            'total'=>$order->total_cost,
+            'delivery_charge'=>$order->delivery_charge,
+            'coupon'=>$order->coupon??'',
+            'coupon_discount'=>$order->coupon_discount,
+            'grand_total'=>$order->total_cost+$order->delivery_charge-$order->coupon_discount,
+            'balance_used'=>$order->balance_used,
+            'points_used'=>$order->points_used,
+            'payble'=>$order->total_cost+$order->delivery_charge-$order->coupon_discount-$order->ballance_used=$order->points_used,
+            'savings'=>round($order->savings+$order->coupon_discount, 2),
+        ];
 
 
     }
