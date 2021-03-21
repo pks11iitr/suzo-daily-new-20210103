@@ -97,7 +97,7 @@ class Cart extends Model
         }
         if(count($invalid_time_items_id)){
             Cart::whereIn('id', $invalid_time_items_id)
-                ->update(['start_date'=>$next_available_slot['date'], 'time_slot'=>$next_available_slot['id']]);
+                ->update(['start_date'=>$next_available_slot['date'], 'time_slot_id'=>$next_available_slot['id']]);
         }
     }
 
