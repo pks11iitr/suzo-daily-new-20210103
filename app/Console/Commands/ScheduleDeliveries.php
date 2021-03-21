@@ -70,6 +70,7 @@ class ScheduleDeliveries extends Command
                     $delivery=DailyDelivery::create([
                         'user_id'=>$order->user_id,
                         'order_id'=>$order->id,
+                        'detail_id'=>$d->id,
                         'product_id'=>$d->product_id,
                         'quantity'=>$d->quantity,
                         'delivery_date'=>$delivery_date,
