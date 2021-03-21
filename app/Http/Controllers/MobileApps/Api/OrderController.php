@@ -96,7 +96,7 @@ class OrderController extends Controller
                 $savings=$savings+$item->quantity*($item->product->price??0)*$item->no_of_days;
             }
 
-            $items[]=new OrderDetail($item->only('product_id', 'quantity','type','start_date','time_slot','no_of_days', 'total_quantity'));
+            $items[]=new OrderDetail($item->only('product_id', 'quantity','type','start_date','time_slot_id','no_of_days', 'total_quantity'));
 
             $days[$item->product_id]=$item->days->map(function($elem){
                 return $elem->id;
@@ -220,7 +220,7 @@ class OrderController extends Controller
                     'quantity'=>$c->quantity,
                     'type'=>$c->type,
                     'start_date'=>$c->start_date,
-                    'time_slot'=>$c->time_slot,
+                    'time_slot'=>$c->time_slot_id,
                     'no_of_days'=>$c->no_of_days,
                     'price'=>$c->product->price,
                     'cut_price'=>$c->product->cut_price,
@@ -241,7 +241,7 @@ class OrderController extends Controller
                     'quantity'=>$c->quantity,
                     'type'=>$c->type,
                     'start_date'=>$c->start_date,
-                    'time_slot'=>$c->time_slot,
+                    'time_slot'=>$c->time_slot_id,
                     'no_of_days'=>$c->no_of_days,
                     //    'discount'=>$c->sizeprice->discount,
                     'price'=>$c->product->price,
