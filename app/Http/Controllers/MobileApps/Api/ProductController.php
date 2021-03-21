@@ -155,12 +155,12 @@ class ProductController extends Controller
                  'quantity'=>$request->cart[$product->id]['cart_quantity']??0,
                  'type'=>$request->cart[$product->id]['cart_type']??'subscription',
                  'start_date'=>$item->start_date??$next_slot['date'],
-                 'time_slot'=>$item->time_slot??$next_slot['id'],
+                 'time_slot'=>$item->time_slot_id??$next_slot['id'],
                  'no_of_days'=>$item->no_of_days??1,
                  'days'=>$item->days??[],
                  'timeslot'=>$timeslot,
                 'start_date_text'=>date('d M', strtotime($item->start_date??$next_slot['date'])),
-                'time_slot_text'=>isset($item->time_slot)?($item->timeslot->name):($next_slot['time']??'NA')
+                'time_slot_text'=>isset($item->time_slot_id)?($item->timeslot->name):($next_slot['time']??'NA')
     );
 
         return [

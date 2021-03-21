@@ -56,7 +56,7 @@ class ScheduleDeliveries extends Command
             $delivery_date=date('Y-m-d', strtotime('+1 days'));
         }
         $orders=Order::with(['details'=>function($details) use($ts){
-                  $details->whereIn('time_slot', $ts)
+                  $details->whereIn('time_slot_id', $ts)
                       ->where('scheduled_quantity', '<', DB::raw('total_quantity'))
                       ->where('order_details.status', 'pending');
                 }])
@@ -74,7 +74,7 @@ class ScheduleDeliveries extends Command
                         'product_id'=>$d->product_id,
                         'quantity'=>$d->quantity,
                         'delivery_date'=>$delivery_date,
-                        'delivery_time_slot'=>$d->time_slot,
+                        'delivery_time_slot'=>$d->time_slot_id,
                         'address_id'=>$order->address_id,
                         'rider_id'=>null,
                     ]);
