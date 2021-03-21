@@ -52,7 +52,7 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
     $api->post('initiate-payment/{order_id}', 'MobileApps\Api\PaymentController@initiatePayment');
     $api->post('verify-payment', 'MobileApps\Api\PaymentController@verifyPayment');
     $api->get('coupons-list', ['as'=>'coupons.list', 'uses'=>'MobileApps\Api\CouponController@coupons']);
-    $api->get('order-details', ['as'=>'order.details', 'uses'=>'MobileApps\Api\OrderController@orderdetails']);
+    $api->get('order-details/{id}', ['as'=>'order.details', 'uses'=>'MobileApps\Api\OrderController@orderdetails']);
 
 
     $api->post('apply-coupon', ['as'=>'order.apply.coupon', 'uses'=>'MobileApps\Api\CouponController@applyCoupon']);
