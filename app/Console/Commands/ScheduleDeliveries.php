@@ -49,7 +49,7 @@ class ScheduleDeliveries extends Command
             });
             $delivery_date=date('Y-m-d');
         }else{
-            $ts=TimeSlot::where('start_time', '06:00:00')->get();
+            $ts=TimeSlot::where('from_time', '06:00:00')->get();
             $ts=$ts->map(function($element){
                 return $element->id;
             });
