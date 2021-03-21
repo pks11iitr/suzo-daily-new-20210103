@@ -22,7 +22,7 @@ class OrderDetail extends Model
     }
 
     public function timeslot(){
-        return $this->belongsToMany('App\Models\TimeSlot', 'time_slot_id');
+        return $this->belongsTo('App\Models\TimeSlot', 'time_slot_id');
     }
 
 }
