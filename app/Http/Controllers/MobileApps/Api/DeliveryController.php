@@ -22,11 +22,13 @@ class DeliveryController extends Controller
             if(!isset($delivery_arr[date('M Y', strtotime($d->delivered_at))]))
                 $delivery_arr[date('M Y', strtotime($d->delivered_at))]=[];
             $delivery_arr[date('M Y', strtotime($d->delivered_at))][]=[
-                'day'=>date('d', strtotime($d->delivered_at)),
-                'weekday'=>date('D', strtotime($d->delivered_at)),
+                'day'=>date('d', strtotime($d->delivery_date)),
+                'weekday'=>date('D', strtotime($d->delivery_date)),
+                'time'=>$d->delivered_at!=null?date('h:ia', strtotime($d->delivered_at)):"",
                 'units'=>$d->quantity.' Units',
                 'status'=>$d->status,
                 'remark'=>$d->remark??''
+
             ];
         }
 
