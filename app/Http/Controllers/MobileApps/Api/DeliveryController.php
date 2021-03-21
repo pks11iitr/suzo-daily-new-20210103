@@ -19,9 +19,9 @@ class DeliveryController extends Controller
 
         $delivery_arr=[];
         foreach($deliveriesobj as $d){
-            if(!isset($delivery_arr[date('M Y', strtotime($d->delivered_at))]))
-                $delivery_arr[date('M Y', strtotime($d->delivered_at))]=[];
-            $delivery_arr[date('M Y', strtotime($d->delivered_at))][]=[
+            if(!isset($delivery_arr[date('M Y', strtotime($d->delivery_date))]))
+                $delivery_arr[date('M Y', strtotime($d->delivery_date))]=[];
+            $delivery_arr[date('M Y', strtotime($d->delivery_date))][]=[
                 'day'=>date('d', strtotime($d->delivery_date)),
                 'weekday'=>date('D', strtotime($d->delivery_date)),
                 'time'=>$d->delivered_at!=null?date('h:ia', strtotime($d->delivered_at)):"",
