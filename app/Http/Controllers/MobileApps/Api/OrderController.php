@@ -210,6 +210,25 @@ class OrderController extends Controller
         foreach($order->details as $c){
 
             if($c->type=='subscription'){
+
+                if($c->status=='pending'){
+                    $show_cancel=$c->total_quantity>$c->delivered_quantity?1:0;
+                    $show_edit=$c->total_quantity>$c->scheduled_quantity?1:0;
+                    $initial_text='Starting On';
+                    $time=date('d M', strtotime($c->start_date)).' '.(isset($c->timeslot->from_time)?date('h:ia', strtotime($c->timeslot->from_time)):'');
+
+                }else if(in_array($c->status==['partially-completed', 'completed'])){
+                    $show_cancel=0;
+                    $show_edit=0;
+                    $initial_text='Started On';
+                    $time=date('d M', strtotime($c->start_date)).' '.(isset($c->timeslot->from_time)?date('h:ia', strtotime($c->timeslot->from_time)):'');
+                }else{
+                    $show_cancel=0;
+                    $show_edit=0;
+                    $initial_text='Cancelled';
+                    $time='';
+                }
+
                 $items['subscriptions'][]=array(
                     'id'=>$c->id,
                     'name'=>$c->product->name??'',
@@ -224,13 +243,35 @@ class OrderController extends Controller
                     'no_of_days'=>$c->no_of_days,
                     'price'=>$c->product->price,
                     'cut_price'=>$c->product->cut_price,
-                    'date_text'=>date('d M', strtotime($c->start_date)).' By'.' 7PM',
+                    'date_text'=>$time,
+                    'show_cancel'=>$show_cancel,
+                    'show_edit'=>$show_edit,
+                    'initial_text'=>$initial_text
                 );
             }else{
                 $total=$total+($c->product->price??0)*$c->quantity;
                 $quantity=$quantity+$c->quantity;
                 $price_total=$price_total+($c->product->price??0)*$c->quantity;
                 $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->quantity;
+
+                if($c->status=='pending'){
+                    $show_cancel=$c->total_quantity>$c->delivered_quantity?1:0;
+                    $show_edit=$c->total_quantity>$c->scheduled_quantity?1:0;
+                    $initial_text='Arriving By';
+                    $time=date('d M', strtotime($c->start_date)).' '.(isset($c->timeslot->from_time)?date('h:ia', strtotime($c->timeslot->from_time)):'');
+
+                }else if(in_array($c->status==['partially-completed', 'completed'])){
+                    $show_cancel=0;
+                    $show_edit=0;
+                    $initial_text='Delivered At';
+                    $time=date('d M', strtotime($c->last_delivery_at)).' '.(isset($c->last_delivery_at)?date('h:ia', strtotime($c->last_delivery_at)):'');
+                }else{
+                    $show_cancel=0;
+                    $show_edit=0;
+                    $initial_text='Cancelled';
+                    $time='';
+                }
+
                 $items['once'][]=array(
                     'id'=>$c->id,
                     'name'=>$c->product->name??'',
@@ -246,11 +287,13 @@ class OrderController extends Controller
                     //    'discount'=>$c->sizeprice->discount,
                     'price'=>$c->product->price,
                     'cut_price'=>$c->product->cut_price,
-                    'date_text'=>date('d M', strtotime($c->start_date)).' By'.' 7PM',
+                    'date_text'=>$time,
+                    'show_cancel'=>$show_cancel,
+                    'show_edit'=>$show_edit,
+                    'initial_text'=>$initial_text,
+                    'status'=>$c->status
                 );
             }
-
-
         }
 
 
