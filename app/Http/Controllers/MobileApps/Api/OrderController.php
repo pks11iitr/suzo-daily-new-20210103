@@ -203,7 +203,7 @@ class OrderController extends Controller
             ->findOrFail($id);
 
         $items=[
-            'subscription'=>[],
+            'subscriptions'=>[],
             'once'=>[]
         ];
 
