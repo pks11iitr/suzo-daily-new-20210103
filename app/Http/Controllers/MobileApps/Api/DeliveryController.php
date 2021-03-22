@@ -27,7 +27,7 @@ class DeliveryController extends Controller
                 'time'=>$d->delivered_at!=null?date('h:ia', strtotime($d->delivered_at)):"",
                 'units'=>$d->quantity.' Units',
                 'status'=>$d->status,
-                'remark'=>$d->remark??''
+                'remark'=>$d->comment??''
 
             ];
         }
