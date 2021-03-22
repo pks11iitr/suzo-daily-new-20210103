@@ -208,6 +208,9 @@ class OrderController extends Controller
         ];
 
         $total=0;
+        $quantity=0;
+        $price_total=0;
+        $price_total_discount=0;
 
         foreach($order->details as $c){
 
