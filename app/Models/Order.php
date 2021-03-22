@@ -28,7 +28,7 @@ class Order extends Model
 
     public function applyCoupon($coupon){
         $discount=$this->getCouponDiscount($coupon);
-        $this->coupon_applied=$coupon->code;
+        $this->coupon=$coupon->code;
         $this->coupon_discount=$discount;
         $this->save();
     }
@@ -53,7 +53,7 @@ class Order extends Model
                 $product_cat=$product_cat->toArray();
                 if(count(array_intersect($product_cat,$coupon_cat))){
                     if($detail->type=='subscription'){
-                        $amount=$amount+$detail->price*$detail->quantity*$detail->no_of_days;
+                        $amount=$amount+$detail->price*$detail->total_quantity;
                     }else{
                         $amount=$amount+$detail->price*$detail->quantity;
                     }
@@ -76,10 +76,18 @@ class Order extends Model
                 });
                 $product_cat=$product_cat->toArray();
                 if(count(array_intersect($product_cat,$membership_cat))){
-                    $amount=$amount+$detail->price*$detail->quantity;
+                    if($detail->type=='subscription'){
+                        $amount=$amount+$detail->price*$detail->total_quantity;
+                    }else{
+                        $amount=$amount+$detail->price*$detail->quantity;
+                    }
                 }
             }else{
-                $amount=$amount+$detail->price*$detail->quantity;
+                if($detail->type=='subscription'){
+                    $amount=$amount+$detail->price*$detail->total_quantity;
+                }else{
+                    $amount=$amount+$detail->price*$detail->quantity;
+                }
             }
         }
         return $amount;
