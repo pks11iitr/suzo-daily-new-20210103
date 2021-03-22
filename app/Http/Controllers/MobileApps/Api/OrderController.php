@@ -207,9 +207,16 @@ class OrderController extends Controller
             'once'=>[]
         ];
 
+        $total=0;
+
         foreach($order->details as $c){
 
             if($c->type=='subscription'){
+
+                $total=$total+($c->product->price??0)*$c->quantity*$c->no_of_days;
+                $quantity=$quantity+$c->quantity*$c->no_of_days;
+                $price_total=$price_total+($c->product->price??0)*$c->quantity*$c->no_of_days;
+                $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->quantity*$c->no_of_days;
 
                 if($c->status=='pending'){
                     $show_cancel=$c->total_quantity>$c->delivered_quantity?1:0;
@@ -311,6 +318,31 @@ class OrderController extends Controller
             'savings'=>round($order->savings+$order->coupon_discount, 2),
         ];
 
+
+    }
+
+
+    public function cancel(Request $request, $detail_id){
+
+        $request->validate([
+           'message'=>'required|string|max:250'
+        ]);
+
+        $details=OrderDetail::with('order', 'product')
+            ->whereHas('order', function($order){
+                $order->where('status', 'confirmed');
+            })
+            ->where('status', 'pending')
+            ->findOrFail($detail_id);
+
+
+
+
+
+    }
+
+
+    public function reschedule(Request $request, $detail_id){
 
     }
 
