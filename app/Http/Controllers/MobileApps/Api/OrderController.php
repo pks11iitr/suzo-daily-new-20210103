@@ -527,7 +527,7 @@ class OrderController extends Controller
 
     public function getSchedule(Request $request, $item_id){
 
-        $item=OrderDetail::with(['product', 'days'])
+        $item=OrderDetail::with(['days'])
                 ->where('status', 'pending')
                 ->findOrFail($item_id);
 
