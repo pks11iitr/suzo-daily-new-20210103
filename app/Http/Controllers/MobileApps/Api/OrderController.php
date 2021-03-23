@@ -10,6 +10,7 @@ use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatus;
+use App\Models\TimeSlot;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 
@@ -524,7 +525,81 @@ class OrderController extends Controller
     }
 
 
-    public function reschedule(Request $request, $detail_id){
+    public function getSchedule(Request $request, $item_id){
+
+        $item=OrderDetail::with(['product', 'days'])
+                ->where('status', 'pending')
+                ->findOrFail($item_id);
+
+        $timeslots=TimeSlot::active()
+            ->get();
+
+        $header_message='The schedule changes will be effective after 12 hrs.';
+
+        return [
+            'status'=>'success',
+            'data'=>compact('item', 'timeslots', 'header_message')
+        ];
+
+    }
+
+    public function reschedule(Request $request, $item_id){
+
+        $item=OrderDetail::with(['product', 'days'])
+            ->where('status', 'pending')
+            ->findOrFail($item_id);
+
+        if($item->type=='subscription'){
+            $request->validate([
+                'time_slot'=>'required|integer',
+                'quantity'=>'required|integer',
+                'days'=>'required|array',
+                'days.*'=>'required|min:0|max:6'
+            ]);
+
+            if($request->quantity > $item->total_quantity-$item->scheduled_quantity)
+                return [
+                    'status'=>'failed',
+                    'message'=>'Quantity exceeds from available quantity'
+                ];
+
+            TimeSlot::findOrFail($request->time_slot);
+
+            $item->quantity=$request->quantity;
+            $item->time_slot_id=$request->time_slot;
+            $item->save();
+            $item->days()->sync($request->days);
+
+            return [
+                'status'=>'success',
+                'message'=>'Item schedule has been updated'
+            ];
+
+        }else{
+            $request->validate([
+                'start_date'=>'required|date_format:Y-m-d',
+                'time_slot'=>'required|integer',
+            ]);
+
+            $ts=TimeSlot::findOrFail($request->time_slot);
+            if(!$ts->checkTimings($request->date)){
+                $next=TimeSlot::getNextDeliverySlot();
+                return [
+                    'status'=>'failed',
+                    'message'=>'Next earliest delivery time is '.$next['name'].' '.$next['time']
+                ];
+            }
+
+            $item->start_date=$request->start_date;
+            $item->time_slot_id=$request->time_slot;
+            $item->save();
+
+            return [
+                'status'=>'success',
+                'message'=>'Item schedule has been updated'
+            ];
+
+        }
 
     }
 
