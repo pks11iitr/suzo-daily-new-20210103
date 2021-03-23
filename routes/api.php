@@ -54,7 +54,7 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
     $api->get('coupons-list', ['as'=>'coupons.list', 'uses'=>'MobileApps\Api\CouponController@coupons']);
     $api->get('order-details/{id}', ['as'=>'order.details', 'uses'=>'MobileApps\Api\OrderController@orderdetails']);
     $api->get('deliveries/{detail_id}', ['as'=>'order.deliveries', 'uses'=>'MobileApps\Api\DeliveryController@index']);
-    $api->get('cancel-item/{detail_id}', ['as'=>'order.item.cancel', 'uses'=>'MobileApps\Api\OrderController@cancel']);
+    $api->post('cancel-item/{detail_id}', ['as'=>'order.item.cancel', 'uses'=>'MobileApps\Api\OrderController@cancel']);
 
 
     $api->post('apply-coupon', ['as'=>'order.apply.coupon', 'uses'=>'MobileApps\Api\CouponController@applyCoupon']);
