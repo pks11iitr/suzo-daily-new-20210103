@@ -228,7 +228,7 @@ class OrderController extends Controller
                     $initial_text='Starting On';
                     $time=date('d M', strtotime($c->start_date)).' '.(isset($c->timeslot->from_time)?date('h:ia', strtotime($c->timeslot->from_time)):'');
 
-                }else if(in_array($c->status==['partially-completed', 'completed'])){
+                }else if(in_array($c->status, ['partially-completed', 'completed'])){
                     $show_cancel=0;
                     $show_edit=0;
                     $initial_text='Started On';
@@ -271,7 +271,7 @@ class OrderController extends Controller
                     $initial_text='Arriving By';
                     $time=date('d M', strtotime($c->start_date)).' '.(isset($c->timeslot->from_time)?date('h:ia', strtotime($c->timeslot->from_time)):'');
 
-                }else if(in_array($c->status==['partially-completed', 'completed'])){
+                }else if(in_array($c->status, ['partially-completed', 'completed'])){
                     $show_cancel=0;
                     $show_edit=0;
                     $initial_text='Delivered At';
