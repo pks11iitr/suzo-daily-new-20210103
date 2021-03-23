@@ -437,7 +437,7 @@ class OrderController extends Controller
         $order=Order::with('details.product.subcategory')
             ->find($detail->order_id);
 
-        foreach($order->detail as $o)
+        foreach($order->details as $o)
             if($o->id==$detail->id){
                 $itemcost=($o->total_quantity-$o->delivered_quantity)*$o->price;
                 $o->total_quantity=$o->delivered_quantity;
