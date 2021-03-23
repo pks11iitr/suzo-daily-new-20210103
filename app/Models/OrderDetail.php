@@ -29,4 +29,8 @@ class OrderDetail extends Model
         return $this->hasMany('App\Models\DailyDelivery', 'detail_id');
     }
 
+    public function order(){
+        return $this->belongsTo('App\Models\Order', 'order_id');
+    }
+
 }
