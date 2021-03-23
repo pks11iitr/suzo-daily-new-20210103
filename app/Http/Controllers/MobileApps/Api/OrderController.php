@@ -383,7 +383,8 @@ class OrderController extends Controller
                 ->update(['status'=>'cancelled']);
 
             //Refund Amount to Wallet
-            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
+            if($refund_amount>0)
+                Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
 
 
             return [
@@ -415,8 +416,10 @@ class OrderController extends Controller
             ->update(['status'=>'cancelled']);
 
         //Refund Amount to Wallet
-        Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
+        if($cash_return>0)
+            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
 
+        if($point_return>0)
         Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
 
         return [
@@ -476,7 +479,8 @@ class OrderController extends Controller
                 ->update(['status'=>'cancelled']);
 
             //Refund Amount to Wallet
-            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
+            if($refund_amount>0)
+                Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
 
             return [
                 'status'=>'success',
@@ -507,9 +511,11 @@ class OrderController extends Controller
             ->update(['status'=>'cancelled']);
 
         //Refund Amount to Wallet
-        Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
+        if($cash_return>0)
+            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
 
-        Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
+        if($point_return>0)
+            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
 
         return [
             'status'=>'success',
