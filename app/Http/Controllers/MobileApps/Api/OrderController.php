@@ -393,7 +393,7 @@ class OrderController extends Controller
         }
 
         //goldcash %tage in total amount
-        if($order->points_used){
+        if($order->points_used>0){
             $percent=$order->total_cost*100/$order->points_used;
         }else{
             $percent=0;
@@ -485,7 +485,7 @@ class OrderController extends Controller
         }
 
         //goldcash %tage in total amount
-        if($order->points_used){
+        if($order->points_used>0){
             $percent=$order->total_cost*100/$order->points_used;
         }else{
             $percent=0;
