@@ -582,7 +582,8 @@ class OrderController extends Controller
 
             return [
                 'status'=>'success',
-                'message'=>'Item schedule has been updated'
+                'message'=>'Item schedule has been updated',
+                'order_id'=>$item->order_id,
             ];
 
         }else{
@@ -606,7 +607,8 @@ class OrderController extends Controller
 
             return [
                 'status'=>'success',
-                'message'=>'Item schedule has been updated'
+                'message'=>'Item schedule has been updated',
+                'order_id'=>$item->order_id,
             ];
 
         }
