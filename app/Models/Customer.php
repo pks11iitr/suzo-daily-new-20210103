@@ -7,12 +7,13 @@ use Illuminate\Contracts\Notifications\Dispatcher;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use OwenIt\Auditing\Contracts\Auditable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use NotificationChannels\Fcm\Exceptions\CouldNotSendNotification;
 use DateTime;
-class Customer extends Authenticatable implements JWTSubject
+class Customer extends Authenticatable implements JWTSubject, Auditable
 {
-    use DocumentUploadTrait, Notifiable;
+    use DocumentUploadTrait, Notifiable, \OwenIt\Auditing\Auditable;
 
     protected $table='customers';
 

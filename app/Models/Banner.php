@@ -6,10 +6,12 @@ use App\Models\BaseModel as Model;
 use App\Models\Traits\Active;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Storage;
+use OwenIt\Auditing\Contracts\Auditable;
 
 class Banner extends Model
 {
     use Active,HasFactory;
+
     protected $table='banners';
     protected $fillable=['image','isactive','type', 'entity_type', 'entity_id', 'parent_id'];
 

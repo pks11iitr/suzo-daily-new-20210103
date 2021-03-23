@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Traits\Active;
 use App\Models\Traits\DocumentUploadTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel as Model;
 use Illuminate\Support\Facades\Storage;
 
 class Category extends Model

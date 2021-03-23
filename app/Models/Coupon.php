@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\Active;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel as Model;
 
 class Coupon extends Model
 {
