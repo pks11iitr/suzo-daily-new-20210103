@@ -328,7 +328,7 @@ class OrderController extends Controller
     public function cancel(Request $request, $detail_id){
 
         $request->validate([
-           'message'=>'required|string|max:250'
+           'reason'=>'required|string|max:250'
         ]);
 
         $detail=OrderDetail::
@@ -339,14 +339,14 @@ class OrderController extends Controller
             ->findOrFail($detail_id);
 
         if($detail->type=='subscription')
-            return $this->cancelSubscription($detail);
+            return $this->cancelSubscription($detail, $request->reason);
         else
-            return $this->cancelOnce($detail);
+            return $this->cancelOnce($detail, $request->reason);
 
     }
 
 
-    private function cancelOnce($detail){
+    private function cancelOnce($detail, $message){
         $order=Order::with('details', function($details) use($detail){
             $details->with('product.subcategory')
             ->where('order_details.id', '!=', $detail->id);
@@ -375,6 +375,7 @@ class OrderController extends Controller
             $order->save();
 
             $detail->status='cancelled';
+            $detail->remark=$message;
             $detail->save();
 
             $detail->deliveries()
@@ -406,6 +407,7 @@ class OrderController extends Controller
         $order->save();
 
         $detail->status='cancelled';
+        $detail->remark=$message;
         $detail->save();
 
         $detail->deliveries()
@@ -424,7 +426,7 @@ class OrderController extends Controller
     }
 
 
-    private function cancelSubscription($detail){
+    private function cancelSubscription($detail,$message){
 
         if($detail->product->subscription_cashback)
             return [
@@ -465,6 +467,7 @@ class OrderController extends Controller
             $order->save();
 
             $detail->total_quantity=$detail->delivered_quantity;
+            $detail->remark=$message;
             $detail->status='cancelled';
             $detail->save();
 
@@ -496,6 +499,7 @@ class OrderController extends Controller
         $order->save();
 
         $detail->status='cancelled';
+        $detail->remark=$message;
         $detail->save();
 
         $detail->deliveries()
