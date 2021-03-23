@@ -34,11 +34,12 @@
                                 <table id="example2" class="table table-bordered table-hover">
                                     <thead>
                                     <tr>
+                                        <th>Name</th>
                                         <th>Title</th>
                                         <th>Description</th>
                                         <th>Price</th>
                                         <th>Cut Price</th>
-                                        <th>Profile Limit</th>
+                                        <th>Min Order</th>
                                         <th>Isactive</th>
                                         <th>Months</th>
                                         <th>Action</th>
@@ -47,11 +48,12 @@
                                     <tbody>
                                     @foreach($memberships as $membership)
                                         <tr>
+                                            <td>{{$membership->name}}</td>
                                             <td>{{$membership->title}}</td>
                                             <td>{{$membership->description}}</td>
                                             <td>{{$membership->price}}</td>
                                             <td>{{$membership->cut_price}}</td>
-                                            <td>{{$membership->profile_limit}}</td>
+                                            <td>{{$membership->min_order}}</td>
                                             <td>
                                                 @if($membership->isactive==1){{'Active'}}
                                                 @else{{'Inactive'}}

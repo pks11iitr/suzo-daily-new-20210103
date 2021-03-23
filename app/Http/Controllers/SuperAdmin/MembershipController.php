@@ -19,21 +19,23 @@ class MembershipController extends Controller
 
     public function store(Request $request){
         $request->validate([
+            'name'=>'required',
             'title'=>'required',
             'description'=>'required',
             'price'=>'required',
             'cut_price'=>'required',
-            'profile_limit'=>'required',
+            'min_order'=>'required',
             'months'=>'required',
             'isactive'=>'required'
         ]);
 
         if($area=Membership::create([
+            'name'=>$request->name,
             'title'=>$request->title,
             'description'=>$request->description,
             'price'=>$request->price,
             'cut_price'=>$request->cut_price,
-            'profile_limit'=>$request->profile_limit,
+            'min_order'=>$request->min_order,
             'months'=>$request->months,
             'isactive'=>$request->isactive,
         ]))
@@ -51,22 +53,24 @@ class MembershipController extends Controller
 
     public function update(Request $request,$id){
         $request->validate([
+            'name'=>'required',
             'title'=>'required',
             'description'=>'required',
             'price'=>'required',
             'cut_price'=>'required',
-            'profile_limit'=>'required',
+            'min_order'=>'required',
             'months'=>'required',
             'isactive'=>'required'
         ]);
         $membership = Membership::findOrFail($id);
 
         if($membership->update([
+            'name'=>$request->name,
             'title'=>$request->title,
             'description'=>$request->description,
             'price'=>$request->price,
             'cut_price'=>$request->cut_price,
-            'profile_limit'=>$request->profile_limit,
+            'min_order'=>$request->min_order,
             'months'=>$request->months,
             'isactive'=>$request->isactive,
         ]))

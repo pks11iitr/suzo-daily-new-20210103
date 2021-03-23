@@ -13,7 +13,7 @@ class Membership extends Model
 
     protected $table='memberships';
 
-    public $fillable=['title','description','price', 'cut_price', 'profile_limit', 'months','isactive'];
+    public $fillable=['name', 'title', 'description','price', 'cut_price', 'min_order', 'months','isactive'];
     protected $hidden = [
         'created_at','deleted_at','updated_at'
     ];

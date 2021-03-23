@@ -38,6 +38,12 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
+                                                <label for="exampleInputEmail1">Name</label>
+                                                <input type="text" name="name" class="form-control" id="exampleInputEmail1" placeholder="Enter Title" value="{{$membership->name}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
                                                 <label for="exampleInputEmail1">Title</label>
                                                 <input type="text" name="title" class="form-control" id="exampleInputEmail1" placeholder="Enter Title" value="{{$membership->title}}">
                                             </div>
@@ -62,8 +68,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1">Profile Limit</label>
-                                                <input type="number" name="profile_limit" class="form-control" id="exampleInputEmail1" placeholder="Enter Profile Limit" min="0" value="{{$membership->profile_limit}}">
+                                                <label for="exampleInputEmail1">Min Order</label>
+                                                <input type="number" name="min_order" class="form-control" id="exampleInputEmail1" placeholder="Enter Cut Price" min="0" value="{{$membership->min_order}}">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
