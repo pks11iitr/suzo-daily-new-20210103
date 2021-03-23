@@ -84,3 +84,8 @@ $api->get('privacy-policy', 'SuperAdmin\UrlController@privacy');
 $api->get('login-banner', 'MobileApps\Api\HomeController@login_Banner');
 $api->get('active-address/{id}', 'MobileApps\Api\CustomerAddressController@deliveryaddressactive');
 
+
+
+$api->group(['prefix' => 'rider'], function ($api) {
+    $api->post('login', 'MobileApps\Rider\Auth\LoginController@login');
+});

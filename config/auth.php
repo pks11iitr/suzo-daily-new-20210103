@@ -51,6 +51,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'customers',
         ],
+        'riderapi' => [
+            'driver' => 'jwt',
+            'provider' => 'riders',
+        ],
     ],
 
     /*
@@ -84,6 +88,10 @@ return [
         'customers' => [
             'driver' => 'eloquent',
             'model' => App\Models\Customer::class,
+        ],
+        'riders' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Rider::class,
         ],
     ],
 

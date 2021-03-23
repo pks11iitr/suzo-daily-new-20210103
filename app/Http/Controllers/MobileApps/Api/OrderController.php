@@ -554,7 +554,7 @@ class OrderController extends Controller
                 'time_slot'=>'required|integer',
                 'quantity'=>'required|integer',
                 'days'=>'required|array',
-                'days.*'=>'required|min:0|max:6'
+                'days.*'=>'nullable|min:0|max:6'
             ]);
 
             if($request->quantity > $item->total_quantity-$item->scheduled_quantity)
@@ -568,7 +568,17 @@ class OrderController extends Controller
             $item->quantity=$request->quantity;
             $item->time_slot_id=$request->time_slot;
             $item->save();
-            $item->days()->sync($request->days);
+
+            if(!empty($request->days)){
+                $seldays=[];
+                foreach($request->days as $d){
+                    if($d!=='' ){
+                        $seldays[]=$d;
+                        $item->days()->sync($seldays);
+                    }
+                }
+
+            }
 
             return [
                 'status'=>'success',
