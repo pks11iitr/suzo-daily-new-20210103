@@ -390,7 +390,8 @@ class OrderController extends Controller
 
             return [
                 'status'=>'success',
-                'message'=>'Item has been cancelled'
+                'message'=>'Item has been cancelled',
+                'order_id'=>$detail->order_id,
             ];
         }
 
@@ -425,7 +426,8 @@ class OrderController extends Controller
 
         return [
             'status'=>'success',
-            'message'=>'Item has been cancelled'
+            'message'=>'Item has been cancelled',
+            'order_id'=>$detail->order_id,
         ];
     }
 
@@ -485,7 +487,8 @@ class OrderController extends Controller
 
             return [
                 'status'=>'success',
-                'message'=>'Subscription has been cancelled'
+                'message'=>'Subscription has been cancelled',
+                'order_id'=>$detail->order_id,
             ];
         }
 
@@ -520,7 +523,8 @@ class OrderController extends Controller
 
         return [
             'status'=>'success',
-            'message'=>'Subscription has been cancelled'
+            'message'=>'Subscription has been cancelled',
+            'order_id'=>$detail->order_id,
         ];
     }
 
