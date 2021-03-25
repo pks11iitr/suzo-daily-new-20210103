@@ -11,7 +11,9 @@ class CategoryController extends Controller
 {
     public function index(){
 
-        $categories=Category::active()->inRandomOrder()->get();
+        $categories=Category::active()->with(['subcategories'=>function($subcat){
+            $subcat->where('isactive', 1);
+        }])->get();
 
         if($categories->count()>0){
             return [

@@ -21,4 +21,9 @@ class Category extends Model
             return Storage::url($value);
         return null;
     }
+
+
+    public function subcategories(){
+        return $this->hasMany('App\Models\SubCategory', 'category_id');
+    }
 }
