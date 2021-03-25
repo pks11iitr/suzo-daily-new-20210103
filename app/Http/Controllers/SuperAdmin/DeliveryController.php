@@ -14,13 +14,10 @@ class DeliveryController extends Controller
         $deliveries = DailyDelivery::where('id','>=',0);
 
         if(isset($request->fromdate))
-            $deliveries = $deliveries->where('delivery_date', '>=', $request->fromdate.' 00:00:00');
+            $deliveries = $deliveries->where('delivery_date', '>=', $request->fromdate);
 
         if(isset($request->todate))
-            $deliveries = $deliveries->where('delivery_date', '<=', $request->todate.' 23:59:59');
-
-        if($request->user_id)
-            $deliveries=$deliveries->where('user_id', $request->user_id);
+            $deliveries = $deliveries->where('delivery_date', '<=', $request->todate);
 
         if($request->rider_id)
             $deliveries=$deliveries->where('rider_id', $request->rider_id);
