@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\MobileApps\Api;
 
+use App\Models\Area;
 use App\Models\CustomerAddress;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -184,6 +185,37 @@ class CustomerAddressController extends Controller
             'status'=>'success',
             'message' => 'successfully',
         ];
+
+    }
+
+    public function getAreaList(Request $request){
+
+        $city=$request->city;
+
+        $chosen_city=null;
+        foreach(config('myconfig.cities') as $key=>$value){
+            if(strtolower($value)==strtolower($city))
+                $chosen_city=$key;
+        }
+
+        $areas=[];
+        if($chosen_city)
+            $areas=Area::where('city_id', $chosen_city)
+                ->select('name', 'id')
+                ->get();
+
+        if(count($areas)){
+            return [
+                'status'=>'success',
+                'data'=>compact('areas')
+            ];
+        }
+
+        return [
+            'status'=>'failed',
+            'message'=>'We dont deliver in this city.'
+        ];
+
 
     }
 

@@ -23,6 +23,8 @@ $api->post('resend-otp', 'MobileApps\Auth\OtpController@resend');
 //$api->post('update-password', 'MobileApps\Auth\ForgotPasswordController@updatePassword');
 $api->post('fb-login', 'MobileApps\Auth\LoginController@facebookLogin');
 $api->post('gmail-login', 'MobileApps\Auth\LoginController@gmailLogin');
+
+$api->get('area-list', 'MobileApps\Api\CustomerAddressController@getAreaList');
 //test comment again
 
 
