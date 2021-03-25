@@ -215,6 +215,17 @@
                         </li>
                     @endif
 
+                    @if(auth()->user()->hasRole('admin'))
+                        <li class="nav-item">
+                            <a href="{{route('area.list')}}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Area List
+                                </p>
+                            </a>
+                        </li>
+                    @endif
+
                     <li class="nav-item">
                         <a href="{{route('news.list')}}" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>

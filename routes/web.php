@@ -189,6 +189,16 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
 
     });
 
+    Route::group(['prefix'=>'area'], function(){
+            Route::get('/','SuperAdmin\AreaController@index')->name('area.list');
+            Route::get('create','SuperAdmin\AreaController@create')->name('area.create');
+            Route::get('edit/{id}','SuperAdmin\AreaController@edit')->name('area.edit');
+
+            Route::post('store','SuperAdmin\AreaController@store')->name('area.store');
+            Route::post('update/{id}','SuperAdmin\AreaController@update')->name('area.update');
+
+    });
+
 
 
 });
