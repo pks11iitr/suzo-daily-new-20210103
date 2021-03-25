@@ -38,7 +38,8 @@ class HomeController extends Controller
         $user=[
             'name'=>$user->name??'',
             'image'=>$user->image??'',
-            'mobile'=>$user->mobile??''
+            'mobile'=>$user->mobile??'',
+            'membership_name'=>$user??($user->membership_expiry>=date('Y-m-d')?$user->membership->name:'')
         ];
         $home_sections=HomeSection::active()
             ->with('entities.entity')

@@ -125,4 +125,8 @@ class Customer extends Authenticatable implements JWTSubject, Auditable
 
         return $text;
     }
+
+    public function membership(){
+        return $this->belongsTo('App\Models\Membership', 'membership_id');
+    }
 }
