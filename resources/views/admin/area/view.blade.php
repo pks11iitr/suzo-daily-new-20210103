@@ -29,27 +29,12 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <a href="{{route('area.create')}}" class="btn btn-primary">Add Area List</a>
-                                        <a class="btn btn-warning" href="{{route('area.export')}}">Export Data</a>
+
                                 </div>
                                 </div>
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-header">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <form role="form" method="post" enctype="multipart/form-data" action="{{route('area.import')}}">
-                                            @csrf
-                                            <div class="card-body">
-                                                <div class="form-group">
-                                                    <label>Select File for Upload</label>
-                                                    <input type="file" name="select_file" class="form-control"><br>
-                                                    <button type="submit" class="btn btn-primary">Upload</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example2" class="table table-bordered table-hover">
