@@ -21,4 +21,13 @@ class DailyDelivery extends Model
         return $this->belongsTo('App\Models\OrderDetail', 'detail_id');
     }
 
+    public function customer(){
+        return $this->belongsTo('App\Models\Customer', 'user_id');
+    }
+
+    public function rider(){
+        return $this->belongsTo('App\Models\Rider', 'rider_id');
+    }
+
+
 }

@@ -158,6 +158,15 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
 
     });
 
+    Route::group(['prefix'=>'delivery'], function(){
+
+        Route::get('/','SuperAdmin\DeliveryController@index')->name('delivery.list');
+
+
+    });
+
+
+
     Route::get('download-invoice/{id}','SuperAdmin\InvoiceController@download')->name('download.invoice');
 
 
