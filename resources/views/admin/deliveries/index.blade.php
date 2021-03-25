@@ -72,6 +72,7 @@
                                         <th>Product</th>
                                         <th>Quantity</th>
                                         <th>Delivery Date</th>
+                                        <th>Status</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -87,6 +88,7 @@
                                             <td>{{$delivery->product->name??''}}</td>
                                             <td>{{$delivery->quantity}}</td>
                                             <td>{{$delivery->delivery_date}}/{{$delivery->timeslot->name}}</td>
+                                            <td>{{$delivery->status}}</td>
 
                                         </tr>
                                     @endforeach
