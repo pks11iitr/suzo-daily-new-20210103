@@ -26,6 +26,14 @@ class Order extends Model
         return $this->belongsTo('App\Models\CustomerAddress', 'address_id');
     }
 
+    public function rider(){
+        return $this->belongsTo('App\Models\Rider', 'rider_id');
+    }
+
+    public function store(){
+        return $this->belongsTo('App\Models\User', 'store_id');
+    }
+
     public function applyCoupon($coupon){
         $discount=$this->getCouponDiscount($coupon);
         $this->coupon=$coupon->code;
@@ -91,6 +99,11 @@ class Order extends Model
             }
         }
         return $amount;
+    }
+
+
+    public function returned(){
+        return $this->hasMany('App\Models\ReturnProduct', 'order_id');
     }
 
 }

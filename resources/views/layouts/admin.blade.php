@@ -116,7 +116,16 @@
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
-
+                    </li>
+                    <li class="nav-item has-treeview menu-open">
+                        <a href="{{route('orders.list')}}" class="nav-link active">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                               Orders
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a href="{{route('banners.list')}}" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>

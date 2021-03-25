@@ -144,7 +144,41 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
 
     });
 
+    Route::group(['prefix'=>'orders'], function(){
 
+            Route::get('/','SuperAdmin\OrderController@index')->name('orders.list');
+            Route::get('details/{id}','SuperAdmin\OrderController@details')->name('order.details');
+            Route::post('invoice-update/{id}','SuperAdmin\InvoiceController@update')->name('order.invoice.update');
+
+            Route::get('change-status/{id}','SuperAdmin\OrderController@changeStatus')->name('order.status.change');
+            Route::get('change-payment-status/{id}','SuperAdmin\OrderController@changePaymentStatus')->name('payment.status.change');
+            Route::post('changeRider/{id}','SuperAdmin\OrderController@changeRider')->name('rider.change');
+            Route::get('add-cashback/{id}/{type}','SuperAdmin\OrderController@addCashback')->name('add.cashback');
+
+
+    });
+
+    Route::get('download-invoice/{id}','SuperAdmin\InvoiceController@download')->name('download.invoice');
+
+
+    Route::group(['prefix'=>'reports'], function(){
+
+        Route::get('sales-report', 'SuperAdmin\ReportDownloader@downloadSalesReport')->name('sales.report');
+
+        Route::get('order-report', 'SuperAdmin\ReportDownloader@downloadOrderReport')->name('order.report');
+
+    });
+
+
+    Route::group(['prefix'=>'wallet'], function(){
+
+        Route::post('add-remove-wallet-balance', 'SuperAdmin\WalletController@addremove')->name('wallet.add.remove');
+
+        Route::get('get-wallet-balance/{id}', 'SuperAdmin\WalletController@getbalance')->name('user.wallet.balance');
+
+        Route::get('get-wallet-history/{id}', 'SuperAdmin\WalletController@getWalletHistory')->name('user.wallet.history');
+
+    });
 
 
 
