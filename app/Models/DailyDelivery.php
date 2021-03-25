@@ -37,6 +37,10 @@ class DailyDelivery extends Model
         return $this->belongsTo('App\Models\CustomerAddress', 'adderss_id');
     }
 
+    public function timeslot(){
+        return $this->belongsTo('App\Models\TimeSlot', 'delivery_time_slot');
+    }
+
 
 
 }

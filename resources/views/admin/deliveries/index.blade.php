@@ -80,13 +80,13 @@
                                             <td>
                                                 <b>Name :</b> {{$delivery->customer->name??''}}<br>
                                                 <b>Mobile :</b> {{$delivery->customer->mobile??''}}
-                                                <b>Address:</b>{{$delivery->customer->address??''}}
+                                                <b>Address:</b>{{$delivery->deliveryaddress->street??''}}
                                             </td>
-                                            <td>{{$delivery->customer->address??''}}</td>
+                                            <td>{{$delivery->store->name??''}}</td>
                                             <td>{{$delivery->rider->name??''}}</td>
                                             <td>{{$delivery->product->name??''}}</td>
                                             <td>{{$delivery->quantity}}</td>
-                                            <td>{{$delivery->delivery_date}}</td>
+                                            <td>{{$delivery->delivery_date}}/{{$delivery->timeslot->name}}</td>
 
                                         </tr>
                                     @endforeach
