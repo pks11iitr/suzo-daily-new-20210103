@@ -67,9 +67,9 @@
                                     <thead>
                                     <tr>
                                         <th>Customer</th>
-                                        <th>Customer Address</th>
-                                        <th>Rider Name</th>
-                                        <th>Product Name</th>
+                                        <th>Store</th>
+                                        <th>Rider</th>
+                                        <th>Product</th>
                                         <th>Quantity</th>
                                         <th>Delivery Date</th>
                                     </tr>
@@ -80,6 +80,7 @@
                                             <td>
                                                 <b>Name :</b> {{$delivery->customer->name??''}}<br>
                                                 <b>Mobile :</b> {{$delivery->customer->mobile??''}}
+                                                <b>Address:</b>{{$delivery->customer->address??''}}
                                             </td>
                                             <td>{{$delivery->customer->address??''}}</td>
                                             <td>{{$delivery->rider->name??''}}</td>

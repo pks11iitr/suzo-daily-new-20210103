@@ -20,6 +20,7 @@ class CustomerAddressController extends Controller
                 'message'=>'Please login to continue'
             ];
         $customeraddress=CustomerAddress::where('user_id',$user->id)
+            ->orderBy('delivery_active', 'desc')
             ->orderBy('id', 'desc')
             ->get();
 
@@ -175,30 +176,15 @@ class CustomerAddressController extends Controller
                 'message'=>'Please login to continue'
             ];
 
-        $customeraddress = CustomerAddress::where('user_id',$user->id)->get();
-        foreach ($customeraddress as $address) {
+        CustomerAddress::where('user_id',$user->id)->update(['delivery_active'=>0]);
 
+        CustomerAddress::where('user_id', $user->id)->where('id', $id)->update(['delivery_active'=>1]);
 
-            if ($address->id == $id) {
-                $address->delivery_active = 1;
+        return [
+            'status'=>'success',
+            'message' => 'successfully',
+        ];
 
-            } else {
-                $address->delivery_active = 0;
-
-            }
-        }
-
-        if($address->save()) {
-            return [
-                'status'=>'success',
-                'message' => 'successfully',
-            ];
-        }else{
-            return [
-                'status'=>'failed',
-                'message' => 'error'
-            ];
-        }
     }
 
 

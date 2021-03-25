@@ -11,7 +11,7 @@ class DailyDelivery extends Model
 
     protected $table='daily_deliveries';
 
-    protected $fillable =['order_id', 'detail_id', 'user_id', 'product_id', 'quantity', 'delivery_date', 'delivery_time_slot', 'address_id', 'rider_id'];
+    protected $fillable =['order_id', 'detail_id', 'user_id', 'product_id', 'quantity', 'delivery_date', 'delivery_time_slot', 'address_id', 'rider_id', 'store_id'];
 
     public function product(){
         return $this->belongsTo('App\Models\Product', 'product_id');
@@ -28,6 +28,15 @@ class DailyDelivery extends Model
     public function rider(){
         return $this->belongsTo('App\Models\Rider', 'rider_id');
     }
+
+    public function store(){
+        return $this->belongsTo('App\Models\User', 'store_id');
+    }
+
+    public function deliveryaddress(){
+        return $this->belongsTo('App\Models\CustomerAddress', 'adderss_id');
+    }
+
 
 
 }

@@ -76,7 +76,8 @@ class ScheduleDeliveries extends Command
                         'delivery_date'=>$delivery_date,
                         'delivery_time_slot'=>$d->time_slot_id,
                         'address_id'=>$order->address_id,
-                        'rider_id'=>null,
+                        'rider_id'=>$order->rider_id,
+                        'store_id'=>$order->store_id
                     ]);
                     if($delivery){
                         if($d->type=='once'){
