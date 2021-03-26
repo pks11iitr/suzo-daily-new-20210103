@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'customer-api-auth'=>\App\Http\Middleware\CustomerApiAuth::class,
         'mycart'=>\App\Http\Middleware\MyCart::class,
+        'rider-api-auth'=>\App\Http\Middleware\RiderApiAuth::class,
     ];
 }

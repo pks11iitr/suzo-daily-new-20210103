@@ -90,4 +90,11 @@ $api->get('active-address/{id}', 'MobileApps\Api\CustomerAddressController@deliv
 
 $api->group(['prefix' => 'rider'], function ($api) {
     $api->post('login', 'MobileApps\Rider\Auth\LoginController@login');
+
+    $api->group(['middleware' => ['rider-api-auth']], function ($api) {
+            $api->get('open-deliveries', 'MobileApps\Rider\Api\DeliveryController@openDeliveries');
+            $api->get('past-deliveries', 'MobileApps\Rider\Api\DeliveryController@pastDeliveries');
+            $api->post('update-delivery/{id}', 'MobileApps\Rider\Api\DeliveryController@updateDeliveryStatus');
+    });
+
 });
