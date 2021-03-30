@@ -77,8 +77,8 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
 //
 
     //membership subscription
-    $api->get('subscribe/{id}', ['as'=>'membership.subscribe', 'uses'=>'Customer\Api\MembershipController@subscribe']);
-    $api->post('verify-subscription', ['as'=>'membership.verify', 'uses'=>'Customer\Api\MembershipController@verify']);
+    $api->get('subscribe/{id}', ['as'=>'membership.subscribe', 'uses'=>'MobileApps\Api\MemberShipController@subscribe']);
+    $api->post('verify-subscription', ['as'=>'membership.verify', 'uses'=>'MobileApps\Api\MemberShipController@verify']);
 
 });
 

@@ -8,10 +8,16 @@ use App\Models\Membership;
 use App\Models\Notification;
 use App\Models\Subscription;
 use App\Services\Notification\FCMNotification;
+use App\Services\Payment\RazorPayService;
 use Illuminate\Http\Request;
 
 class MemberShipController extends Controller
 {
+    public function __construct(RazorPayService $pay)
+    {
+        $this->pay=$pay;
+    }
+
     public function index(Request $request){
 
         $membershipobj=Membership::active()->get();
