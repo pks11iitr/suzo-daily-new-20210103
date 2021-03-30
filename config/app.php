@@ -162,6 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+
         /*
          * Package Service Providers...
          */
@@ -177,6 +178,7 @@ return [
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         'Kodeine\Acl\AclServiceProvider',
         OwenIt\Auditing\AuditingServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class
     ],
 
     /*
@@ -229,6 +231,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'acl' => 'Kodeine\Acl\Middleware\HasPermission',
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 

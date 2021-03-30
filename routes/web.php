@@ -166,10 +166,6 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
     });
 
 
-
-    Route::get('download-invoice/{id}','SuperAdmin\InvoiceController@download')->name('download.invoice');
-
-
     Route::group(['prefix'=>'reports'], function(){
 
         Route::get('sales-report', 'SuperAdmin\ReportDownloader@downloadSalesReport')->name('sales.report');
@@ -213,5 +209,7 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
 
 
 });
+
+Route::get('invoice/{id}', 'SuperAdmin\InvoiceController@download')->name('download.invoice');
 
 require __DIR__.'/auth.php';

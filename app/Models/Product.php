@@ -12,7 +12,7 @@ class Product extends Model
     use ReviewTrait, Active;
 
 	protected $table='products';
-    protected $fillable=['name','description','company','ratings','image','isactive','stock_type','image','is_offer','min_qty','max_qty','stock','description','is_discounted','is_newarrival','is_hotdeal','price','cut_price'];
+    protected $fillable=['name','description','company','ratings','image','isactive','stock_type','image','is_offer','min_qty','max_qty','stock','description','is_discounted','is_newarrival','is_hotdeal','price','cut_price', 'cgst', 'sgst', 'eligible_goldcash', 'can_be_subscribed', 'subscription_cashback', 'delivery_charge'];
 
     protected $hidden = ['created_at','deleted_at','updated_at'];
 
