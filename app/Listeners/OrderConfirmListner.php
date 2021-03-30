@@ -40,32 +40,20 @@ class OrderConfirmListner
 
     public function sendNotifications($order){
 
-        $message='';
-        if($order->details[0]->entity_type == 'App\Models\Product'){
-            $message='Congratulations! Your purchase of Rs. '.$order->total_cost.' at Arogyapeeth.com is successfull. Order Reference ID: '.$order->refid;
-        }else{
-            $message='Congratulations! Your therapy booking of Rs. '.$order->total_cost.' at Arogyapeeth.com is successfull. Order Reference ID: '.$order->refid;
+        $title='Order Confirmed';
+        $message='Congratulations! Your purchase of Rs. '.$order->total_cost.' at Frestr is successfull. Order Reference ID: '.$order->refid;
 
-        }
 
         $user=$order->customer;
 
         Notification::create([
             'user_id'=>$order->user_id,
-            'title'=>'Order Confirmed',
+            'title'=>$title,
             'description'=>$message,
-            'data'=>null,
             'type'=>'individual'
         ]);
 
-        FCMNotification::sendNotification($user->notification_token, 'Order Confirmed', $message);
-
-        // send invoice email
-
-
-        $pdf=Order::generateInvoicePdfRaw($order->refid);
-
-        Mail::send(new SendMail(null, $order->email, "Order Confirmed at Arogyapeeth", 'mails.invoice-mail', ['order'=>$order], null, $pdf, []));
+        $user->notify(new FCMNotification($title, $message, []));
 
     }
 }

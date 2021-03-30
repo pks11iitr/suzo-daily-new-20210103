@@ -37,20 +37,19 @@ class RechargeConfirmListner
     public function sendNotifications($wallet){
 
             $title='Recharge Successfull';
-            $message='Congratulations! Your wallet recharge of Rs. '.$wallet->amount.' at Arogyapeeth.com is successfull. Order Reference ID: '.$wallet->refid;
+            $message='Congratulations! Your wallet recharge of Rs. '.$wallet->amount.' at Frestr is successfull. Order Reference ID: '.$wallet->refid;
 
             $user=$wallet->customer;
 
-//        Notification::create([
-//            'user_id'=>$wallet->user_id,
-//            'title'=>'Recharge Confirmed',
-//            'description'=>$message,
-//            'data'=>null,
-//            'type'=>'individual'
-//        ]);
+        Notification::create([
+            'user_id'=>$wallet->user_id,
+            'title'=>'Recharge Confirmed',
+            'description'=>$message,
+            'type'=>'individual'
+        ]);
 
-//        $user->notify(new FCMNotification($title, $message , [
-//            'type'=>'recharge'
-//        ]))
+        $user->notify(new FCMNotification($title, $message , [
+            'type'=>'recharge'
+        ]));
     }
 }
