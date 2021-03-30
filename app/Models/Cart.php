@@ -155,5 +155,19 @@ class Cart extends Model
         return $amount;
     }
 
+    public static function getEligibleGoldCash($cart){
+        $eligible=0;
+        foreach($cart as $c){
+
+            if($c->product->eligible_goldcash){
+                $eligible=$c->price*$c->product->eligible_goldcash/100;
+            }
+
+        }
+
+        return round($eligible, 2);
+
+    }
+
 
 }

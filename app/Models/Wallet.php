@@ -100,14 +100,14 @@ class Wallet extends Model
         return $this->belongsTo('App\Models\Customer', 'user_id');
     }
 
-    public static function calculateEligibleCashback($price_total, $cashback_available){
-        // only 15% cashback can be used at once
-        $eligible_cashback_usage=round($price_total*15/100, 2);
-        if($eligible_cashback_usage > $cashback_available)
-            $cashbackpoints=$cashback_available;
-        else
-            $cashbackpoints = $eligible_cashback_usage;
-        return $cashbackpoints;
-    }
+//    public static function calculateEligibleCashback($price_total, $cashback_available){
+//        // only 15% cashback can be used at once
+//        $eligible_cashback_usage=round($price_total*15/100, 2);
+//        if($eligible_cashback_usage > $cashback_available)
+//            $cashbackpoints=$cashback_available;
+//        else
+//            $cashbackpoints = $eligible_cashback_usage;
+//        return $cashbackpoints;
+//    }
 
 }

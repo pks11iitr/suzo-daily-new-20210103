@@ -195,7 +195,7 @@ class CartController extends Controller
         $cartitem['subscriptions']=[];
         $cartitem['once']=[];
         $out_of_stock=0;
-
+        $eligible_goldcash=0;
         foreach($cartitems as $c){
             if(!$c->product->isactive){
                 $c->days()->sync([]);
@@ -230,6 +230,7 @@ class CartController extends Controller
                     'date_text'=>date('d M', strtotime($c->start_date)).' By'.' 7PM',
                 );
 
+                $eligible_goldcash=$eligible_goldcash+($c->price*$c->product->eligible_goldcash/100)*$c->quantity*$c->no_of_days;
 
             }else{
                 $total=$total+($c->product->price??0)*$c->quantity;
@@ -256,6 +257,8 @@ class CartController extends Controller
                     'stock'=>$c->product->stock,
                     'date_text'=>date('d M', strtotime($c->start_date)).' By'.' 7PM',
                 );
+
+                $eligible_goldcash=$eligible_goldcash+($c->price*$c->product->eligible_goldcash/100)*$c->quantity;
             }
 
 
@@ -265,7 +268,9 @@ class CartController extends Controller
                 $out_of_stock=1;
         }
 
-        $cashbackpoints=Wallet::calculateEligibleCashback($price_total, $walletdetails['cashback']);
+//        $cashbackpoints=Wallet::calculateEligibleCashback($price_total, $walletdetails['cashback']);
+
+        $cashbackpoints=$eligible_goldcash<$walletdetails['cashback']?$eligible_goldcash:$walletdetails['cashback'];
 
 
         /* $savelaters=SaveLaterProduct::with(['product'=>function($products){

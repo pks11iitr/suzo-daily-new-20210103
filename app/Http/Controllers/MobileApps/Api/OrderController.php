@@ -183,13 +183,20 @@ class OrderController extends Controller
         if($walletpoints<=0)
             return 0;
 
-        $eligible_cashback=Wallet::calculateEligibleCashback($total_cost, $walletpoints);
+        //$eligible_cashback=Wallet::calculateEligibleCashback($total_cost, $walletpoints);
+        $eligible_goldcash=0;
+        foreach($order->details as $d){
+            if($d->type=='subscription')
+                $eligible_goldcash=$eligible_goldcash+($d->price*$d->product->eligible_goldcash/100)*$d->quantity*$d->no_of_days;
+            else
+                $eligible_goldcash=$eligible_goldcash+($d->price*$d->product->eligible_goldcash/100)*$d->quantity;
+        }
 
         $order->use_points=true;
-        if($eligible_cashback >= $order->total_cost+$order->delivery_charge - $order->coupon_discount-$order->balance_used){
+        if($eligible_goldcash >= $order->total_cost+$order->delivery_charge - $order->coupon_discount-$order->balance_used){
             $order->points_used=$order->total_cost+$order->delivery_charge-$order->coupon_discount;
         }else{
-            $order->points_used=$eligible_cashback;
+            $order->points_used=$eligible_goldcash;
         }
         return $order->points_used;
     }
