@@ -52,7 +52,7 @@ class MemberShipController extends Controller
                 'status'=>'failed',
                 'message'=>'Please login to continue'
             ];
-        if($user->membership_expiry && $user->membership_expiry>=date('Y-m-d')){
+        if($user->isMembershipActive() && $user->membership_expiry>=date('Y-m-d')){
             return [
                 'status'=>'failed',
                 'message'=>'You already have a active subscription'
@@ -142,7 +142,7 @@ class MemberShipController extends Controller
             $subscription->save();
 
             $user->membership_id=$subscription->plan_id;
-            $user->membership_expiry=date('Y-m-d', strtotime('+'.$memberships->validity.' days'));
+            $user->membership_expiry=date('Y-m-d', strtotime('+'.$memberships->months.' months'));
             $user->save();
 
 
