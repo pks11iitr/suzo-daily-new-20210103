@@ -75,55 +75,11 @@ class Customer extends Authenticatable implements JWTSubject, Auditable
         return Storage::url('customers/default.jpeg');
     }
 
-    public function city(){
-        return $this->belongsTo('App\Models\City', 'city_id');
-    }
+    public function isMembershipActive(){
+        if($this->membership_expiry>date('Y-m-d'))
+            return true;
+        return false;
 
-    public function country(){
-        return $this->belongsTo('App\Models\Country', 'country_id');
-    }
-
-    public function state(){
-        return $this->belongsTo('App\Models\State', 'state_id');
-    }
-
-
-    public function religion(){
-        return $this->belongsTo('App\Models\City', 'religion_id');
-    }
-
-    public function salary(){
-        return $this->belongsTo('App\Models\Income', 'salary_id');
-    }
-
-    public function height(){
-        return $this->belongsTo('App\Models\Height', 'height_id');
-    }
-
-    public function getAgeAttribute($value){
-        if($this->dob)
-            return $this->getAgeDifference($this->dob);
-        return '--';
-    }
-
-    function getAgeDifference($date){
-
-        $text='--';
-
-        if($date){
-            $date1 = new DateTime(date('Y-m-d H:i:s'));
-            $date2 = $date1->diff(new DateTime($date));
-
-            $text='';
-
-            if($date2->y)
-                $text=$text.$date2->y.' year'.' ';
-
-            if($date2->m)
-                $text=$text.$date2->m.' month';
-        }
-
-        return $text;
     }
 
     public function membership(){

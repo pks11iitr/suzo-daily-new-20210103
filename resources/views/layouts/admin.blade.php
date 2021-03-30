@@ -126,6 +126,26 @@
                             </p>
                         </a>
                     </li>
+                    @if(auth()->user()->hasRole('admin'))
+                        <li class="nav-item">
+                            <a href="{{route('delivery.list')}}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Daily Delivery
+                                </p>
+                            </a>
+                        </li>
+                    @endif
+                    @if(auth()->user()->hasRole('admin'))
+                        <li class="nav-item">
+                            <a href="{{route('customer.list')}}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Customers
+                                </p>
+                            </a>
+                        </li>
+                    @endif
                     <li class="nav-item">
                         <a href="{{route('banners.list')}}" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>
@@ -204,16 +224,7 @@
                         </li>
                     @endif
 
-                    @if(auth()->user()->hasRole('admin'))
-                        <li class="nav-item">
-                            <a href="{{route('delivery.list')}}" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Daily Delivery
-                                </p>
-                            </a>
-                        </li>
-                    @endif
+
 
                     @if(auth()->user()->hasRole('admin'))
                         <li class="nav-item">

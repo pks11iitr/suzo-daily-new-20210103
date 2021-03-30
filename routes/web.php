@@ -199,6 +199,17 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
 
     });
 
+    Route::group(['prefix'=>'customer'], function(){
+            Route::get('/','SuperAdmin\CustomerController@index')->name('customer.list');
+            Route::get('edit/{id}','SuperAdmin\CustomerController@edit')->name('customer.edit');
+
+
+            Route::post('update/{id}','SuperAdmin\CustomerController@update')->name('customer.update');
+            Route::post('send_message','SuperAdmin\CustomerController@send_message')->name('customer.send_message');
+
+
+    });
+
 
 
 });
