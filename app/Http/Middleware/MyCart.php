@@ -19,7 +19,12 @@ class MyCart
     {
         $user = auth()->guard('customerapi')->user();
         $cart=Cart::getUserCart($user);
-        $request->merge(['cart'=>$cart['cart']??[], 'cart_count'=>$cart['total']??0, 'cart_total'=>$cart['price_total']??0, 'user'=>$user]);
+        $request->merge([
+            'cart'=>$cart['cart']??[],
+            'cart_count'=>$cart['total']??0,
+            'cart_total'=>$cart['price_total']??0,
+            'user'=>$user
+        ]);
         return $next($request);
     }
 }

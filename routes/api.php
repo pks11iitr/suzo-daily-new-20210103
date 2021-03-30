@@ -21,12 +21,13 @@ $api->post('register', 'MobileApps\Auth\RegisterController@register');
 $api->post('verify-otp', 'MobileApps\Auth\OtpController@verify');
 $api->post('resend-otp', 'MobileApps\Auth\OtpController@resend');
 //$api->post('update-password', 'MobileApps\Auth\ForgotPasswordController@updatePassword');
-$api->post('fb-login', 'MobileApps\Auth\LoginController@facebookLogin');
-$api->post('gmail-login', 'MobileApps\Auth\LoginController@gmailLogin');
+//$api->post('fb-login', 'MobileApps\Auth\LoginController@facebookLogin');
+//$api->post('gmail-login', 'MobileApps\Auth\LoginController@gmailLogin');
 
 $api->get('area-list', 'MobileApps\Api\CustomerAddressController@getAreaList');
-//test comment again
-
+$api->get('category-list', 'MobileApps\Api\CategoryController@index');
+$api->get('subcategory-list/{id}', 'MobileApps\Api\CategoryController@subcategory');
+$api->get('membership-list', 'MobileApps\Api\MemberShipController@index');
 
 $api->get('configurations', 'MobileApps\ConfigurationController@getFilters');
 
@@ -76,9 +77,6 @@ $api->group(['middleware' => 'mycart'], function ($api) {
     $api->get('product-details/{product_id}', 'MobileApps\Api\ProductController@product_detail');
 });
 
-$api->get('category-list', 'MobileApps\Api\CategoryController@index');
-$api->get('subcategory-list/{id}', 'MobileApps\Api\CategoryController@subcategory');
-$api->get('membership-list', 'MobileApps\Api\MemberShipController@index');
 
 //privacy-policy url
 $api->get('privacy-policy', 'SuperAdmin\UrlController@privacy');
