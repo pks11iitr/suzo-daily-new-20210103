@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\MobileApps\Api;
 
+use App\Models\Banner;
 use App\Models\Cart;
 use App\Models\HomeSectionEntity;
 use App\Models\Product;
@@ -172,6 +173,48 @@ class ProductController extends Controller
         ];
     }
 
+    public function offers(Request $request){
+
+        $bannersobj=Banner::active()
+            ->where('entity_type', 'App\Models\SpecialCategory')
+            ->get();
+
+        foreach($bannersobj as $b){
+
+            $banner=[
+                'image'=>$b->image,
+                'category_id'=>($b->entity_type=='App\Models\SpecialCategory')?'':(!empty($b->parent_id)?$b->parent_id:$b->entity->id),
+                'subcategory_id'=>($b->entity_type=='App\Models\SpecialCategory')?'':(!empty($b->parent_id)?$b->entity_id:''),
+                'special_category'=>($b->entity_type=='App\Models\SpecialCategory')?$b->entity_id:''
+            ];
+
+            $banners[]=$banner;
+
+        }
+
+        $products=Product::active()
+            ->whereHas('specialcategory', function($specialcategory){
+                $specialcategory->where('isactive', 1);
+            })->paginate(20);
+
+        $productsobj=$products->paginate(20);
+
+        $products=[];
+        foreach($productsobj as $product){
+            $product->cart_value=$request->cart[$product->id]['cart_quantity']??0;
+            $product->cart_type=$request->cart[$product->id]['cart_type']??'once';
+            $products[]=$product;
+        }
+
+        return [
+            'status'=>'success',
+            'products'=>$products,
+            'banners'=>$banners,
+            'cart_total'=>$request->cart_count,
+            'cart_total_price'=>$request->cart_total,
+        ];
+
+    }
 
 
 }

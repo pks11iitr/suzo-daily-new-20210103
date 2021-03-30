@@ -46,22 +46,79 @@
                   </div>
                         <div class="col-md-6">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Description</label>
-                      <textarea id="description" class="form-control" name="description" placeholder="Description" rows="4" cols="50"></textarea>
-                  </div>
-                  </div>
-                        <div class="col-md-6">
-                  <div class="form-group">
                     <label for="exampleInputEmail1">Company</label>
                     <input type="text" name="company" class="form-control" id="exampleInputEmail2" placeholder="Enter Name">
                   </div>
                   </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Description</label>
+                                <textarea id="description" class="form-control" name="description" placeholder="Description" rows="4" cols="50"></textarea>
+                            </div>
+                        </div>
                         <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Rating</label>
-                    <input type="text" name="ratings" class="form-control" min="0" id="exampleInputEmail3" placeholder="Enter rating">
-                  </div>
-                  </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Price</label>
+                                <input type="number" name="price" class="form-control" min="0" id="exampleInputEmail3" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Cut Price</label>
+                                <input type="number" name="cut_price" class="form-control" min="0" id="exampleInputEmail3" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Min Qty</label>
+                                <input type="number" name="min_qty" class="form-control" min="0" id="exampleInputEmail3" placeholder="" value="1">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Max Qty</label>
+                                <input type="number" name="max_qty" class="form-control" min="0" id="exampleInputEmail3" placeholder="" value="100">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">CGST</label>
+                                <input type="number" name="cgst" class="form-control" min="0" id="exampleInputEmail3" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">SGST</label>
+                                <input type="number" name="sgst" class="form-control" min="0" id="exampleInputEmail3" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Can Be Subscribed</label>
+                                <select class="form-control" name="can_be_subscribed" required>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Subscription Cashback</label>
+                                <input type="number" name="subscription_cashback" class="form-control" min="0" id="exampleInputEmail3" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Delivery Charge</label>
+                                <input type="number" name="delivery_charge" class="form-control" min="0" id="exampleInputEmail3" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Eligible GoldCash</label>
+                                <input type="number" name="eligible_goldcash" class="form-control" min="0" id="exampleInputEmail3" placeholder="">
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Stock Type</label>
@@ -78,43 +135,6 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                  <div class="form-group">
-                        <label>Is Offer</label>
-                        <select class="form-control" name="is_offer" required>
-                           <option value="1">Yes</option>
-                           <option value="0">No</option>
-                        </select>
-                    </div>
-                    </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Is HotDeals</label>
-                                <select class="form-control" name="is_hotdeal" required>
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Is New Arrival</label>
-                                <select class="form-control" name="is_newarrival" required>
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Is Discounted</label>
-                                <select class="form-control" name="is_discounted" required>
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
                    <div class="form-group">
                         <label>Is Active</label>
                         <select class="form-control" name="isactive" required>
@@ -123,6 +143,12 @@
                         </select>
                     </div>
                     </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Upload Image</label>
+                                <input type="file" name="image" class="form-control">
+                            </div>
+                        </div>
 {{--                        <div class="col-md-6">--}}
 {{--                            <div class="form-group">--}}
 {{--                                <label for="exampleInputtitle">Sub Category</label>--}}

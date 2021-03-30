@@ -31,6 +31,17 @@ $api->get('membership-list', 'MobileApps\Api\MemberShipController@index');
 
 $api->get('configurations', 'MobileApps\ConfigurationController@getFilters');
 
+$api->group(['middleware' => 'mycart'], function ($api) {
+    $api->get('home', 'MobileApps\Api\HomeController@index');
+    $api->get('products/{cat_id}/{subcat_id?}', 'MobileApps\Api\ProductController@products');
+    $api->get('special-products/{cat_id}', 'MobileApps\Api\ProductController@specialproducts');
+    $api->get('section-products/{section_id}', 'MobileApps\Api\ProductController@sectionproducts');
+    $api->get('search-products/{search}', 'MobileApps\Api\ProductController@search_products');
+    $api->get('product-details/{product_id}', 'MobileApps\Api\ProductController@product_detail');
+    $api->get('offers', 'MobileApps\Api\ProductController@offers');
+});
+
+
 $api->group(['middleware' => ['customer-api-auth']], function ($api) {
 
     //$api->get('stores-list', 'MobileApps\Api\StoreController@index');
@@ -68,14 +79,7 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
 });
 
 
-$api->group(['middleware' => 'mycart'], function ($api) {
-    $api->get('home', 'MobileApps\Api\HomeController@index');
-    $api->get('products/{cat_id}/{subcat_id?}', 'MobileApps\Api\ProductController@products');
-    $api->get('special-products/{cat_id}', 'MobileApps\Api\ProductController@specialproducts');
-    $api->get('section-products/{section_id}', 'MobileApps\Api\ProductController@sectionproducts');
-    $api->get('search-products/{search}', 'MobileApps\Api\ProductController@search_products');
-    $api->get('product-details/{product_id}', 'MobileApps\Api\ProductController@product_detail');
-});
+
 
 
 //privacy-policy url

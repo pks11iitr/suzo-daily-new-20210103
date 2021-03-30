@@ -51,6 +51,14 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
+                                                <label for="exampleInputEmail1">Company</label>
+                                                <input type="text" name="company" class="form-control"
+                                                       id="exampleInputEmail1" placeholder="Enter Company"
+                                                       value="{{$products->company}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
                                                 <label for="exampleInputEmail1">Description</label>
                                                 <textarea type="text" name="description" class="form-control"
                                                           id="exampleInputEmail1"
@@ -59,38 +67,67 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1">Company</label>
-                                                <input type="text" name="company" class="form-control"
-                                                       id="exampleInputEmail1" placeholder="Enter Company"
-                                                       value="{{$products->company}}">
+                                                <label for="exampleInputEmail1">Price</label>
+                                                <input type="number" name="price" class="form-control" min="0" id="exampleInputEmail3" value="{{$products->price}}">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1">Rating</label>
-                                                <input type="text" name="ratings" class="form-control"
-                                                       id="exampleInputEmail1" placeholder="Enter Rating"
-                                                       value="{{$products->ratings}}">
+                                                <label for="exampleInputEmail1">Cut Price</label>
+                                                <input type="number" name="cut_price" class="form-control" min="0" id="exampleInputEmail3" placeholder="" value="{{$products->cut_price}}">
                                             </div>
                                         </div>
-                                        {{--                            <div class="col-md-6">--}}
-                                        {{--                  <div class="form-group">--}}
-                                        {{--                    <label for="exampleInputEmail1">Min Qty</label>--}}
-                                        {{--                    <input type="text" name="min_qty" class="form-control" id="exampleInputEmail1" placeholder="Enter Qty" value="{{$products->min_qty}}">--}}
-                                        {{--                  </div>--}}
-                                        {{--                  </div>--}}
-                                        {{--                        <div class="col-md-6">--}}
-                                        {{--                  <div class="form-group">--}}
-                                        {{--                    <label for="exampleInputEmail1">Max Qty</label>--}}
-                                        {{--                    <input type="text" name="max_qty" class="form-control" id="exampleInputEmail1" placeholder="Enter Qty" value="{{$products->max_qty}}">--}}
-                                        {{--                  </div>--}}
-                                        {{--                  </div>--}}
-                                        {{--                        <div class="col-md-6">--}}
-                                        {{--                            <div class="form-group">--}}
-                                        {{--                                <label for="exampleInputEmail1">Stock</label>--}}
-                                        {{--                                <input type="text" name="stock" class="form-control" id="exampleInputEmail1" placeholder="Enter Stock" value="{{$products->stock}}">--}}
-                                        {{--                            </div>--}}
-                                        {{--                        </div>--}}
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Min Qty</label>
+                                                <input type="number" name="min_qty" class="form-control" min="0" id="exampleInputEmail3" placeholder=""  value="{{$products->min_qty}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Max Qty</label>
+                                                <input type="number" name="max_qty" class="form-control" min="0" id="exampleInputEmail3" placeholder="" value="{{$products->max_qty}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">CGST</label>
+                                                <input type="number" name="cgst" class="form-control" min="0" id="exampleInputEmail3" placeholder="" value="{{$products->cgst}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">SGST</label>
+                                                <input type="number" name="sgst" class="form-control" min="0" id="exampleInputEmail3" placeholder="" value="{{$products->sgst}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Can Be Subscribed</label>
+                                                <select class="form-control" name="can_be_subscribed" required>
+                                                    <option value="0" @if($products->can_be_subscribed==0){{'selected'}}@endif>No</option>
+                                                    <option value="1" @if($products->can_be_subscribed==1){{'selected'}}@endif>Yes</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Subscription Cashback</label>
+                                                <input type="number" name="subscription_cashback" class="form-control" min="0" id="exampleInputEmail3" placeholder="" value="{{$products->subscription_cashback}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Delivery Charge</label>
+                                                <input type="number" name="delivery_charge" class="form-control" min="0" id="exampleInputEmail3" placeholder="" value="{{$products->delivery_charge}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Eligible GoldCash</label>
+                                                <input type="number" name="eligible_goldcash" class="form-control" min="0" id="exampleInputEmail3" placeholder="" value="{{$products->eligible_goldcash}}">
+                                            </div>
+                                        </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -112,56 +149,6 @@
                                                        value="{{$products->stock}}">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Is Offer</label>
-                                                <select class="form-control" name="is_offer" required>
-                                                    <option selected="selected"
-                                                            value="1" {{$products->is_offer==1?'selected':''}}>Yes
-                                                    </option>
-                                                    <option value="0" {{$products->is_offer==0?'selected':''}}>No
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Is Hot Deals</label>
-                                                <select class="form-control" name="is_hotdeal" required>
-                                                    <option selected="selected"
-                                                            value="1" {{$products->is_hotdeal==1?'selected':''}}>Yes
-                                                    </option>
-                                                    <option value="0" {{$products->is_hotdeal==0?'selected':''}}>No
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Is New Arrival</label>
-                                                <select class="form-control" name="is_newarrival" required>
-                                                    <option selected="selected"
-                                                            value="1" {{$products->is_newarrival==1?'selected':''}}>Yes
-                                                    </option>
-                                                    <option value="0" {{$products->is_newarrival==0?'selected':''}}>No
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Is Discounted</label>
-                                                <select class="form-control" name="is_discounted" required>
-                                                    <option selected="selected"
-                                                            value="1" {{$products->is_discounted==1?'selected':''}}>Yes
-                                                    </option>
-                                                    <option value="0" {{$products->is_discounted==0?'selected':''}}>No
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Is Active</label>
@@ -211,7 +198,7 @@
                                             <label for="exampleInputimage">Product Image</label>
                                             <input type="file" name="image" class="form-control" id="exampleInputimage"
                                                    placeholder="" multiple>
-
+<img src="{{$products->image}}" height="100" width="100">
                                         </div>
 
                                     </div>

@@ -69,16 +69,12 @@
                   <tr>
                     <th>Name</th>
                     <th>Company</th>
-                    <th>Ratings</th>
-                    <th>Is Offer</th>
-                    <th>Is Hotdeals</th>
-                    <th>Is NewArrival</th>
-                    <th>Is Discounted</th>
-                    <th>Stock Type</th>
-{{--                    <th>Min Qty</th>--}}
-{{--                    <th>Max Qty</th>--}}
+                    <th>Price</th>
+                    <th>Subscription</th>
+                    <th>Min Qty</th>
+                    <th>Max Qty</th>
                     <th>Stock</th>
-{{--                    <th>Image</th>--}}
+                    <th>Image</th>
                     <th>Isactive</th>
                    <th>Action</th>
                   </tr>
@@ -88,27 +84,12 @@
                   <tr>
 					  <td>{{$product->name}}</td>
 					  <td>{{$product->company}}</td>
-					  <td>{{$product->ratings}}</td>
-					  <td> @if($product->is_offer==1){{'Yes'}}
-                          @else{{'No'}}
-                          @endif
-                      </td>
-                      <td> @if($product->is_hotdeal==1){{'Yes'}}
-                          @else{{'No'}}
-                          @endif
-                      </td>
-                      <td> @if($product->is_newarrival==1){{'Yes'}}
-                          @else{{'No'}}
-                          @endif
-                      </td>
-                      <td> @if($product->is_discounted==1){{'Yes'}}
-                          @else{{'No'}}
-                          @endif
-                      </td>
-					  <td>{{$product->stock_type}}</td>
-{{--					  <td>{{$product->max_qty}}</td>--}}
+					  <td>{{$product->price}}/{{$product->cut_price}}</td>
+					  <td>{{$product->can_be_subscribed}}</td>
+					  <td>{{$product->max_qty}}</td>
+					  <td>{{$product->max_qty}}</td>
 					  <td>{{$product->stock}}</td>
-{{--                      <td><img src="{{$product->image}}" height="80px" width="80px"/></td>--}}
+                      <td><img src="{{$product->image}}" height="80px" width="80px"/></td>
                        <td>
                         @if($product->isactive==1){{'Yes'}}
                              @else{{'No'}}

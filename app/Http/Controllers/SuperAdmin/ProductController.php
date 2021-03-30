@@ -85,68 +85,78 @@ class ProductController extends Controller
                   			'name'=>'required',
                   			'description'=>'required',
                   			'company'=>'required',
-                  			'is_offer'=>'required',
+                  			//'is_offer'=>'required',
                   			'stock_type'=>'required',
-//                  			'min_qty'=>'required',
-//                  			'max_qty'=>'required',
-//                  			'stock'=>'required',
-//                  			'image'=>'required|image'
+                  			'min_qty'=>'required',
+                  			'max_qty'=>'required',
+                  			'stock'=>'required',
+                  			'image'=>'required|image',
+                            'price'=>'required',
+                            'cut_price'=>'required',
+                            'cgst'=>'required',
+                            'sgst'=>'required',
+                            'can_be_subscribed'=>'required',
+                            'subscription_cashback'=>'required',
+                            'eligible_goldcash'=>'required',
+                            'delivery_charge'=>'required',
                                ]);
 
           if($products=Product::create([
                       'name'=>$request->name,
                       'description'=>$request->description,
                       'company'=>$request->company,
-                      'is_offer'=>$request->is_offer,
-                      'is_hotdeal'=>$request->is_hotdeal,
-                      'is_newarrival'=>$request->is_newarrival,
-                      'is_discounted'=>$request->is_discounted,
                       'stock_type'=>$request->stock_type,
-                     // 'min_qty'=>$request->min_qty,
-                     // 'max_qty'=>$request->max_qty,
-                      'ratings'=>$request->ratings,
-                        'stock'=>$request->stock,
+                      'min_qty'=>$request->min_qty,
+                      'max_qty'=>$request->max_qty,
+                      'stock'=>$request->stock,
                       'isactive'=>$request->isactive,
-                      'image'=>'a']))
+                      'price'=>$request->price,
+                      'cut_price'=>$request->cut_price,
+                      'cgst'=>$request->cgst,
+                      'sgst'=>$request->sgst,
+                      'can_be_subscribed'=>$request->can_be_subscribed,
+                      'subscription_cashback'=>$request->subscription_cashback,
+                      'eligible_goldcash'=>$request->eligible_goldcash,
+                      'delivery_charge'=>$request->delivery_charge,
+                      'image'=>'a'])){
+
               $added_categories=[];
-       if(!empty($request->sub_cat_id)){
-           $subcat=SubCategory::with('category')
-               ->whereIn('id', $request->sub_cat_id)
-               ->get();
+              if(!empty($request->sub_cat_id)){
+                  $subcat=SubCategory::with('category')
+                      ->whereIn('id', $request->sub_cat_id)
+                      ->get();
 
-           foreach($subcat as $subcategory) {
-               CategoryProduct::create([
-                   'category_id' => $subcategory->category_id,
-                   'sub_cat_id' => $subcategory->id,
-                   'product_id' => $products->id,
+                  foreach($subcat as $subcategory) {
+                      CategoryProduct::create([
+                          'category_id' => $subcategory->category_id,
+                          'sub_cat_id' => $subcategory->id,
+                          'product_id' => $products->id,
 
-               ]);
-               $added_categories[] = $subcategory->category_id;
-           }
-       }
+                      ]);
+                      $added_categories[] = $subcategory->category_id;
+                  }
+              }
 
-       if(!empty($request->category_id)){
-           $reqcat=$request->category_id;
-           $remaining_ids=array_diff($reqcat,$added_categories);
-           //return $remaining_ids;
-           foreach($remaining_ids as $catid)
-               CategoryProduct::create([
-                   'category_id' => $catid,
-                   'sub_cat_id' =>null,
-                   'product_id' => $products->id,
+              if(!empty($request->category_id)){
+                  $reqcat=$request->category_id;
+                  $remaining_ids=array_diff($reqcat,$added_categories);
+                  //return $remaining_ids;
+                  foreach($remaining_ids as $catid)
+                      CategoryProduct::create([
+                          'category_id' => $catid,
+                          'sub_cat_id' =>null,
+                          'product_id' => $products->id,
 
-               ]);
-       }
+                      ]);
+              }
 
+              if($request->image){
+                  $products->saveImage($request->image, 'products');
+              }
 
+          }
 
-
-                if($request->image){
-                    $products->saveImage($request->image, 'products');
-                }
-
-
-             return redirect()->route('product.edit', ['id'=>$products->id])->with('success', 'Product has been created');
+         return redirect()->route('product.edit', ['id'=>$products->id])->with('success', 'Product has been created');
 
           }
 
@@ -176,12 +186,19 @@ class ProductController extends Controller
                  'name'=>'required',
                  'description'=>'required',
                  'company'=>'required',
-                 'is_offer'=>'required',
                  'stock_type'=>'required',
-//                 'min_qty'=>'required',
-//                 'max_qty'=>'required',
+                 'min_qty'=>'required',
+                 'max_qty'=>'required',
                  'stock'=>'required',
-                 'image'=>'image'
+                 'image'=>'image',
+                 'price'=>'required',
+                 'cut_price'=>'required',
+                 'cgst'=>'required',
+                 'sgst'=>'required',
+                 'can_be_subscribed'=>'required',
+                 'subscription_cashback'=>'required',
+                 'eligible_goldcash'=>'required',
+                 'delivery_charge'=>'required'
                                ]);
 
              $products = Product::findOrFail($id);
@@ -190,16 +207,19 @@ class ProductController extends Controller
                  'name'=>$request->name,
                  'description'=>$request->description,
                  'company'=>$request->company,
-                 'is_offer'=>$request->is_offer,
-                 'is_hotdeal'=>$request->is_hotdeal,
-                 'is_newarrival'=>$request->is_newarrival,
-                 'is_discounted'=>$request->is_discounted,
                  'stock_type'=>$request->stock_type,
-//                 'min_qty'=>$request->min_qty,
-//                 'max_qty'=>$request->max_qty,
-                 'ratings'=>$request->ratings,
+                 'min_qty'=>$request->min_qty,
+                 'max_qty'=>$request->max_qty,
                     'stock'=>$request->stock,
                  'isactive'=>$request->isactive,
+                 'price'=>$request->price,
+                 'cut_price'=>$request->cut_price,
+                 'cgst'=>$request->cgst,
+                 'sgst'=>$request->sgst,
+                 'can_be_subscribed'=>$request->can_be_subscribed,
+                 'subscription_cashback'=>$request->subscription_cashback,
+                 'eligible_goldcash'=>$request->eligible_goldcash,
+                 'delivery_charge'=>$request->delivery_charge,
              ]);
         $added_categories=[];
 
