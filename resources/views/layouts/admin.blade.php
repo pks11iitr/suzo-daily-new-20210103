@@ -117,8 +117,8 @@
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item has-treeview menu-open">
-                        <a href="{{route('orders.list')}}" class="nav-link active">
+                    <li class="nav-item has-treeview">
+                        <a href="{{route('orders.list')}}" class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>
                                Orders
