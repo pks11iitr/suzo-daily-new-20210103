@@ -103,16 +103,12 @@
                   <tr>
                       <th>Name</th>
                       <th>Company</th>
-                      <th>Ratings</th>
-                      <th>Is Offer</th>
-                      <th>Is Hotdeals</th>
-                      <th>Is NewArrival</th>
-                      <th>Is Discounted</th>
-                      <th>Stock Type</th>
-{{--                      <th>Min Qty</th>--}}
-{{--                      <th>Max Qty</th>--}}
-{{--                      <th>Stock</th>--}}
-{{--                      <th>Image</th>--}}
+                      <th>Price</th>
+                      <th>Subscription</th>
+                      <th>Min Qty</th>
+                      <th>Max Qty</th>
+                      <th>Stock</th>
+                      <th>Image</th>
                       <th>Isactive</th>
                       <th>Action</th>
                   </tr>
