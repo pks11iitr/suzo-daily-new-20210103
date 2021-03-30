@@ -25,7 +25,7 @@ class Customer extends Authenticatable implements JWTSubject, Auditable
         'password','created_at','deleted_at','updated_at','email','mobile'
     ];
 
-    protected $appends=['age'];
+    //protected $appends=['age'];
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
