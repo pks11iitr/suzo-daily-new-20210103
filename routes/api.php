@@ -30,6 +30,7 @@ $api->get('subcategory-list/{id}', 'MobileApps\Api\CategoryController@subcategor
 $api->get('membership-list', 'MobileApps\Api\MemberShipController@index');
 
 $api->get('configurations', 'MobileApps\ConfigurationController@getFilters');
+$api->post('store-token', 'MobileApps\Api\NotificationController@storeToken');
 
 $api->group(['middleware' => 'mycart'], function ($api) {
     $api->get('home', 'MobileApps\Api\HomeController@index');

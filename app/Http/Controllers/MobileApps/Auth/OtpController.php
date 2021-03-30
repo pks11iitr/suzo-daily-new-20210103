@@ -4,6 +4,7 @@ namespace App\Http\Controllers\MobileApps\Auth;
 
 use App\Events\SendOtp;
 use App\Models\Customer;
+use App\Models\NotificationToken;
 use App\Models\OTPModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -29,10 +30,10 @@ class OtpController extends Controller
         ]);
 
         switch($request->type){
-            case 'register': return $this->verifyRegister($request);
+            //case 'register': return $this->verifyRegister($request);
             case 'login': return $this->verifyLogin($request);
             case 'resand': return $this->verifyLogin($request);
-            case 'reset': return $this->verifyResetPassword($request);
+            //case 'reset': return $this->verifyResetPassword($request);
         }
 
         return [
@@ -89,6 +90,19 @@ class OtpController extends Controller
                 }
                 $user->status=1;
                 $user->save();
+
+                $notification_token=NotificationToken::where('notification_token', $request->notification_token)->first();
+
+                if(!$notification_token){
+                    NotificationToken::create([
+                        'notification_token'=>$request->notification_token,
+                        'user_id'=>$user->id
+                    ]);
+                }else{
+                    $notification_token->user_id=$user->id;
+                    $notification_token->save();
+                }
+
 
                 return [
                     'status'=>'success',
