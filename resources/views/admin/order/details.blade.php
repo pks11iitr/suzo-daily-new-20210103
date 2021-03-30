@@ -74,8 +74,9 @@
                                 </tr>
                                 <tr>
                                     <td>
+                                        Eligible GoldCash
                                     </td>
-                                    <td></td>
+                                    <td><></td>
                                     <td><b>Add/Revoke Cashback/Wallet Balance</b><br></td>
                                     <td>
                                         <a href="javascript:void(0)" onclick="openWalletPanel('{{$order->id}}', '{{route('user.wallet.balance', ['id'=>$order->user_id])}}')">Open Panel</a>

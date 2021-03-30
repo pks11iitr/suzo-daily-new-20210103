@@ -76,6 +76,10 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
     $api->post('apply-coupon', ['as'=>'order.apply.coupon', 'uses'=>'MobileApps\Api\CouponController@applyCoupon']);
 //
 
+    //membership subscription
+    $api->get('subscribe/{id}', ['as'=>'membership.subscribe', 'uses'=>'Customer\Api\MembershipController@subscribe']);
+    $api->post('verify-subscription', ['as'=>'membership.verify', 'uses'=>'Customer\Api\MembershipController@verify']);
+
 });
 
 
