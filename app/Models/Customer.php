@@ -55,7 +55,11 @@ class Customer extends Authenticatable implements JWTSubject, Auditable
      */
     public function routeNotificationForFcm()
     {
-        return $this->tokens;
+        $arr=[];
+        $tokens=$this->tokens;
+        foreach($tokens as $t)
+            $arr[]=$t->notification_token;
+        return $arr;
     }
 
     public function tokens(){
