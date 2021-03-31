@@ -32,7 +32,7 @@ $api->get('membership-list', 'MobileApps\Api\MemberShipController@index');
 $api->get('configurations', 'MobileApps\ConfigurationController@getFilters');
 $api->post('store-token', 'MobileApps\Api\NotificationController@storeToken');
 
-$api->get('notifications', 'MobileApps\Api\NotificationController@index');
+    $api->get('notifications', 'MobileApps\Api\NotificationController@index');
 
 
 $api->group(['middleware' => 'mycart'], function ($api) {

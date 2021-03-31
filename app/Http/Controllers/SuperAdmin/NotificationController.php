@@ -21,7 +21,7 @@ class NotificationController extends Controller
                   			'title'=>'required',
                   			'description'=>'required'
                                ]);
-
+             //die('sds');
              dispatch(new SendBulkNotifications($request->title,$request->description,
                  $request->type));
              return redirect()->back()->with('success', 'Notification Send Successfully');

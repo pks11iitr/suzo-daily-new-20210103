@@ -18,11 +18,7 @@ class NotificationToken extends Model
 
     public function routeNotificationForFcm()
     {
-        $arr=[];
-        $tokens=$this->tokens;
-        foreach($tokens as $t)
-            $arr[]=$t->notification_token;
-        return $arr;
+        return $this->notification_token;
     }
 
     public function notify($instance)

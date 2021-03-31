@@ -18,6 +18,7 @@ class SendBulkNotifications implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $title,$message,$stores;
     /**
      * Create a new job instance.
      *
@@ -28,6 +29,7 @@ class SendBulkNotifications implements ShouldQueue
         $this->title=$title;
         $this->message=$message;
         $this->stores=$stores;
+        //die('xcdf');
     }
 
     /**
@@ -41,6 +43,7 @@ class SendBulkNotifications implements ShouldQueue
 
         $tokens=NotificationToken::with('user')->get();
         $all_sent=false;
+        //var_dump($tokens->toArray());die;
         foreach($tokens as $t){
 
             if($t->user_id){
