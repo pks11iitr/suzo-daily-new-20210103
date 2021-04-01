@@ -20,6 +20,7 @@ class MemberShipController extends Controller
 
     public function index(Request $request){
 
+        $user=$request->user;
         $membershipobj=Membership::active()->get();
         $memberships=[];
 
@@ -34,7 +35,10 @@ class MemberShipController extends Controller
             ];
         }
 
-        $active_membership=1;
+        if($user->membership_id && $user->membership_expiry>date('Y-m-d'))
+            $active_membership=$user->membership_id;
+        else
+            $active_membership=0;
 
         return [
             'status'=>'success',
