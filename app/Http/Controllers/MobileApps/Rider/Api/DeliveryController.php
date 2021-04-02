@@ -28,6 +28,7 @@ class DeliveryController extends Controller
             $deliveries[]=[
                 'delivery_id'=>($del->order->refid??'').'/'.$del->id,
                 'product_name'=>$del->product->name??'',
+                'product_image'=>$del->product->image??'',
                 'quantity'=>$del->quantity,
                 'date'=>$del->delivery_date,
                 'time'=>$del->timeslot->name??'',
@@ -110,6 +111,7 @@ class DeliveryController extends Controller
             $deliveries[]=[
                 'delivery_id'=>($del->order->refid??'').'/'.$del->id,
                 'product_name'=>$del->product->name??'',
+                'product_image'=>$del->product->image??'',
                 'quantity'=>$del->quantity,
                 'date'=>$del->delivery_date,
                 'time'=>$del->timeslot->name??'',
