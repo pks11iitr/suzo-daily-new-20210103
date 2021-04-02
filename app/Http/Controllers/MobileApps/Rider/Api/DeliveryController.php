@@ -12,7 +12,7 @@ class DeliveryController extends Controller
 
         $user=$request->user;
         $deliveriesobj=DailyDelivery::with(['product'=>function($product){
-                            $product->select('id', 'name');
+                            $product->select('id', 'name', 'image');
                         },'deliveryaddress', 'order'=>function($order){
                             $order->select('id','refid');
                         },'timeslot'=>function($ts){
