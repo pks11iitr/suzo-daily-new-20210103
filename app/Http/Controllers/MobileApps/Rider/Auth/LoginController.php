@@ -56,7 +56,7 @@ class LoginController extends Controller
         $this->validateLogin($request);
 
         if ($token=$this->attemptLogin($request)) {
-            return $this->sendLoginResponse($this->getCustomer($request), $token);
+            return $this->sendLoginResponse($request, $this->getCustomer($request), $token);
         }
         return [
             'status'=>'failed',
@@ -78,12 +78,11 @@ class LoginController extends Controller
         return Rider::where($this->userId($request),$request->user_id)->first();
     }
 
-    protected function sendLoginResponse($user, $token){
+    protected function sendLoginResponse($request, $user, $token){
         if($user->isactive==1){
-            $otp=OTPModel::createOTP('riders', $user->id, 'login');
-            $msg=str_replace('{{otp}}', $otp, config('sms-templates.login'));
-            Msg91::send($user->mobile,$msg);
-            return ['status'=>'success', 'message'=>'otp verify', 'token'=>''];
+            $user->notification_token=$request->notification_token;
+            $user->save();
+            return ['status'=>'success', 'message'=>'Login Successfull', 'token'=>$token];
         }
         else
             return ['status'=>'failed', 'message'=>'This account has been blocked', 'token'=>''];
