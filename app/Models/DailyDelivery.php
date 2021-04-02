@@ -33,6 +33,10 @@ class DailyDelivery extends Model
         return $this->belongsTo('App\Models\User', 'store_id');
     }
 
+    public function order(){
+        return $this->belongsTo('App\Models\Order', 'order_id');
+    }
+
     public function deliveryaddress(){
         return $this->belongsTo('App\Models\CustomerAddress', 'adderss_id');
     }
@@ -40,6 +44,8 @@ class DailyDelivery extends Model
     public function timeslot(){
         return $this->belongsTo('App\Models\TimeSlot', 'delivery_time_slot');
     }
+
+
 
 
 
