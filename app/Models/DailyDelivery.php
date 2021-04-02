@@ -45,8 +45,9 @@ class DailyDelivery extends Model
         return $this->belongsTo('App\Models\TimeSlot', 'delivery_time_slot');
     }
 
-
-
+    public function area(){
+        return $this->belongsTo('App\Models\Area', 'area_id');
+    }
 
 
 }

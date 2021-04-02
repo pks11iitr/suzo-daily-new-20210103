@@ -17,7 +17,7 @@ class DeliveryController extends Controller
                             $order->select('id','refid');
                         },'timeslot'=>function($ts){
             $ts->select('id','name');
-        }])
+        },'area'])
             ->where("status", 'pending')
             ->where('rider_id', $user->id)
             ->orderBy('area_id', 'asc')
