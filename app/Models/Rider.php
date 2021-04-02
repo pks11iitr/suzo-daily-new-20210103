@@ -8,6 +8,7 @@ use Illuminate\Contracts\Notifications\Dispatcher;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use NotificationChannels\Fcm\Exceptions\CouldNotSendNotification;
 use OwenIt\Auditing\Contracts\Auditable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -19,6 +20,13 @@ class Rider extends Authenticatable implements JWTSubject, Auditable
 
     protected $table='riders';
 
+    protected $fillable=['name','email','mobile','password', 'image','address','city','state', 'isactive'];
+
+    public function getImageAttribute($value){
+        if($value)
+            return Storage::url($value);
+        return null;
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

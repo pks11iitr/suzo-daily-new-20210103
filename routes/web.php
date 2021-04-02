@@ -211,6 +211,17 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
             Route::post('store','SuperAdmin\NotificationController@store')->name('notification.store');
     });
 
+    Route::group(['prefix'=>'rider'], function(){
+
+        Route::get('/','SuperAdmin\RiderController@index')->name('rider.list');
+        Route::get('create','SuperAdmin\RiderController@create')->name('rider.create');
+        Route::get('edit/{id}','SuperAdmin\RiderController@edit')->name('rider.edit');
+        Route::post('store','SuperAdmin\RiderController@store')->name('rider.store');
+        Route::post('update/{id}','SuperAdmin\RiderController@update')->name('rider.update');
+
+
+    });
+
 
 
 });
