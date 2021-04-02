@@ -47,9 +47,9 @@ class RiderController extends Controller
             'image'=>'a']))
         {
             $rider->saveImage($request->image, 'rider');
-            return redirect()->route('rider.list')->with('success', 'rider has been created');
+            return redirect()->route('rider.list')->with('success', 'Rider has been created');
         }
-        return redirect()->back()->with('error', 'rider create failed');
+        return redirect()->back()->with('error', 'Rider create failed');
     }
 
     public function edit(Request $request,$id){
@@ -92,9 +92,9 @@ class RiderController extends Controller
 
         if($rider)
         {
-            return redirect()->route('rider.list')->with('success', 'rider has been updated');
+            return redirect()->route('rider.list')->with('success', 'Rider has been updated');
         }
-        return redirect()->back()->with('error', 'rider create failed');
+        return redirect()->back()->with('error', 'Rider create failed');
     }
 
 }
