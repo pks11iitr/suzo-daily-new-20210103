@@ -79,14 +79,12 @@ class LoginController extends Controller
     }
 
     protected function sendLoginResponse($user, $token){
-        if($user->status==0){
+        if($user->isactive==1){
             $otp=OTPModel::createOTP('riders', $user->id, 'login');
             $msg=str_replace('{{otp}}', $otp, config('sms-templates.login'));
             Msg91::send($user->mobile,$msg);
             return ['status'=>'success', 'message'=>'otp verify', 'token'=>''];
         }
-        else if($user->status==1)
-            return ['status'=>'success', 'message'=>'Login Successfull', 'token'=>$token];
         else
             return ['status'=>'failed', 'message'=>'This account has been blocked', 'token'=>''];
     }
