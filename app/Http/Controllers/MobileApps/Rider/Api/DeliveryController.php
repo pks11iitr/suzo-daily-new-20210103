@@ -33,6 +33,7 @@ class DeliveryController extends Controller
                 'date'=>$del->delivery_date,
                 'time'=>$del->timeslot->name??'',
                 'deliveryaddress'=>$del->deliveryaddress,
+                'area'=>$del->area
             ];
         }
 
@@ -116,7 +117,9 @@ class DeliveryController extends Controller
                 'date'=>$del->delivery_date,
                 'time'=>$del->timeslot->name??'',
                 'deliveryaddress'=>$del->deliveryaddress,
-                'status'=>$del->status
+                'status'=>$del->status,
+                'area'=>$del->area
+
             ];
         }
 
