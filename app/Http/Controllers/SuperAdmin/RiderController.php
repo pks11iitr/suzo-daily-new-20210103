@@ -21,8 +21,8 @@ class RiderController extends Controller
     public function store(Request $request){
         $request->validate([
             'name'=>'required',
-            'email'=>'required',
-            'mobile'=>'required',
+            'email'=>'required|unique:riders',
+            'mobile'=>'required|unique:riders',
             'address'=>'required',
             'state'=>'required',
             'city'=>'required',
@@ -30,6 +30,10 @@ class RiderController extends Controller
             'image'=>'required|image',
             'isactive'=>'required|integer'
         ]);
+
+        if(Rider::where('mobile', $request->mobile)->first()){
+            return redirect()->back()->with('error', 'Mobile Number Already Exists Registers');
+        }
 
         if($rider=Rider::create([
             'name'=>$request->name,
@@ -43,9 +47,9 @@ class RiderController extends Controller
             'image'=>'a']))
         {
             $rider->saveImage($request->image, 'rider');
-            return redirect()->route('rider.list')->with('success', 'rider has been created');
+            return redirect()->route('rider.list')->with('success', 'Rider has been created');
         }
-        return redirect()->back()->with('error', 'rider create failed');
+        return redirect()->back()->with('error', 'Rider create failed');
     }
 
     public function edit(Request $request,$id){
@@ -56,8 +60,8 @@ class RiderController extends Controller
     public function update(Request $request,$id){
         $request->validate([
             'name'=>'required',
-            'email'=>'required',
-            'mobile'=>'required',
+            'email'=>'required|unique:riders,email,'.$id,
+            'mobile'=>'required|unique:riders,mobile,'.$id,
             'address'=>'required',
             'state'=>'required',
             'city'=>'required',
@@ -66,7 +70,11 @@ class RiderController extends Controller
         ]);
 
         $rider = Rider::findOrFail($id);
-
+        if($request->mobile!=$rider->mobile){
+            if($rider1=Rider::where('mobile', $request->mobile)->first()){
+                return redirect()->back()->with('error', 'Mobile Number Already Exists Registers');
+            }
+        }
         $rider->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -84,9 +92,9 @@ class RiderController extends Controller
 
         if($rider)
         {
-            return redirect()->route('rider.list')->with('success', 'rider has been updated');
+            return redirect()->route('rider.list')->with('success', 'Rider has been updated');
         }
-        return redirect()->back()->with('error', 'rider create failed');
+        return redirect()->back()->with('error', 'Rider create failed');
     }
 
 }
