@@ -246,6 +246,15 @@
                             </p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{route('rider.list')}}" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Rider
+
+                            </p>
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a href="{{route('news.list')}}" class="nav-link">
