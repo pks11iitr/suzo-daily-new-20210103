@@ -91,7 +91,7 @@ class DeliveryController extends Controller
 
         return [
             'status'=>'success',
-            'message'=>'Delivered'
+            'message'=>'Status has been Updated'
         ];
 
     }
