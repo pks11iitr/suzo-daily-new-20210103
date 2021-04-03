@@ -31,7 +31,7 @@ class PaymentController extends Controller
         }
         $payment_info=[
             'total'=>$order->total_cost,
-            'delivery_charge'=>$order->delivery_charges??0.0,
+            'delivery_charge'=>$order->delivery_charge,
             'coupon_discount'=>$order->coupon_discount,
             'wallet_balance'=>$order->balance_used,
             'gold_cash'=>$order->points_used,
