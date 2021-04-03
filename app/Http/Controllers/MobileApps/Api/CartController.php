@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\MobileApps\Api;
 
 use App\Models\BookDay;
+use App\Models\Configuration;
 use App\Models\Coupon;
 use App\Models\CustomerAddress;
 use App\Models\Product;
@@ -178,6 +179,8 @@ class CartController extends Controller
             ->where('delivery_active',1)
             ->where('user_id',$user->id)
             ->first();
+
+        //$delivery_fee=Configuration::where('delivery_charge')
 
         $cartitems=Cart::with(['product','days', 'timeslot'])
         ->where('user_id', $user->id)

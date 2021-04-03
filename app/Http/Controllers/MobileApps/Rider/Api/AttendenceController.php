@@ -28,7 +28,7 @@ class AttendenceController extends Controller
         $request->validate([
             'lat'=>'required',
             'lang'=>'required',
-            'map_address'=>'required',
+            'address'=>'required',
             'image'=>'required',
         ]);
 

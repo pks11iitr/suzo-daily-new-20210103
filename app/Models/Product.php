@@ -34,18 +34,5 @@ class Product extends Model
     public function specialcategory(){
         return $this->belongsToMany('App\Models\SpecialCategory', 'special_category_product', 'product_id','category_id');
     }
-		/*public function sizeprice(){
-        return $this->hasMany('App\Models\Size', 'product_id');
-    }
-    public function allimages(){
-        return $this->belongsToMany('App\Models\ProductImage', 'product_images', 'product_id', 'size_id');
-    }*/
-//    public function images(){
-//        return $this->hasMany('App\Models\ProductImage', 'product_id');
-//    }
-//		//
-//     public function timeslot(){
-//         return $this->belongsTo('App\Models\Review', 'category_id');
-//     }
 
 }
