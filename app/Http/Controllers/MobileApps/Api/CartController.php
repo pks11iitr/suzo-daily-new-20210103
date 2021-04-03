@@ -174,7 +174,8 @@ class CartController extends Controller
 
         }
 
-        $deliveryaddress=CustomerAddress::where('delivery_active',1)
+        $deliveryaddress=CustomerAddress::with('area')
+            ->where('delivery_active',1)
             ->where('user_id',$user->id)
             ->first();
 
