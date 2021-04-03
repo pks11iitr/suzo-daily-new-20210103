@@ -107,7 +107,7 @@ class ScheduleDeliveries extends Command
             if(!empty($riders)){
                 $ridreobj=Rider::whereIn('id', array_keys($riders))->get();
                 foreach($ridreobj as $r)
-                    $r->notify(new FCMNotification('New Deliveries Scheduled', 'You have '.$riders[$r->id].' new deliveries.', ['type'=>'open_deliveries', 'title'=>'New Deliveries Scheduled', 'message'=>'You have '.$riders[$r->id].' new deliveries.'], 'open-deliveries'));
+                    $r->notify(new FCMNotification('New Deliveries Scheduled', 'You have '.$riders[$r->id].' new deliveries.', ['type'=>'open_deliveries', 'title'=>'New Deliveries Scheduled', 'body'=>'You have '.$riders[$r->id].' new deliveries.'], 'open-deliveries'));
             }
 
         }

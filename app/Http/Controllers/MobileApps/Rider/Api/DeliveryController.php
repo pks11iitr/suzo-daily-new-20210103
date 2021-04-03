@@ -87,6 +87,14 @@ class DeliveryController extends Controller
         $delivery->status=$status;
         $delivery->save();
 
+        if($delivery->notification_status==0){
+            DailyDelivery::where('detail_id', $delivery->detail_id)
+                ->where('delivery_date', $delivery->delivery_date)
+                ->where('delivery_time_slot', $delivery->delivery_time_slot)
+                ->where('notification_status', 0)
+                ->update('notification_status', 1);
+        }
+
         //$user->notify(new FCMNotification(''))
 
         return [

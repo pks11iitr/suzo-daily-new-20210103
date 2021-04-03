@@ -37,7 +37,7 @@ class PaymentController extends Controller
             'gold_cash'=>$order->points_used,
             'to_be_paid'=>$order->total_cost+$order->delivery_charges-$order->coupon_discount-$order->cashback_used-$order->balance_used,
             'savings'=>$order->savings,
-            'disable_cod'=>$disable_cod
+            'disable_cod'=>'yes'
         ];
 
         return [
