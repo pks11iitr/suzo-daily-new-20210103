@@ -6,6 +6,7 @@ use App\Exports\AreaExport;
 use App\Imports\AreaImport;
 use App\Models\Area;
 use App\Models\CustomerAddress;
+use App\Models\Rider;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,7 +21,7 @@ class AreaController extends Controller
 
     public function create(Request $request){
         $stores=User::where('id', '>', 1)->get();
-        $riders=Area::get();
+        $riders=Rider::get();
         return view('admin.area.add', compact('stores', 'riders'));
     }
 
@@ -47,7 +48,7 @@ class AreaController extends Controller
     public function edit(Request $request,$id){
         $arealist=Area::findOrFail($id);
         $stores=User::where('id', '>', 1)->get();
-        $riders=Area::get();
+        $riders=Rider::get();
         return view('admin.area.edit',['arealist'=>$arealist, 'stores'=>$stores, 'riders'=>$riders]);
     }
 
