@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\DailyDelivery;
 use App\Models\Order;
+use App\Models\Rider;
 use App\Models\TimeSlot;
+use App\Services\Notification\FCMNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -63,10 +65,18 @@ class ScheduleDeliveries extends Command
                 ->whereNotIn('orders.status', ['pending'])
                 ->get();
 
+        $riders=[];
+
         if(count($orders)){
 
             foreach($orders as $order){
                 foreach( $order->details as $d){
+
+                    if(!isset($riders[$order->rider_id])){
+                        $riders[$order->rider_id]=0;
+                    }
+                    $riders[$order->rider_id]++;
+
                     $delivery=DailyDelivery::create([
                         'user_id'=>$order->user_id,
                         'order_id'=>$order->id,
@@ -92,6 +102,12 @@ class ScheduleDeliveries extends Command
                         }
                     }
                 }
+            }
+
+            if(!empty($riders)){
+                $ridreobj=Rider::whereIn('id', array_keys($riders))->get();
+                foreach($ridreobj as $r)
+                    $r->notify(new FCMNotification('New Deliveries Scheduled', 'You have '.$riders[$r->id].' new deliveries.', ['type'=>'open_deliveries', 'title'=>'New Deliveries Scheduled', 'message'=>'You have '.$riders[$r->id].' new deliveries.'], 'open-deliveries'));
             }
 
         }
