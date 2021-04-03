@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\MobileApps\Api;
 
 use App\Events\ItemCancelled;
+use App\Events\ItemRescheduled;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Coupon;
@@ -432,6 +433,7 @@ class OrderController extends Controller
         if($point_return>0)
         Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
 
+        event(new ItemCancelled($order, $detail));
         return [
             'status'=>'success',
             'message'=>'Item has been cancelled',
@@ -493,6 +495,8 @@ class OrderController extends Controller
             if($refund_amount>0)
                 Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
 
+            event(new ItemCancelled($order, $detail));
+
             return [
                 'status'=>'success',
                 'message'=>'Subscription has been cancelled',
@@ -528,6 +532,8 @@ class OrderController extends Controller
 
         if($point_return>0)
             Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
+
+        event(new ItemCancelled($order, $detail));
 
         return [
             'status'=>'success',
@@ -592,6 +598,8 @@ class OrderController extends Controller
 
             }
 
+            event(new ItemRescheduled($item));
+
             return [
                 'status'=>'success',
                 'message'=>'Item schedule has been updated',
@@ -616,6 +624,8 @@ class OrderController extends Controller
             $item->start_date=$request->start_date;
             $item->time_slot_id=$request->time_slot;
             $item->save();
+
+            event(new ItemRescheduled($item));
 
             return [
                 'status'=>'success',

@@ -50,7 +50,7 @@ class DeliveryController extends Controller
     public function updateDeliveryStatus(Request $request, $id){
 
         $request->validate([
-            'status'=>'required|in:delivered, delivery-failed, partially-delivered, returned'
+            'status'=>'required|in:delivered,delivery-failed,partially-delivered,returned'
         ]);
 
         $user=$request->user;
