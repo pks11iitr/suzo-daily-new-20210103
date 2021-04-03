@@ -25,6 +25,7 @@ Route::get('/', function () {
 Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
 
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+    Route::get('audits', 'SuperAdmin\AuditController@audits');
 
     Route::get('/dashboard', 'SuperAdmin\DashboardController@index')->name('home');
 
