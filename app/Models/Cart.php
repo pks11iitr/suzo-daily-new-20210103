@@ -42,6 +42,7 @@ class Cart extends Model
 
         $total=0;
         $price_total=0;
+        $item_type_count=0;
         foreach ($items as $item){
 
             $cart[$item->product_id]['cart_quantity']=$item->quantity;
@@ -55,11 +56,13 @@ class Cart extends Model
                 $price_total=$price_total+$item->quantity*$item->no_of_days;
                 $total=$total+$item->quantity;
             }
+
+            $item_type_count++;
         }
 
         $price_total=round($price_total, 2);
 
-        return compact('cart', 'total', 'price_total');
+        return compact('cart', 'total', 'price_total', 'item_type_count');
     }
 
    /* public static function removeOutOfStockItems($item){

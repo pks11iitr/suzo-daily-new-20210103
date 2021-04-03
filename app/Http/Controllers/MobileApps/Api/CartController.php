@@ -191,6 +191,7 @@ class CartController extends Controller
         $quantity=0;
         $price_total=0;
         $price_total_discount=0;
+        $item_type_count=0;
         $cartitem=array();
         $cartitem['subscriptions']=[];
         $cartitem['once']=[];
@@ -202,7 +203,7 @@ class CartController extends Controller
                 $c->delete();
                 continue;
             }
-
+            $item_type_count++;
             if($c->type=='subscription'){
                 $total=$total+($c->product->price??0)*$c->quantity*$c->no_of_days;
                 $quantity=$quantity+$c->quantity*$c->no_of_days;
@@ -309,7 +310,7 @@ class CartController extends Controller
                 'cashbackpoints'=>$cashbackpoints,
                 'club_membersip'=>round($club_membersip),
                 'delivery_charge'=>round($delivery_charge),
-                'quantity'=>$quantity,
+                'quantity'=>$item_type_count,
                 'coupon_discount'=>0,
                 'payble_amount'=>round($price_total),
                 //'coupons'=>$coupon,
