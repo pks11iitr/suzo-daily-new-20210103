@@ -105,6 +105,7 @@ $api->group(['prefix' => 'rider'], function ($api) {
             $api->get('open-deliveries', 'MobileApps\Rider\Api\DeliveryController@openDeliveries');
             $api->get('past-deliveries', 'MobileApps\Rider\Api\DeliveryController@pastDeliveries');
             $api->post('update-delivery/{id}', 'MobileApps\Rider\Api\DeliveryController@updateDeliveryStatus');
+            $api->post('checkin', 'MobileApps\Rider\Api\AttendenceController@checkin');
     });
 
 });
