@@ -299,6 +299,7 @@ class CartController extends Controller
              );
          }*/
             return [
+                'status'=>'success',
                 'deliveryaddress'=>$deliveryaddress,
                 'cartitem'=>$cartitem,
                 'total'=>round($total),
