@@ -94,8 +94,8 @@ class OrderController extends Controller
                 $savings=$savings+$item->quantity*(($item->product->price??0)-($item->product->cut_price))*$item->no_of_days;
             }
             else{
-                $total_cost=$total_cost+$item->quantity*$item->no_of_days;
-                $savings=$savings+$item->quantity*($item->product->price??0)*$item->no_of_days;
+                $total_cost=$total_cost+$item->quantity*($item->product->price??0);
+                $savings=$savings+$item->quantity*($item->product->price??0);
             }
 
             $items[]=new OrderDetail(array_merge($item->only('product_id', 'quantity','type','start_date','time_slot_id','no_of_days', 'total_quantity'), ['price'=>$item->product->price, 'cut_price'=>$item->product->cut_price]));
