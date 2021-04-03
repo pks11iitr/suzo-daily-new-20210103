@@ -58,7 +58,7 @@ class DeliveryController extends Controller
         $comment=$request->message;
         $status=$request->status;
 
-        $delivery=DailyDelivery::with(['user', 'order'])
+        $delivery=DailyDelivery::with(['customer', 'order'])
         ->where('rider_id', $user->id)
         ->find($id);
 
