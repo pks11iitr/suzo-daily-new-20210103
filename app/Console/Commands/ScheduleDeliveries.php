@@ -58,10 +58,10 @@ class ScheduleDeliveries extends Command
             $delivery_date=date('Y-m-d', strtotime('+1 days'));
         }
         $orders=Order::with(['details'=>function($details) use($ts){
-                  $details->whereIn('time_slot_id', $ts)
+                  $details->with('days')->whereIn('time_slot_id', $ts)
                       ->where('scheduled_quantity', '<', DB::raw('total_quantity'))
                       ->where('order_details.status', 'pending');
-                }])
+                },])
                 ->whereNotIn('orders.status', ['pending'])
                 ->get();
 
@@ -76,20 +76,42 @@ class ScheduleDeliveries extends Command
                         $riders[$order->rider_id]=0;
                     }
                     $riders[$order->rider_id]++;
+                    if($d->type=='once'){
+                        $delivery=DailyDelivery::create([
+                            'user_id'=>$order->user_id,
+                            'order_id'=>$order->id,
+                            'detail_id'=>$d->id,
+                            'product_id'=>$d->product_id,
+                            'quantity'=>$d->quantity,
+                            'delivery_date'=>$delivery_date,
+                            'delivery_time_slot'=>$d->time_slot_id,
+                            'address_id'=>$order->address_id,
+                            'rider_id'=>$order->rider_id,
+                            'store_id'=>$order->store_id,
+                            'area_id'=>$order->deliveryaddress->area_id,
+                        ]);
+                    }else{
+                        $day=date('w', strtotime($delivery_date));
+                        $subcription_days=$d->days->map(function($element){
+                            return $element->id;
+                        })->toArray();
+                        if(in_array($day, $subcription_days)){
+                            $delivery=DailyDelivery::create([
+                                'user_id'=>$order->user_id,
+                                'order_id'=>$order->id,
+                                'detail_id'=>$d->id,
+                                'product_id'=>$d->product_id,
+                                'quantity'=>$d->quantity,
+                                'delivery_date'=>$delivery_date,
+                                'delivery_time_slot'=>$d->time_slot_id,
+                                'address_id'=>$order->address_id,
+                                'rider_id'=>$order->rider_id,
+                                'store_id'=>$order->store_id,
+                                'area_id'=>$order->deliveryaddress->area_id,
+                            ]);
+                        }
+                    }
 
-                    $delivery=DailyDelivery::create([
-                        'user_id'=>$order->user_id,
-                        'order_id'=>$order->id,
-                        'detail_id'=>$d->id,
-                        'product_id'=>$d->product_id,
-                        'quantity'=>$d->quantity,
-                        'delivery_date'=>$delivery_date,
-                        'delivery_time_slot'=>$d->time_slot_id,
-                        'address_id'=>$order->address_id,
-                        'rider_id'=>$order->rider_id,
-                        'store_id'=>$order->store_id,
-                        'area_id'=>$order->deliveryaddress->area_id,
-                    ]);
                     if($delivery){
                         if($d->type=='once'){
                             $d->update(['scheduled_quantity'=>DB::raw('scheduled_quantity+'.$d->quantity), 'status'=>'completed']);
