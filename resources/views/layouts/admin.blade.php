@@ -255,26 +255,42 @@
                             </p>
                         </a>
                     </li>
-
                     <li class="nav-item">
-                        <a href="{{route('news.list')}}" class="nav-link">
+                        <a href="{{route('configurations.list')}}" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>
                             <p>
-                                News Update
-
+                                Configurations
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{route('complain.list')}}" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Complaints
                             </p>
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="{{route('story.list')}}" class="nav-link">
-                            <i class="nav-icon fas fa-th"></i>
-                            <p>
-                                Stories
+{{--                    <li class="nav-item">--}}
+{{--                        <a href="{{route('news.list')}}" class="nav-link">--}}
+{{--                            <i class="nav-icon fas fa-th"></i>--}}
+{{--                            <p>--}}
+{{--                                News Update--}}
 
-                            </p>
-                        </a>
-                    </li>
+{{--                            </p>--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
+
+{{--                    <li class="nav-item">--}}
+{{--                        <a href="{{route('story.list')}}" class="nav-link">--}}
+{{--                            <i class="nav-icon fas fa-th"></i>--}}
+{{--                            <p>--}}
+{{--                                Stories--}}
+
+{{--                            </p>--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
                     <!--**********************************************************************************************************-->
 {{--                    <li class="nav-item">--}}
 {{--                        <a href="pages/widgets.html" class="nav-link">--}}
