@@ -311,8 +311,9 @@ class PaymentController extends Controller
                 Wallet::updatewallet($order->user_id, 'Paid For Order ID: '.$order->refid, 'DEBIT',$order->balance_used, 'CASH', $order->id);
 
             Cart::deleteUserCart($order->user_id);
-            //event(new OrderSuccessfull($order));
-            //event(new OrderConfirmed($order));
+
+            event(new OrderConfirmed($order));
+
             return [
                 'status'=>'success',
                 'message'=> 'Congratulations! Your order at Hallobasket is successful',

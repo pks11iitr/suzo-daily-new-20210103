@@ -122,6 +122,8 @@ class Cart extends Model
                     $c->days()->sync([]);
                 }
         }
+        Cart::where('user_id', $user_id)
+            ->delete();
     }
 
 

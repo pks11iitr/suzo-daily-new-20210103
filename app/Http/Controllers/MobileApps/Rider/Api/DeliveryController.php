@@ -4,6 +4,7 @@ namespace App\Http\Controllers\MobileApps\Rider\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\DailyDelivery;
+use App\Services\Notification\FCMNotification;
 use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
@@ -26,6 +27,7 @@ class DeliveryController extends Controller
         $deliveries=[];
         foreach ($deliveriesobj as $del){
             $deliveries[]=[
+                'id'=>$del->id,
                 'delivery_id'=>($del->order->refid??'').'/'.$del->id,
                 'product_name'=>$del->product->name??'',
                 'product_image'=>$del->product->image??'',
@@ -56,7 +58,8 @@ class DeliveryController extends Controller
         $comment=$request->message;
         $status=$request->status;
 
-        $delivery=DailyDelivery::where('rider_id', $user->id)
+        $delivery=DailyDelivery::with(['user', 'order'])
+        ->where('rider_id', $user->id)
         ->find($id);
 
         if(!$delivery)
@@ -84,6 +87,8 @@ class DeliveryController extends Controller
         $delivery->status=$status;
         $delivery->save();
 
+        //$user->notify(new FCMNotification(''))
+
         return [
             'status'=>'success',
             'message'=>'Delivered'
@@ -110,6 +115,7 @@ class DeliveryController extends Controller
         $deliveries=[];
         foreach ($deliveriesobj as $del){
             $deliveries[]=[
+                'id'=>$del->id,
                 'delivery_id'=>($del->order->refid??'').'/'.$del->id,
                 'product_name'=>$del->product->name??'',
                 'product_image'=>$del->product->image??'',

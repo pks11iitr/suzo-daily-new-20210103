@@ -41,7 +41,7 @@ class OrderConfirmListner
     public function sendNotifications($order){
 
         $title='Order Confirmed';
-        $message='Congratulations! Your purchase of Rs. '.$order->total_cost.' at Frestr is successfull. Order Reference ID: '.$order->refid;
+        $message='Congratulations! Your purchase of Rs. '.$order->total_cost.' at Frestr is successful. Order Reference ID: '.$order->refid;
 
 
         $user=$order->customer;
@@ -53,7 +53,7 @@ class OrderConfirmListner
             'type'=>'individual'
         ]);
 
-        $user->notify(new FCMNotification($title, $message, []));
+        $user->notify(new FCMNotification($title, $message, ['type'=>'order', 'title'=>$title, 'body'=>$message, 'order_id'=>$order->id], 'order_details'));
 
     }
 }

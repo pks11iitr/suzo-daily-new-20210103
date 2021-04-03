@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\MobileApps\Api;
 
-use App\Events\OrderConfirmed;
+use App\Events\ItemCancelled;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Coupon;
@@ -394,6 +394,7 @@ class OrderController extends Controller
             if($refund_amount>0)
                 Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
 
+            event(new ItemCancelled($order, $detail));
 
             return [
                 'status'=>'success',

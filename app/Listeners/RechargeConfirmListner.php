@@ -48,8 +48,6 @@ class RechargeConfirmListner
             'type'=>'individual'
         ]);
 
-        $user->notify(new FCMNotification($title, $message , [
-            'type'=>'recharge'
-        ]));
+        $user->notify(new FCMNotification($title, $message, ['type'=>'recharge', 'title'=>$title, 'body'=>$message], 'wallet_history'));
     }
 }

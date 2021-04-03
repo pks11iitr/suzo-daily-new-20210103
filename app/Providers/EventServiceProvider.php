@@ -29,16 +29,18 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\OrderConfirmListner'
         ],
 
-        'App\Events\RescheduleConfirmed'=>[
-            'App\Listeners\RescheduleConfirmListner'
-        ],
-
         'App\Events\RechargeConfirmed'=>[
             'App\Listeners\RechargeConfirmListner'
         ],
-        'App\Events\TherapistRegistered' => [
-            'App\Listeners\TherapistRegisterListner',
+
+        'App\Events\ItemCancelled'=>[
+            'App\Listeners\ItemCancelListner'
         ],
+
+        'App\Events\ItemRescheduled'=>[
+            'App\Listeners\ItemRescheduleListner'
+        ],
+
     ];
 
     /**
