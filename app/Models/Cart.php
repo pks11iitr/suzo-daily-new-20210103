@@ -52,8 +52,8 @@ class Cart extends Model
                 $total=$total+$item->quantity*$item->no_of_days;
             }
             else{
-                $total=$total+$item->quantity;
                 $price_total=$price_total+$item->quantity*$item->no_of_days;
+                $total=$total+$item->quantity;
             }
         }
 

@@ -40,7 +40,7 @@ class Wallet extends Model
         $wallet=Wallet::where('user_id', $userid)
             //->where('amount_type', 'CASH')
             ->where('iscomplete', true)
-            ->select(DB::raw('sum(amount) as total'), 'type')
+            ->select(DB::raw('sum(amount) as total'), 'amount_type', 'type')
             ->groupBy('amount_type', 'type')
             ->get();
 
