@@ -122,11 +122,13 @@ class HomeController extends Controller
 
         }
 
+        $cart_total=$request->item_type_count??0;
+
        //if($banners->count()>0 || $categories->count()>0){
            return [
                'status'=>'success',
                'message'=>'success',
-               'data'=>compact('banners','categories','secondbanner','user','sections')
+               'data'=>compact('banners','categories','secondbanner','user','sections', 'cart_total')
            ];
 //       }else{
 //           return [
