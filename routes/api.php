@@ -78,6 +78,13 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
 
 
     $api->post('apply-coupon', ['as'=>'order.apply.coupon', 'uses'=>'MobileApps\Api\CouponController@applyCoupon']);
+
+    $api->get('complaint-category', ['as'=>'complaint.info', 'uses'=>'Customer\Api\ConfigurationController@complaintcategory']);
+    //complaints api
+    $api->get('complaints', ['as'=>'complaints.list', 'uses'=>'Customer\Api\ComplaintController@index']);
+    $api->post('complaints', ['as'=>'complaints.list', 'uses'=>'Customer\Api\ComplaintController@create']);
+    $api->get('complaint/{id}', ['as'=>'complaints.list', 'uses'=>'Customer\Api\ComplaintController@messages']);
+    $api->post('complaint/{id}', ['as'=>'complaints.list', 'uses'=>'Customer\Api\ComplaintController@postMessage']);
 //
 
     //membership subscription
