@@ -175,6 +175,13 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
 
     });
 
+    Route::group(['prefix' => 'configurations'], function () {
+            Route::get('/', 'SuperAdmin\ConfigurationController@index')->name('configurations.list');
+
+            Route::post('/', 'SuperAdmin\ConfigurationController@update');
+
+    });
+
 
     Route::group(['prefix'=>'reports'], function(){
 
