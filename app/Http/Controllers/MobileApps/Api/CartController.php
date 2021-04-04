@@ -180,17 +180,18 @@ class CartController extends Controller
             ->where('user_id',$user->id)
             ->first();
 
-        //$delivery_fee=Configuration::where('delivery_charge')
-
         $cartitems=Cart::with(['product','days', 'timeslot'])
         ->where('user_id', $user->id)
         ->get();
+
+        $delivery=Configuration::where('param_name', 'delivery_charge')->first();
+
 
         $walletdetails=Wallet::walletdetails($user->id);
         $balance = $walletdetails['balance'];
 
         $club_membersip=10;
-        $delivery_charge=25;
+        $delivery_charge=0;
         $total=0;
         $quantity=0;
         $price_total=0;
@@ -201,6 +202,7 @@ class CartController extends Controller
         $cartitem['once']=[];
         $out_of_stock=0;
         $eligible_goldcash=0;
+        $daywise_delivery_total=[];
         foreach($cartitems as $c){
             if(!$c->product->isactive){
                 $c->days()->sync([]);
@@ -237,6 +239,17 @@ class CartController extends Controller
 
                 $eligible_goldcash=$eligible_goldcash+($c->price*$c->product->eligible_goldcash/100)*$c->quantity*$c->no_of_days;
 
+                if($user->membership_expiry>=$c->start_date){
+                    $subscription_days=$c->days->map(function($element){
+                        return $element->id;
+                    })->toArray();
+                    $count_free_days=calculateDaysCountBetweenDate($c->start_date, $user->membership_expiry, $subscription_days);
+                    $delivery_charge=$delivery_charge+($c->product->delivery_charge*$c->total_quantity)-$c->quantity*$c->product->delivery_charge*$count_free_days;
+                }else{
+                    $delivery_charge=$delivery_charge+($c->product->delivery_charge*$c->total_quantity);
+                }
+
+
             }else{
                 $total=$total+($c->product->price??0)*$c->quantity;
                 $quantity=$quantity+$c->quantity;
@@ -264,13 +277,24 @@ class CartController extends Controller
                 );
 
                 $eligible_goldcash=$eligible_goldcash+($c->price*$c->product->eligible_goldcash/100)*$c->quantity;
+
+                if(!isset($daywise_delivery_total))
+                    $daywise_delivery_total[$c->start_date]=0;
+                $daywise_delivery_total[$c->start_date]=$daywise_delivery_total[$c->start_date]+$c->product->price*$c->quantity;
             }
-
-
-
 
             if(!$c->product->stock)
                 $out_of_stock=1;
+        }
+
+        if(!empty($daywise_delivery_total)){
+            foreach($daywise_delivery_total as $key=>$val){
+                if($user->membership_expiry < $key && $val< 399){
+                    $delivery_charge=$delivery_charge+($delivery->param_value??0);
+                }else if($user->membership_expiry >= $key && $val< 149){
+                    $delivery_charge=$delivery_charge+($delivery->param_value??0);
+                }
+            }
         }
 
 //        $cashbackpoints=Wallet::calculateEligibleCashback($price_total, $walletdetails['cashback']);

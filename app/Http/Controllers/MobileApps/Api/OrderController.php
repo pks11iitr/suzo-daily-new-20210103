@@ -6,6 +6,7 @@ use App\Events\ItemCancelled;
 use App\Events\ItemRescheduled;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\Configuration;
 use App\Models\Coupon;
 use App\Models\CustomerAddress;
 use App\Models\Order;
@@ -76,6 +77,8 @@ class OrderController extends Controller
             ->where('user_id', $user->id)
             ->get();
 
+        $delivery=Configuration::where('', 'delivery_charge')->first();
+
         if(!count($cart))
             return [
                 'status'=>'failed',
@@ -92,10 +95,26 @@ class OrderController extends Controller
             if($item->type=='subscription'){
                 $total_cost=$total_cost+$item->quantity*($item->product->price??0)*$item->no_of_days;
                 $savings=$savings+$item->quantity*(($item->product->price??0)-($item->product->cut_price))*$item->no_of_days;
+
+                if($user->membership_expiry>=$item->start_date){
+                    $subscription_days=$item->days->map(function($element){
+                        return $element->id;
+                    })->toArray();
+                    $count_free_days=calculateDaysCountBetweenDate($item->start_date, $user->membership_expiry, $subscription_days);
+                    $delivery_charge=$delivery_charge+($item->product->delivery_charge*$item->total_quantity)-$item->quantity*$item->product->delivery_charge*$count_free_days;
+                }else{
+                    $delivery_charge=$delivery_charge+($item->product->delivery_charge*$item->total_quantity);
+                }
+
             }
             else{
                 $total_cost=$total_cost+$item->quantity*($item->product->price??0);
                 $savings=$savings+$item->quantity*(($item->product->price??0)-($item->product->cut_price));
+
+                if(!isset($daywise_delivery_total))
+                    $daywise_delivery_total[$item->start_date]=0;
+                $daywise_delivery_total[$item->start_date]=$daywise_delivery_total[$item->start_date]+$item->product->price*$item->quantity;
+
             }
 
             $items[]=new OrderDetail(array_merge($item->only('product_id', 'quantity','type','start_date','time_slot_id','no_of_days', 'total_quantity'), ['price'=>$item->product->price, 'cut_price'=>$item->product->cut_price]));
@@ -106,8 +125,18 @@ class OrderController extends Controller
 
         }
 
+        if(!empty($daywise_delivery_total)){
+            foreach($daywise_delivery_total as $key=>$val){
+                if($user->membership_expiry < $key && $val< 399){
+                    $delivery_charge=$delivery_charge+($delivery->param_value??0);
+                }else if($user->membership_expiry >= $key && $val< 149){
+                    $delivery_charge=$delivery_charge+($delivery->param_value??0);
+                }
+            }
+        }
+
         //chnage it to dynamic later
-        $delivery_charge=50;
+        //$delivery_charge=50;
 
         $order=Order::create([
             'user_id'=>$user->id,
@@ -145,7 +174,7 @@ class OrderController extends Controller
 
         //use gold cash for remaining amount
         if(!$request->coupon){
-            if($order->total_cost+$order->delivery_charge-$order->coupon_discount-$order->balance_used){
+            if($order->total_cost+$order->delivery_charge-$order->balance_used){
                 if($request->use_points==1) {
                     $result=$this->usePoints($order);
                 }
@@ -178,7 +207,7 @@ class OrderController extends Controller
         return $order->balance_used;
     }
 
-    private function usePoints($order,$total_cost){
+    private function usePoints($order){
 
         $walletpoints=Wallet::points($order->user_id);
         if($walletpoints<=0)
@@ -336,21 +365,23 @@ class OrderController extends Controller
 
     public function cancel(Request $request, $detail_id){
 
+        $user=$request->user;
         $request->validate([
            'reason'=>'required|string|max:250'
         ]);
 
         $detail=OrderDetail::
-            whereHas('order', function($order){
-                $order->where('status', 'confirmed');
+            whereHas('order', function($order) use($user){
+                $order->where('status', 'confirmed')
+                    ->where('user_id', $user->id);
             })
             ->where('status', 'pending')
             ->findOrFail($detail_id);
 
         if($detail->type=='subscription')
-            return $this->cancelSubscription($detail, $request->reason);
+            return $this->cancelSubscription($user, $detail, $request->reason);
         else
-            return $this->cancelOnce($detail, $request->reason);
+            return $this->cancelOnce($user, $detail, $request->reason);
 
     }
 
@@ -563,7 +594,12 @@ class OrderController extends Controller
 
     public function reschedule(Request $request, $item_id){
 
+        $user=$request->user;
+
         $item=OrderDetail::with(['product', 'days'])
+            ->whereHas('order', function($order)use($user){
+                $order->where('user_id', $user->id);
+            })
             ->where('status', 'pending')
             ->findOrFail($item_id);
 
@@ -580,6 +616,13 @@ class OrderController extends Controller
                     'status'=>'failed',
                     'message'=>'Quantity exceeds from available quantity'
                 ];
+
+            if($user->membership_expiry >= $item->start_date){
+                return [
+                    'status'=>'failed',
+                    'message'=>'This product was purchased under active membership with no delivery charge. Rescheduling it post membership expiry will cause additional charges. Please raise a case in complaints if you still want to reschedule it'
+                ];
+            }
 
             TimeSlot::findOrFail($request->time_slot);
 
@@ -618,6 +661,13 @@ class OrderController extends Controller
                 return [
                     'status'=>'failed',
                     'message'=>'Next earliest delivery time is '.$next['name'].' '.$next['time']
+                ];
+            }
+
+            if($user->membership_expiry >= $item->start_date && $request->start_date > $user->membership_expiry ){
+                return [
+                    'status'=>'failed',
+                    'message'=>'This product was purchased under active membership with no delivery charge. Rescheduling it post membership expiry will cause additional charges. Please raise a case in complaints if you still want to reschedule it'
                 ];
             }
 
