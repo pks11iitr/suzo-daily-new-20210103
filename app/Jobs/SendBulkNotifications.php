@@ -78,7 +78,7 @@ class SendBulkNotifications implements ShouldQueue
             else
                 $image_path=null;
 
-            $token->notify(new FCMNotification($this->title, $message, ['image'=>$image_path], 'notification_screen'));
+            $token->notify(new FCMNotification($this->title, $message, ['image'=>$image_path, 'title'=>$this->title, 'body'=>$message], 'notification_screen'));
 
         }
 
