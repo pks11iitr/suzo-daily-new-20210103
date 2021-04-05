@@ -23,7 +23,7 @@ class NotificationController extends Controller
 //                  			'description'=>'required'
 //                               ]);
              //die('sds');
-             if($request->image){
+             if(isset($request->image)){
                  $name = $request->image->getClientOriginalName();
                  $contents = file_get_contents($request->image);
                  $path = 'notifications/'. rand(111, 999) . '_' . str_replace(' ','_', $name);
