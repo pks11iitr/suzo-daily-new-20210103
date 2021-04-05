@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 
 class SendBulkNotifications implements ShouldQueue
 {
@@ -73,7 +74,7 @@ class SendBulkNotifications implements ShouldQueue
 
             }
 
-            $t->notify(new FCMNotification($this->title, $message, ['image'=>$this->imagepath], 'notification_screen'));
+            $t->notify(new FCMNotification($this->title, $message, ['image'=>Storage::url($this->imagepath)], 'notification_screen'));
 
         }
 
