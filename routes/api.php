@@ -32,7 +32,8 @@ $api->get('membership-list', 'MobileApps\Api\MemberShipController@index');
 $api->get('configurations', 'MobileApps\ConfigurationController@getFilters');
 $api->post('store-token', 'MobileApps\Api\NotificationController@storeToken');
 
-    $api->get('notifications', 'MobileApps\Api\NotificationController@index');
+$api->get('notifications', 'MobileApps\Api\NotificationController@index');
+$api->get('contacts', ['as'=>'contact.info', 'uses'=>'Customer\Api\ConfigurationController@contact']);
 
 
 $api->group(['middleware' => 'mycart'], function ($api) {
@@ -40,7 +41,7 @@ $api->group(['middleware' => 'mycart'], function ($api) {
     $api->get('products/{cat_id}/{subcat_id?}', 'MobileApps\Api\ProductController@products');
     $api->get('special-products/{cat_id}', 'MobileApps\Api\ProductController@specialproducts');
     $api->get('section-products/{section_id}', 'MobileApps\Api\ProductController@sectionproducts');
-    $api->get('search-products/{search}', 'MobileApps\Api\ProductController@search_products');
+    $api->post('search-products', 'MobileApps\Api\SearchController@search_products');
     $api->get('product-details/{product_id}', 'MobileApps\Api\ProductController@product_detail');
     $api->get('offers', 'MobileApps\Api\ProductController@offers');
 });
