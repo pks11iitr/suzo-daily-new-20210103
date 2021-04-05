@@ -28,13 +28,16 @@ class FCMNotification extends Notification
 
     public function toFcm($notifiable)
     {
+        $notification=\NotificationChannels\Fcm\Resources\Notification::create()
+            ->setTitle($this->title)
+            ->setBody($this->body);
+        if(isset($data['image'])){
+            $notification->setImage($data['image']);
+        }
+
         return FcmMessage::create()
             ->setData($this->data)
-            ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
-                ->setTitle($this->title)
-                ->setBody($this->body)
-            //    ->setImage('https://images.freekaamaal.com/common-images/fkm-logo.png')
-            )
+            ->setNotification($notification)
             ->setAndroid(
                 AndroidConfig::create()
                     ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))
