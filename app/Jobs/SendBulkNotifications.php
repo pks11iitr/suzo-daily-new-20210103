@@ -18,17 +18,18 @@ class SendBulkNotifications implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $title,$message,$stores;
+    public $title,$message,$stores,$imagepath;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($title, $message, $stores)
+    public function __construct($title, $message, $imagepath, $stores)
     {
         $this->title=$title;
         $this->message=$message;
         $this->stores=$stores;
+        $this->imagepath=$imagepath;
         //die('xcdf');
     }
 
@@ -53,6 +54,7 @@ class SendBulkNotifications implements ShouldQueue
                 Notification::create([
                     'user_id'=>$token->user_id,
                     'title'=>$this->title,
+                    'image'=>$this->imagepath,
                     'description'=>$message,
                     'type'=>'individual'
                 ]);
@@ -63,6 +65,7 @@ class SendBulkNotifications implements ShouldQueue
                     Notification::create([
                         'title'=>$this->title,
                         'description'=>$message,
+                        'image'=>$this->imagepath,
                         'type'=>'all'
                     ]);
                     $all_sent=true;
@@ -70,7 +73,7 @@ class SendBulkNotifications implements ShouldQueue
 
             }
 
-            $t->notify(new FCMNotification($this->title, $message, []));
+            $t->notify(new FCMNotification($this->title, $message, ['image'=>$this->imagepath], 'notification_screen'));
 
         }
 

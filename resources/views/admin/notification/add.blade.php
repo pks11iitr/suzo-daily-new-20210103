@@ -62,6 +62,10 @@
                    <label for="exampleInputEmail1">Description</label>
                     <textarea class="form-control" name="description" rows="4"></textarea>
                   </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Image</label>
+                        <input type="file" name="image" class="form-control" id="exampleInputEmail1" placeholder="" required>
+                    </div>
 
                 </div>
                 <!-- /.card-body -->
