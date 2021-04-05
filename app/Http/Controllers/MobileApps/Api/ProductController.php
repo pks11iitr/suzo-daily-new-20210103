@@ -176,7 +176,7 @@ class ProductController extends Controller
         $products=Product::active()
             ->whereHas('specialcategory', function($specialcategory){
                 $specialcategory->where('isactive', 1);
-            })->paginate(20);
+            });
 
         $productsobj=$products->paginate(20);
 
