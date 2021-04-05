@@ -31,7 +31,7 @@ class FCMNotification extends Notification
         $notification=\NotificationChannels\Fcm\Resources\Notification::create()
             ->setTitle($this->title)
             ->setBody($this->body);
-        if(isset($data['image'])){
+        if(isset($data['image']) && !empty($data['image'])){
             $notification->setImage($data['image']);
         }
 
