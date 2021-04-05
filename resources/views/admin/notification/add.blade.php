@@ -56,7 +56,7 @@
                     </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Name</label>
-                    <input type="text" name="title" class="form-control" id="exampleInputEmail1" placeholder="Enter title" required>
+                    <input type="text" name="title" class="form-control" id="exampleInputEmail1" placeholder="Enter title" >
                   </div>
                   <div class="form-group">
                    <label for="exampleInputEmail1">Description</label>
@@ -64,7 +64,7 @@
                   </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Image</label>
-                        <input type="file" name="image" class="form-control" id="exampleInputEmail1" placeholder="" required>
+                        <input type="file" name="image" class="form-control" id="exampleInputEmail1" placeholder="" >
                     </div>
 
                 </div>

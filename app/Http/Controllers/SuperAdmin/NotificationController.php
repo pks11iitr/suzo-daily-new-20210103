@@ -18,10 +18,10 @@ class NotificationController extends Controller
                }
 
    public function store(Request $request){
-               $request->validate([
-                  			'title'=>'required',
-                  			'description'=>'required'
-                               ]);
+//               $request->validate([
+//                  			'title'=>'required',
+//                  			'description'=>'required'
+//                               ]);
              //die('sds');
              if($request->image){
                  $name = $request->image->getClientOriginalName();
