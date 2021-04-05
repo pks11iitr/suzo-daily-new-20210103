@@ -20,11 +20,14 @@ class SearchController extends Controller
             $product->cart_type=$request->cart[$product->id]['cart_type']??'once';
         }
 
+        $cart_count=$request->item_type_count??0;
+
         return [
             'status'=>'success',
             'data'=>$searchproducts,
             'cart_total'=>$request->cart_count,
             'cart_total_price'=>$request->cart_total,
+            'cart_count'=>$cart_count
         ];
     }
 
