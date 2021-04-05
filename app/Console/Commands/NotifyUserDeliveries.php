@@ -59,7 +59,7 @@ class NotifyUserDeliveries extends Command
                 ->where('delivery_date', $delivery->delivery_date)
                 ->where('delivery_time_slot', $delivery->delivery_time_slot)
                 ->where('notification_status', 1)
-                ->update('notification_status', 2);
+                ->update(['notification_status'=> 2]);
 
         }
 
