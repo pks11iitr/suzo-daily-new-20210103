@@ -36,6 +36,8 @@ $api->get('notifications', 'MobileApps\Api\NotificationController@index');
 $api->get('contacts', ['as'=>'contact.info', 'uses'=>'MobileApps\Api\ConfigurationController@contact']);
 
 
+$api->post('search-sugestions', 'MobileApps\Api\SearchController@search_suggestions');
+
 $api->group(['middleware' => 'mycart'], function ($api) {
     $api->get('home', 'MobileApps\Api\HomeController@index');
     $api->get('products/{cat_id}/{subcat_id?}', 'MobileApps\Api\ProductController@products');
@@ -45,6 +47,7 @@ $api->group(['middleware' => 'mycart'], function ($api) {
     $api->get('product-details/{product_id}', 'MobileApps\Api\ProductController@product_detail');
     $api->get('offers', 'MobileApps\Api\ProductController@offers');
 });
+
 
 
 $api->group(['middleware' => ['customer-api-auth']], function ($api) {

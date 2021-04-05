@@ -27,4 +27,21 @@ class SearchController extends Controller
             'cart_total_price'=>$request->cart_total,
         ];
     }
+
+
+    public function search_suggestions(Request $request){
+
+        $products=Product::active();
+        if(!empty($request->search))
+            $products = $products->where('name', 'like', "%".$request->search."%");
+
+        $searchproducts=$products->select('name', 'id')->get();
+
+        return [
+            'status'=>'success',
+            'data'=>$searchproducts,
+        ];
+    }
+
+
 }
