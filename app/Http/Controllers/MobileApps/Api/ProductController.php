@@ -32,11 +32,14 @@ class ProductController extends Controller
             $product->cart_type=$request->cart[$product->id]['cart_type']??'once';
         }
 
+        $cart_count=$request->item_type_count??0;
+
         return [
             'status'=>'success',
             'products'=>$products,
             'cart_total'=>$request->cart_count,
-            'cart_total_price'=>$request->cart_total
+            'cart_total_price'=>$request->cart_total,
+            'cart_count'=>$cart_count
         ];
     }
 
@@ -54,13 +57,14 @@ class ProductController extends Controller
             $products[]=$product;
         }
 
-
+        $cart_count=$request->item_type_count??0;
 
         return [
             'status'=>'success',
             'products'=>$products,
             'cart_total'=>$request->cart_count,
             'cart_total_price'=>$request->cart_total,
+            'cart_count'=>$cart_count
         ];
     }
 
@@ -79,11 +83,14 @@ class ProductController extends Controller
             $products[]=$product;
         }
 
+        $cart_count=$request->item_type_count??0;
+
         return [
             'status'=>'success',
             'products'=>$products,
             'cart_total'=>$request->cart_count,
             'cart_total_price'=>$request->cart_total,
+            'cart_count'=>$cart_count
         ];
     }
 
@@ -187,12 +194,15 @@ class ProductController extends Controller
             $products[]=$product;
         }
 
+        $cart_count=$request->item_type_count??0;
+
         return [
             'status'=>'success',
             'products'=>$products,
             'banners'=>$banners,
             'cart_total'=>$request->cart_count,
             'cart_total_price'=>$request->cart_total,
+            'cart_count'=>$cart_count
         ];
 
     }
