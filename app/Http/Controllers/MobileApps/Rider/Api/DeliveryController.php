@@ -50,17 +50,14 @@ class DeliveryController extends Controller
     public function updateDeliveryStatus(Request $request, $id){
 
         $request->validate([
-            'status'=>'required|in:delivered,delivery-failed,partially-delivered,returned'
+            'status'=>'required|in:delivered,delivery-failed,returned'
         ]);
 
         $user=$request->user;
 
-        $comment=$request->message;
-        $status=$request->status;
-
         $delivery=DailyDelivery::with(['customer', 'order'])
-        ->where('rider_id', $user->id)
-        ->find($id);
+            ->where('rider_id', $user->id)
+            ->find($id);
 
         if(!$delivery)
             return [
@@ -82,9 +79,29 @@ class DeliveryController extends Controller
             ];
         }
 
+        if($request->quantity<1 || $request->quantity > $delivery->quantity){
+            return [
+                'status'=>'failed',
+                'message'=>'Invalid Quantity Selected'
+            ];
+        }
+
+        $comment=$request->message;
+        if($request->status=='returned'){
+            if($request->quantity==$delivery->quantity){
+                $status='returned';
+            }else if($request->quantity < $delivery->quantity){
+                $status='partially-delivered';
+            }
+        }else{
+            $status=$request->status;
+        }
+
+        $quantity=($request->status=='delivered')?0:($request->quantity??0);
 
         $delivery->comment=$comment;
         $delivery->status=$status;
+        $delivery->quantity_not_accepted=$quantity;
         $delivery->save();
 
         if($delivery->notification_status==0){
