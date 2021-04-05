@@ -342,7 +342,7 @@ class CartController extends Controller
                 'coupon_discount'=>0,
                 'payble_amount'=>round($price_total),
                 //'coupons'=>$coupon,
-                'out_of_stock'=>$out_of_stock
+                'out_of_stock'=>$out_of_stock,
             ];
 
         }

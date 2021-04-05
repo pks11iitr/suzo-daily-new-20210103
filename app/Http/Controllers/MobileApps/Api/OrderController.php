@@ -617,10 +617,10 @@ class OrderController extends Controller
                     'message'=>'Quantity exceeds from available quantity'
                 ];
 
-            if($user->membership_expiry >= $item->start_date){
+            if($request->quantity < $item->item_quantity && $user->membership_expiry >= $item->start_date){
                 return [
                     'status'=>'failed',
-                    'message'=>'This product was purchased under active membership with no delivery charge. Rescheduling it post membership expiry will cause additional charges. Please raise a case in complaints if you still want to reschedule it'
+                    'message'=>'This product was purchased under active membership with no delivery charge. Rescheduling it post membership expiry will cause additional charges. Please contact support if you still want to reschedule this'
                 ];
             }
 
@@ -667,7 +667,7 @@ class OrderController extends Controller
             if($user->membership_expiry >= $item->start_date && $request->start_date > $user->membership_expiry ){
                 return [
                     'status'=>'failed',
-                    'message'=>'This product was purchased under active membership with no delivery charge. Rescheduling it post membership expiry will cause additional charges. Please raise a case in complaints if you still want to reschedule it'
+                    'message'=>'This product was purchased under active membership with no delivery charge. Rescheduling it post membership expiry will cause additional charges. Please contact support if you still want to reschedule it.'
                 ];
             }
 

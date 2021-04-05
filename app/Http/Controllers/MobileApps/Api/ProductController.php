@@ -127,6 +127,7 @@ class ProductController extends Controller
 
         }
 
+        $cart_count=$request->item_type_count??0;
 
         $productdetails=array(
                  'id'=>$product->id,
@@ -157,6 +158,7 @@ class ProductController extends Controller
             'data'=>$productdetails,
             'cart_total'=>$request->cart_count,
             'cart_total_price'=>$request->cart_total,
+            'cart_count'=>$cart_count
 
         ];
     }
