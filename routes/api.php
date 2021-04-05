@@ -33,7 +33,7 @@ $api->get('configurations', 'MobileApps\ConfigurationController@getFilters');
 $api->post('store-token', 'MobileApps\Api\NotificationController@storeToken');
 
 $api->get('notifications', 'MobileApps\Api\NotificationController@index');
-$api->get('contacts', ['as'=>'contact.info', 'uses'=>'Customer\Api\ConfigurationController@contact']);
+$api->get('contacts', ['as'=>'contact.info', 'uses'=>'MobileApps\Api\ConfigurationController@contact']);
 
 
 $api->group(['middleware' => 'mycart'], function ($api) {
@@ -80,12 +80,12 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
 
     $api->post('apply-coupon', ['as'=>'order.apply.coupon', 'uses'=>'MobileApps\Api\CouponController@applyCoupon']);
 
-    $api->get('complaint-category', ['as'=>'complaint.info', 'uses'=>'Customer\Api\ConfigurationController@complaintcategory']);
+    $api->get('complaint-category', ['as'=>'complaint.info', 'uses'=>'MobileApps\Api\ConfigurationController@complaintcategory']);
     //complaints api
-    $api->get('complaints', ['as'=>'complaints.list', 'uses'=>'Customer\Api\ComplaintController@index']);
-    $api->post('complaints', ['as'=>'complaints.list', 'uses'=>'Customer\Api\ComplaintController@create']);
-    $api->get('complaint/{id}', ['as'=>'complaints.list', 'uses'=>'Customer\Api\ComplaintController@messages']);
-    $api->post('complaint/{id}', ['as'=>'complaints.list', 'uses'=>'Customer\Api\ComplaintController@postMessage']);
+    $api->get('complaints', ['as'=>'complaints.list', 'uses'=>'MobileApps\Api\ComplaintController@index']);
+    $api->post('complaints', ['as'=>'complaints.list', 'uses'=>'MobileApps\Api\ComplaintController@create']);
+    $api->get('complaint/{id}', ['as'=>'complaints.list', 'uses'=>'MobileApps\Api\ComplaintController@messages']);
+    $api->post('complaint/{id}', ['as'=>'complaints.list', 'uses'=>'MobileApps\Api\ComplaintController@postMessage']);
 //
 
     //membership subscription

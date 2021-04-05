@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Customer\Api;
+namespace App\Http\Controllers\MobileApps\Api;
 
 use App\Models\Complaint;
 use App\Models\ComplaintMessage;
