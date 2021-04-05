@@ -184,7 +184,7 @@ class CartController extends Controller
         ->where('user_id', $user->id)
         ->get();
 
-        $delivery=Configuration::where('param_name', 'delivery_charge')->first();
+        $delivery=Configuration::where('param', 'delivery_charge')->first();
 
 
         $walletdetails=Wallet::walletdetails($user->id);

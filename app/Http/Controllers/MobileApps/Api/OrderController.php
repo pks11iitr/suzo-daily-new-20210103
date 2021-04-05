@@ -77,7 +77,7 @@ class OrderController extends Controller
             ->where('user_id', $user->id)
             ->get();
 
-        $delivery=Configuration::where('', 'delivery_charge')->first();
+        $delivery=Configuration::where('param', 'delivery_charge')->first();
 
         if(!count($cart))
             return [
