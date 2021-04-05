@@ -46,9 +46,9 @@ class SendBulkNotifications implements ShouldQueue
         $tokens=NotificationToken::with('user')->get();
         $all_sent=false;
         //var_dump($tokens->toArray());die;
-        foreach($tokens as $t){
+        foreach($tokens as $token){
 
-            if($t->user_id){
+            if($token->user_id){
                 $message=str_replace('{{name}}', $token->user->name??'User', $this->message);
                 $message=str_replace('{{Name}}', $token->user->name??'User', $message);
 
@@ -74,7 +74,7 @@ class SendBulkNotifications implements ShouldQueue
 
             }
 
-            $t->notify(new FCMNotification($this->title, $message, ['image'=>Storage::url($this->imagepath)], 'notification_screen'));
+            $token->notify(new FCMNotification($this->title, $message, ['image'=>Storage::url($this->imagepath)], 'notification_screen'));
 
         }
 
