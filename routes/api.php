@@ -29,7 +29,7 @@ $api->get('category-list', 'MobileApps\Api\CategoryController@index');
 $api->get('subcategory-list/{id}', 'MobileApps\Api\CategoryController@subcategory');
 $api->get('membership-list', 'MobileApps\Api\MemberShipController@index');
 
-$api->get('configurations', 'MobileApps\ConfigurationController@getFilters');
+$api->get('configurations', 'MobileApps\Api\ConfigurationController@getFilters');
 $api->post('store-token', 'MobileApps\Api\NotificationController@storeToken');
 
 $api->get('notifications', 'MobileApps\Api\NotificationController@index');
