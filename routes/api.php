@@ -36,7 +36,7 @@ $api->get('notifications', 'MobileApps\Api\NotificationController@index');
 $api->get('contacts', ['as'=>'contact.info', 'uses'=>'MobileApps\Api\ConfigurationController@contact']);
 
 
-$api->post('search-sugestions', 'MobileApps\Api\SearchController@search_suggestions');
+$api->post('search-suggestions', 'MobileApps\Api\SearchController@search_suggestions');
 
 $api->group(['middleware' => 'mycart'], function ($api) {
     $api->get('home', 'MobileApps\Api\HomeController@index');
