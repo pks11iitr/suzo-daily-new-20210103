@@ -278,7 +278,7 @@ class CartController extends Controller
 
                 $eligible_goldcash=$eligible_goldcash+($c->price*$c->product->eligible_goldcash/100)*$c->quantity;
 
-                if(!isset($daywise_delivery_total))
+                if(!isset($daywise_delivery_total[$c->start_date]))
                     $daywise_delivery_total[$c->start_date]=0;
                 $daywise_delivery_total[$c->start_date]=$daywise_delivery_total[$c->start_date]+$c->product->price*$c->quantity;
             }
