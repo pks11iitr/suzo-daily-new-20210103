@@ -256,6 +256,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{route('stores.list')}}" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Stores
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{route('configurations.list')}}" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>
                             <p>
