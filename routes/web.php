@@ -183,6 +183,14 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
 
     });
 
+    Route::group(['prefix'=>'stores'], function(){
+        Route::get('/','SuperAdmin\StoreController@index')->name('stores.list');
+        Route::get('create','SuperAdmin\StoreController@create')->name('stores.create');
+        Route::get('edit/{id}','SuperAdmin\StoreController@edit')->name('stores.edit');
+
+        Route::post('store','SuperAdmin\StoreController@store')->name('stores.store');
+        Route::post('update/{id}','SuperAdmin\StoreController@update')->name('stores.update');
+    });
 
     Route::group(['prefix'=>'reports'], function(){
 
