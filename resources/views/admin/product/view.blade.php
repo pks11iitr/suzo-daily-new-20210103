@@ -86,7 +86,7 @@
 					  <td>{{$product->company}}</td>
 					  <td>{{$product->price}}/{{$product->cut_price}}</td>
 					  <td>{{$product->can_be_subscribed}}</td>
-					  <td>{{$product->max_qty}}</td>
+					  <td>{{$product->min_qty}}</td>
 					  <td>{{$product->max_qty}}</td>
 					  <td>{{$product->stock}}</td>
                       <td><img src="{{$product->image}}" height="80px" width="80px"/></td>
