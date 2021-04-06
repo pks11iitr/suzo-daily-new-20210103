@@ -54,7 +54,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Mapp City</label>
-                                                <select class="form-control" name="store_id" required>
+                                                <select class="form-control" name="city_id" required>
                                                     <option value="" >Select</option>
                                                     @foreach(config('myconfig.cities') as $id=>$city)
                                                         <option value="{{$id}}">{{$city}}</option>
