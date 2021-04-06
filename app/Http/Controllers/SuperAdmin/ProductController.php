@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SuperAdmin;
 
+use App\Exports\ProductsExport;
 use App\Exports\SalesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
@@ -18,11 +19,6 @@ use Excel;
 class ProductController extends Controller
 {
      public function index(Request $request){
-
-         if($request->type=='export'){
-             return $this->downloadProduct($request);
-         }
-
 
          if($request->search){
              $products=Product::where(function($products) use($request){
@@ -41,33 +37,20 @@ class ProductController extends Controller
          if($request->ordertype)
              $products=$products->orderBy('name', $request->ordertype);
 
-         $products=$products->paginate(10);
 
+         if($request->export=='yes'){
+             $products=$products->with(['category', 'subcategory'])->get();
+             return $this->downloadProduct($products);
+         }
+
+         $products=$products->paginate(10);
          $categories=Category::get();
 
          return view('admin.product.view',['products'=>$products, 'categories'=>$categories]);
               }
 
 
-    public function downloadProduct(Request $request){
-
-         $product=Product::with(['category', 'sizeprice', 'subcategory']);
-         if($request->search){
-            $products=$product->where(function($products) use($request){
-                $products->where('name','LIKE','%'.$request->search.'%');
-            });
-        }
-
-        if($request->category_id)
-            $products=$products->whereHas('category', function($category) use($request){
-                $category->where('categories.id', $request->category_id);
-            });
-
-
-        if($request->ordertype)
-            $products=$products->orderBy('name', $request->ordertype);
-
-        $products=$products->get();
+    public function downloadProduct($products){
 
         return Excel::download(new ProductsExport($products), 'products.xlsx');
 

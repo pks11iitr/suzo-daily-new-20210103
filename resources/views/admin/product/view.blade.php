@@ -28,8 +28,11 @@
               <div class="card-header">
 			 <div class="row">
 			  <div class="col-3">
-                <a href="{{route('product.create')}}" class="btn btn-primary">Add Product</a></div>&nbsp;&nbsp;
+                <a href="{{route('product.create')}}" class="btn btn-primary">Add Product</a>
+              </div>
+                 <div class="col-3">   &nbsp;&nbsp;
                  <a href="{{route('product.bulk.form')}}" class="btn btn-primary">Bulk Upload</a>
+                 </div>
              </div><br>
             <div class="col-12">
 		 <form class="form-validate form-horizontal"  method="get" action="" enctype="multipart/form-data">
@@ -55,6 +58,8 @@
                          </div>
                     <div class="col-3">
                        <button type="submit" name="save" class="btn btn-primary">Submit</button>
+                            <a href="{{ request()->fullUrlWithQuery(['export' => 'yes']) }} " class="btn btn-primary">Download</a>
+
                      </div>
                   </div>
               </form>
