@@ -27,14 +27,14 @@ class NotificationController extends Controller
                 $query->where('user_id', $user->id)->where('type','individual');
             })->orWhere('type', 'all')
                 ->orderBy('id', 'desc')
-                ->select('id', 'title', 'description', 'image')
+                ->select('id', 'title', 'description', 'image', 'created_at')
                 ->take(20)
                 ->get();
         }
         else{
             $notifications=Notification::where('type', 'all')
                 ->orderBy('id', 'desc')
-                ->select('id', 'title', 'description', 'image')
+                ->select('id', 'title', 'description', 'image', 'created_at')
                 ->take(20)
                 ->get();
         }
