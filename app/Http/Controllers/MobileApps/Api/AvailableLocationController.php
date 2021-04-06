@@ -44,9 +44,14 @@ class AvailableLocationController extends Controller
     public function checkServiceAvailability(Request $request)
     {
         $location = $request->location;
-        $city = City::active()->where('name', $request->city)->first();
+        $city=$request->city;
+        $city_id=null;
+        foreach(config('myconfig.cities') as $key=>$value){
+            if(strtolower($value)==strtolower($city))
+                $city_id=$key;
+        }
 
-        if (!$city)
+        if (!$city_id)
             return [
                 'status' => 'failed',
                 'message' => 'Location is not serviceable'
@@ -61,14 +66,14 @@ class AvailableLocationController extends Controller
                 $locality2 = $json[3]['value'] ?? '';
                 $locality3 = $json[4]['value'] ?? '';
 
-                $location = WorkLocations::active()
+                $location = Area::active()
                     ->where(function ($query) use ($locality1, $locality2, $locality3)
                     {
                         $query->where('name', $locality1)
                             ->orWhere('name', $locality2)
                             ->orWhere('name', $locality3);
                     })
-                    ->where('city_id', $city->id)
+                    ->where('city_id', $city_id)
                     ->first();
                 if ($location) {
                     return [
