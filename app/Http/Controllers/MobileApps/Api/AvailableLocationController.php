@@ -78,7 +78,8 @@ class AvailableLocationController extends Controller
                 if ($location) {
                     return [
                         'status' => 'success',
-                        'message' => 'Location is serviceable'
+                        'message' => 'Location is serviceable',
+                        'location_id' => $location->id
                     ];
                 }
             }
