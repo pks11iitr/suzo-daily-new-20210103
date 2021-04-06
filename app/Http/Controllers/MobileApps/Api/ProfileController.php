@@ -59,7 +59,7 @@ class ProfileController extends Controller
         }else{
             return [
                 'status'=>'failed',
-                'message'=>'Profile Not Update',
+                'message'=>'Something went wrong. Please try later',
             ];
         }
 

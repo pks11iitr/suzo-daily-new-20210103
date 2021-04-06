@@ -32,48 +32,13 @@ class OtpController extends Controller
         switch($request->type){
             //case 'register': return $this->verifyRegister($request);
             case 'login': return $this->verifyLogin($request);
-            case 'resand': return $this->verifyLogin($request);
+            case 'resend': return $this->verifyLogin($request);
             //case 'reset': return $this->verifyResetPassword($request);
         }
 
         return [
             'status'=>'failed',
             'message'=>'Request is not valid'
-        ];
-    }
-
-    protected function verifyRegister(Request $request){
-        $user=Customer::where('mobile', $request->mobile)->first();
-        if($user->status==0){
-            if(OTPModel::verifyOTP('customer',$user->id,$request->type,$request->otp)){
-                if(empty($user->name))
-                {
-                    $profile=0;
-                }else{
-                    $profile=1;
-                }
-                $user->status=1;
-                $user->save();
-
-                return [
-                    'status'=>'success',
-                    'profile_iscomplete'=>$profile,
-                    'message'=>'OTP has been verified successfully',
-                    'token'=>Auth::guard('customerapi')->fromUser($user)
-                ];
-            }
-
-            return [
-                'status'=>'failed',
-                'message'=>'OTP is not correct',
-                'token'=>''
-            ];
-
-        }
-        return [
-            'status'=>'failed',
-            'message'=>'Request is not valid',
-            'token'=>''
         ];
     }
 
@@ -125,37 +90,6 @@ class OtpController extends Controller
             'token'=>''
         ];
     }
-
-
-    protected function verifyResetPassword(Request $request){
-        $user=Customer::where('mobile', $request->mobile)->first();
-        if(in_array($user->status, [0,1])){
-            if(OTPModel::verifyOTP('customer',$user->id,$request->type,$request->otp)){
-
-                $user->status=1;
-                $user->save();
-
-                return [
-                    'status'=>'success',
-                    'message'=>'OTP Has Been Verified',
-                    'token'=>Auth::guard('customerapi')->fromUser($user)
-                ];
-            }
-
-            return [
-                'status'=>'failed',
-                'message'=>'OTP is not correct',
-                'token'=>''
-            ];
-
-        }
-        return [
-            'status'=>'failed',
-            'message'=>'Account has been blocked',
-            'token'=>''
-        ];
-    }
-
 
     public function resend(Request $request){
         $request->validate([
