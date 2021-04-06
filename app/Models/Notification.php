@@ -21,4 +21,10 @@ class Notification extends Model
             return Storage::url($value);
         return '';
     }
+
+    public function getCreatedAtAttribute($value){
+        if($value)
+            return date('d M', strtotime($value));
+        return '';
+    }
 }
