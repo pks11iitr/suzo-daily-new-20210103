@@ -24,7 +24,6 @@ $api->post('resend-otp', 'MobileApps\Auth\OtpController@resend');
 //$api->post('fb-login', 'MobileApps\Auth\LoginController@facebookLogin');
 //$api->post('gmail-login', 'MobileApps\Auth\LoginController@gmailLogin');
 
-$api->get('area-list', 'MobileApps\Api\CustomerAddressController@getAreaList');
 $api->get('category-list', 'MobileApps\Api\CategoryController@index');
 $api->get('subcategory-list/{id}', 'MobileApps\Api\CategoryController@subcategory');
 $api->get('membership-list', 'MobileApps\Api\MemberShipController@index');
@@ -34,6 +33,9 @@ $api->post('store-token', 'MobileApps\Api\NotificationController@storeToken');
 
 $api->get('notifications', 'MobileApps\Api\NotificationController@index');
 $api->get('contacts', ['as'=>'contact.info', 'uses'=>'MobileApps\Api\ConfigurationController@contact']);
+
+$api->get('area-list', 'MobileApps\Api\AvailableLocationController@getAreaList');
+$api->post('availability-check', ['as'=>'check.service', 'uses'=>'MobileApps\Api\AvailableLocationController@checkServiceAvailability']);
 
 
 $api->post('search-suggestions', 'MobileApps\Api\SearchController@search_suggestions');

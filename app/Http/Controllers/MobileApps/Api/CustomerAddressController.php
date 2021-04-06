@@ -183,36 +183,5 @@ class CustomerAddressController extends Controller
 
     }
 
-    public function getAreaList(Request $request){
-
-        $city=$request->city;
-
-        $chosen_city=null;
-        foreach(config('myconfig.cities') as $key=>$value){
-            if(strtolower($value)==strtolower($city))
-                $chosen_city=$key;
-        }
-
-        $areas=[];
-        if($chosen_city)
-            $areas=Area::where('city_id', $chosen_city)
-                ->select('name', 'id')
-                ->get();
-
-        if(count($areas)){
-            return [
-                'status'=>'success',
-                'data'=>compact('areas')
-            ];
-        }
-
-        return [
-            'status'=>'failed',
-            'message'=>'We dont deliver in this city.'
-        ];
-
-
-    }
-
 
 }
