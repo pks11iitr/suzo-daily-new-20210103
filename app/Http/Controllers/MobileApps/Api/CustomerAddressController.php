@@ -41,7 +41,7 @@ class CustomerAddressController extends Controller
 
         $request->validate([
             'first_name'=>'required',
-            'last_name'=>'required',
+            //'last_name'=>'required',
             'mobile_no'=>'required',
             'house_no'=>'required',
             'street'=>'required',
