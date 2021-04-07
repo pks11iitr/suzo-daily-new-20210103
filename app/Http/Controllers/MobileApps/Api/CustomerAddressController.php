@@ -79,6 +79,13 @@ class CustomerAddressController extends Controller
                 ]);
 
         if($customeraddress) {
+
+            CustomerAddress::where('user_id',$user->id)->update(['delivery_active'=>0]);
+
+            CustomerAddress::where('user_id', $user->id)
+                ->where('id', $customeraddress->id)
+                ->update(['delivery_active'=>1]);
+
             return [
                 'status'=>'success',
                 'message' => 'success',
