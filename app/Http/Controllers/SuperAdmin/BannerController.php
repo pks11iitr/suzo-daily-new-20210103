@@ -37,16 +37,16 @@ class BannerController extends Controller
                   			'isactive'=>'required',
                   			'image'=>'required|image'
                                ]);
-               return $request->all();
+               //return $request->all();
 
-       if(stripos($request->entity_type, 'subcat_')!==false){
+       if(stripos($request->entity_type, 'subcat_')===0){
            $id=str_replace('subcat_', '', $request->entity_type);
            $subcategory=SubCategory::find((int)$id);
            $entitytype='App\Models\SubCategory';
            $entitytid=$subcategory->id;
            $main_id=$subcategory->category_id??'';
 
-       }elseif(stripos($request->entity_type, 'cat_')!==false){
+       }elseif(stripos($request->entity_type, 'cat_')===0){
            $id=str_replace('cat_', '', $request->entity_type);
            $category=Category::find((int)$id);
            $entitytype='App\Models\Category';
@@ -60,7 +60,7 @@ class BannerController extends Controller
            $entitytid=$offercategory->id;
            $main_id=null;
        }
-       elseif(stripos($request->entity_type, 'detailedoffer_')!==false){
+       elseif(stripos($request->entity_type, 'detailedoffer_')===0){
            $id=str_replace('detailedoffer_', '', $request->entity_type);
            $offercategory=OfferDetail::find((int)$id);
            $entitytype='App\Models\OfferDetail';
@@ -106,24 +106,30 @@ class BannerController extends Controller
                                    ]);
              $banner = Banner::findOrFail($id);
 
-        if(stripos($request->entity_type, 'subcat_')!==false){
+        if(stripos($request->entity_type, 'subcat_')===0){
             $id=str_replace('subcat_', '', $request->entity_type);
             $subcategory=SubCategory::find((int)$id);
             $entitytype='App\Models\SubCategory';
             $entitytid=$subcategory->id;
             $main_id=$subcategory->category_id??'';
 
-        }elseif(stripos($request->entity_type, 'cat_')!==false){
+        }elseif(stripos($request->entity_type, 'cat_')===0){
             $id=str_replace('cat_', '', $request->entity_type);
             $category=Category::find((int)$id);
             $entitytype='App\Models\Category';
             $entitytid=$category->id;
             $main_id=null;
         }
-        elseif(stripos($request->entity_type, 'offer_')!==false){
+        elseif(stripos($request->entity_type, 'offer_')===0){
             $id=str_replace('offer_', '', $request->entity_type);
             $offercategory=SpecialCategory::find((int)$id);
             $entitytype='App\Models\SpecialCategory';
+            $entitytid=$offercategory->id;
+            $main_id=null;
+        }elseif(stripos($request->entity_type, 'detailedoffer_')===0){
+            $id=str_replace('detailedoffer_', '', $request->entity_type);
+            $offercategory=OfferDetail::find((int)$id);
+            $entitytype='App\Models\OfferDetail';
             $entitytid=$offercategory->id;
             $main_id=null;
         }

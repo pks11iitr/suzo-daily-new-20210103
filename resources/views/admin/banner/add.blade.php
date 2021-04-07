@@ -67,7 +67,7 @@
                                               <option value="offer_{{$offercategory->id}}">{{$offercategory->name}}(Special Category)</option>
                                           @endforeach
                                       @foreach($offers as $offer)
-                                          <option value="detailedoffer_{{$offer->id}}">{{$offer->title}}(Offer Detail)</option>
+                                          <option value="detailedoffer_{{$offer->id}}">{{$offer->name}}(Offer Detail)</option>
                                       @endforeach
 
                                   </select>

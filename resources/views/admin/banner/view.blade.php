@@ -56,6 +56,8 @@
                                   {{$bann->entity->name??''}}(Sub Category)
                               @elseif($bann->entity_type=='App\Models\SpecialCategory')
                                   {{$bann->entity->name??''}}(Special Category)
+                              @elseif($bann->entity_type=='App\Models\OfferDetail')
+                                  {{$bann->entity->name??''}}(Offer Detail)
                               @endif
                           </td>
 

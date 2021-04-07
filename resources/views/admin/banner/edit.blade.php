@@ -69,7 +69,7 @@
                                         @endforeach
                                     @foreach($offers as $offer)
                                         <option value="detailedoffer_{{$offer->id}}"
-                                        @if($banner->entity_id==$offer->id && $banner->entity_type=='App\Models\OfferDetail'){{'selected'}}@endif>{{$offer->title}}(Offer Detail)</option>
+                                        @if($banner->entity_id==$offer->id && $banner->entity_type=='App\Models\OfferDetail'){{'selected'}}@endif>{{$offer->name}}(Offer Detail)</option>
                                     @endforeach
                                 </select>
                             </div>
