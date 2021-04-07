@@ -75,6 +75,15 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
             Route::post('update/{id}','SuperAdmin\CategoryController@update')->name('category.update');
     });
 
+    Route::group(['prefix'=>'offer'], function(){
+        Route::get('/','SuperAdmin\OfferDetailController@index')->name('offer.list');
+        Route::get('create','SuperAdmin\OfferDetailController@create')->name('offer.create');
+        Route::get('edit/{id}','SuperAdmin\OfferDetailController@edit')->name('offer.edit');
+        Route::post('store','SuperAdmin\OfferDetailController@store')->name('offer.store');
+
+        Route::post('update/{id}','SuperAdmin\OfferDetailController@update')->name('offer.update');
+    });
+
     Route::group(['prefix'=>'subcategory'], function(){
 
             Route::get('/','SuperAdmin\SubCategoryController@index')->name('subcategory.list');

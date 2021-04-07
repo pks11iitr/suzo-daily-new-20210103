@@ -200,6 +200,16 @@
                         </li>
                     @endif
 
+                    <li class="nav-item">
+                        <a href="{{route('offer.list')}}" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Offers
+
+                            </p>
+                        </a>
+                    </li>
+
                     @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('coupon-viewer') || auth()->user()->hasRole('coupon-editor'))
 
                         <li class="nav-item">
