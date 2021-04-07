@@ -45,20 +45,25 @@ class SendBulkNotifications implements ShouldQueue
 
         $tokens=NotificationToken::with('user')->get();
         $all_sent=false;
+        $user_sent=[];
         //var_dump($tokens->toArray());die;
         foreach($tokens as $token){
 
             if($token->user_id){
                 $message=str_replace('{{name}}', $token->user->name??'User', $this->message);
                 $message=str_replace('{{Name}}', $token->user->name??'User', $message);
+                if(!in_array($token->user_id, $user_sent)){
+                    Notification::create([
+                        'user_id'=>$token->user_id,
+                        'title'=>$this->title,
+                        'image'=>$this->imagepath,
+                        'description'=>$message,
+                        'type'=>'individual'
+                    ]);
 
-                Notification::create([
-                    'user_id'=>$token->user_id,
-                    'title'=>$this->title,
-                    'image'=>$this->imagepath,
-                    'description'=>$message,
-                    'type'=>'individual'
-                ]);
+                    $user_sent[]=$token->user_id;
+
+                }
             }else{
                 $message=str_replace('{{name}}', $token->user->name??'User', $this->message);
                 $message=str_replace('{{Name}}', $token->user->name??'User', $message);
