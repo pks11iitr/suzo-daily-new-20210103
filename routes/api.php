@@ -97,6 +97,9 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
     $api->get('subscribe/{id}', ['as'=>'membership.subscribe', 'uses'=>'MobileApps\Api\MemberShipController@subscribe']);
     $api->post('verify-subscription', ['as'=>'membership.verify', 'uses'=>'MobileApps\Api\MemberShipController@verify']);
 
+    $api->post('holidays', ['as'=>'holidays', 'uses'=>'MobileApps\Api\HolidayController@set']);
+    $api->get('holidays', ['as'=>'holidays', 'uses'=>'MobileApps\Api\HolidayController@get']);
+
 });
 
 
