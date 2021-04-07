@@ -91,7 +91,6 @@
                                             <td>{{$delivery->delivery_date}}/{{$delivery->timeslot->name}}</td>
                                             <td>{{$delivery->status}}</td>
                                             <td>{{$delivery->quantity_not_accepted}}</td>
-
                                         </tr>
                                     @endforeach
                                     </tbody>

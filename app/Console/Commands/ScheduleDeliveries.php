@@ -81,21 +81,23 @@ class ScheduleDeliveries extends Command
                         }
                         $riders[$order->rider_id]++;
 
-                        $delivery=DailyDelivery::create([
-                            'user_id'=>$order->user_id,
-                            'order_id'=>$order->id,
-                            'detail_id'=>$d->id,
-                            'product_id'=>$d->product_id,
-                            'quantity'=>$d->quantity,
-                            'delivery_date'=>$delivery_date,
-                            'delivery_time_slot'=>$d->time_slot_id,
-                            'address_id'=>$order->address_id,
-                            'rider_id'=>$order->rider_id,
-                            'store_id'=>$order->store_id,
-                            'area_id'=>$order->deliveryaddress->area_id,
-                        ]);
-
-                        $d->update(['scheduled_quantity'=>DB::raw('scheduled_quantity+'.$d->quantity), 'status'=>'completed']);
+                        $quantity=$d->quantity;
+                        if($quantity>0){
+                            $delivery=DailyDelivery::create([
+                                'user_id'=>$order->user_id,
+                                'order_id'=>$order->id,
+                                'detail_id'=>$d->id,
+                                'product_id'=>$d->product_id,
+                                'quantity'=>$quantity,
+                                'delivery_date'=>$delivery_date,
+                                'delivery_time_slot'=>$d->time_slot_id,
+                                'address_id'=>$order->address_id,
+                                'rider_id'=>$order->rider_id,
+                                'store_id'=>$order->store_id,
+                                'area_id'=>$order->deliveryaddress->area_id,
+                            ]);
+                            $d->update(['scheduled_quantity'=>DB::raw('scheduled_quantity+'.$quantity)]);
+                        }
 
                     }else{
                         $day=date('w', strtotime($delivery_date));
@@ -109,24 +111,27 @@ class ScheduleDeliveries extends Command
                                 }
                                 $riders[$order->rider_id]++;
 
-                                $delivery=DailyDelivery::create([
-                                    'user_id'=>$order->user_id,
-                                    'order_id'=>$order->id,
-                                    'detail_id'=>$d->id,
-                                    'product_id'=>$d->product_id,
-                                    'quantity'=>$d->quantity,
-                                    'delivery_date'=>$delivery_date,
-                                    'delivery_time_slot'=>$d->time_slot_id,
-                                    'address_id'=>$order->address_id,
-                                    'rider_id'=>$order->rider_id,
-                                    'store_id'=>$order->store_id,
-                                    'area_id'=>$order->deliveryaddress->area_id,
-                                ]);
-
-                                if($d->total_quantity==$d->scheduled_quantity+$d->quantity){
-                                    $d->update(['scheduled_quantity'=>DB::raw('scheduled_quantity+'.$d->quantity), 'status'=>'completed']);
+                                if($d->total_quantity-$d->scheduled_quantity >= $d->quantity){
+                                    $quantity=$d->quantity;
                                 }else{
-                                    $d->update(['scheduled_quantity'=>DB::raw('scheduled_quantity+'.$d->quantity)]);
+                                    $quantity=$d->total_quantity-$d->scheduled_quantity;
+                                }
+                                if($quantity>0){
+                                    $delivery=DailyDelivery::create([
+                                        'user_id'=>$order->user_id,
+                                        'order_id'=>$order->id,
+                                        'detail_id'=>$d->id,
+                                        'product_id'=>$d->product_id,
+                                        'quantity'=>$quantity,
+                                        'delivery_date'=>$delivery_date,
+                                        'delivery_time_slot'=>$d->time_slot_id,
+                                        'address_id'=>$order->address_id,
+                                        'rider_id'=>$order->rider_id,
+                                        'store_id'=>$order->store_id,
+                                        'area_id'=>$order->deliveryaddress->area_id,
+                                    ]);
+
+                                    $d->update(['scheduled_quantity'=>DB::raw('scheduled_quantity+'.$quantity)]);
                                 }
 
                             }

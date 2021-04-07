@@ -55,9 +55,12 @@ class DeliveryController extends Controller
 
         $user=$request->user;
 
-        $delivery=DailyDelivery::with(['customer', 'order'])
+        $delivery=DailyDelivery::with(['customer', 'order', 'detail'])
             ->where('rider_id', $user->id)
-            ->find($id);
+            ->whereHas('detail', function($detail){
+                $detail->where('order_details.status', 'pending');
+            })
+            ->findOrFail($id);
 
         if(!$delivery)
             return [
@@ -103,6 +106,13 @@ class DeliveryController extends Controller
         $delivery->status=$status;
         $delivery->quantity_not_accepted=$quantity;
         $delivery->save();
+
+        //mark complete delivery , Partial deliveries will be managed from admin panel
+        if( $delivery->status == 'delivered'){
+            if($delivery->detail->total_quantity==$delivery->detail->scheduled_quantity) {
+                $delivery->detail->update(['delivered_quantity' => DB::raw('delivered_quantity+' . $delivery->quantity), 'status' => 'completed']);
+            }
+        }
 
         if($delivery->notification_status==0){
             DailyDelivery::where('detail_id', $delivery->detail_id)

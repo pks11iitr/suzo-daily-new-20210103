@@ -606,7 +606,7 @@ class OrderController extends Controller
         if($item->type=='subscription'){
             $request->validate([
                 'time_slot'=>'required|integer',
-                'quantity'=>'required|integer',
+                'quantity'=>'required|integer|min:1',
                 'days'=>'required|array',
                 'days.*'=>'nullable|min:0|max:6'
             ]);
