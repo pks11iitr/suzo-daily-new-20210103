@@ -39,7 +39,7 @@ class HomeController extends Controller
             'name'=>$user->name??'',
             'image'=>$user->image??'',
             'mobile'=>$user->mobile??'',
-            'membership_name'=>isset($user)?($user->membership_expiry>=date('Y-m-d')?$user->membership->name:''):''
+            'membership_name'=>isset($user)?($user->membership_expiry>=date('Y-m-d')?$user->membership->name:''):'Get additional benefits with Frestr Memberships'
         ];
         $home_sections=HomeSection::active()
             ->with('entities.entity')

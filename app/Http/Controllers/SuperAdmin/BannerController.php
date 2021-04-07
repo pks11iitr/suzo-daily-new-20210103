@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Category;
 //use App\Models\OfferCategory;
+use App\Models\OfferDetail;
 use App\Models\Product;
 use App\Models\SpecialCategory;
 use App\Models\SpecialCategoryProduct;
@@ -25,8 +26,9 @@ class BannerController extends Controller
              $categorys = Category::get();
              $subcategorys = SubCategory::get();
              $offercategorys = SpecialCategory::get();
+             $offers=OfferDetail::get();
 
-            return view('admin.banner.add',['categorys'=>$categorys,'subcategorys'=>$subcategorys,'offercategorys'=>$offercategorys]);
+            return view('admin.banner.add',['categorys'=>$categorys,'subcategorys'=>$subcategorys,'offercategorys'=>$offercategorys, 'offers'=>$offers]);
 
                }
 
@@ -35,6 +37,7 @@ class BannerController extends Controller
                   			'isactive'=>'required',
                   			'image'=>'required|image'
                                ]);
+               return $request->all();
 
        if(stripos($request->entity_type, 'subcat_')!==false){
            $id=str_replace('subcat_', '', $request->entity_type);
@@ -50,10 +53,17 @@ class BannerController extends Controller
            $entitytid=$category->id;
            $main_id=null;
        }
-       elseif(stripos($request->entity_type, 'offer_')!==false){
+       elseif(stripos($request->entity_type, 'offer_')===0){
            $id=str_replace('offer_', '', $request->entity_type);
            $offercategory=SpecialCategory::find((int)$id);
            $entitytype='App\Models\SpecialCategory';
+           $entitytid=$offercategory->id;
+           $main_id=null;
+       }
+       elseif(stripos($request->entity_type, 'detailedoffer_')!==false){
+           $id=str_replace('detailedoffer_', '', $request->entity_type);
+           $offercategory=OfferDetail::find((int)$id);
+           $entitytype='App\Models\OfferDetail';
            $entitytid=$offercategory->id;
            $main_id=null;
        }
@@ -83,9 +93,10 @@ class BannerController extends Controller
              $subcategorys = SubCategory::get();
              $offercategorys = SpecialCategory::get();
             $products =Product::active()->get();
-        $special_category =SpecialCategoryProduct::where('category_id',$id)->get();
+            $special_category =SpecialCategoryProduct::where('category_id',$id)->get();
+            $offers =OfferDetail::get();
 
-             return view('admin.banner.edit',['banner'=>$banner,'categorys'=>$categorys,'subcategorys'=>$subcategorys,'offercategorys'=>$offercategorys,'products'=>$products,'special_category'=>$special_category]);
+             return view('admin.banner.edit',['banner'=>$banner,'categorys'=>$categorys,'subcategorys'=>$subcategorys,'offercategorys'=>$offercategorys,'products'=>$products,'special_category'=>$special_category, 'offers'=>$offers]);
              }
 
     public function update(Request $request,$id){

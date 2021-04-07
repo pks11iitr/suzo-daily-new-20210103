@@ -67,7 +67,10 @@
                                             <option value="cat_{{$category->id}}"
                                             @if($banner->entity_id==$category->id && $banner->entity_type=='App\Models\SubCategory'){{'selected'}}@endif>{{$category->name}}(Category)</option>
                                         @endforeach
-
+                                    @foreach($offers as $offer)
+                                        <option value="detailedoffer_{{$offer->id}}"
+                                        @if($banner->entity_id==$offer->id && $banner->entity_type=='App\Models\OfferDetail'){{'selected'}}@endif>{{$offer->title}}(Offer Detail)</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
