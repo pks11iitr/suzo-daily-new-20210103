@@ -38,6 +38,18 @@ class HolidayController extends Controller
     public function set(Request $request){
         $user=$request->user;
 
+        if($request->type=='no'){
+            $user->holiday_start=null;
+            $user->holiday_end=null;
+            $user->save();
+
+            return [
+                'status'=>'success',
+                'message'=>'Preferences have been updated'
+            ];
+
+        }
+
         $request->validate([
             'type'=>'required|in:yes,no',
             'start_date'=>'required|date_format:Y-m-d',
