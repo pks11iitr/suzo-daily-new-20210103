@@ -386,43 +386,43 @@ class ProductController extends Controller
          $request->validate([
              'name'=>'required',
              'company'=>'required',
-             'description'=>'required',
              'isactive'=>'required|in:0,1',
-             'stock_type'=>'required|in:packet,quantity',
              'stock'=>'required|integer|min:0',
-             'is_offer'=>'required|integer|min:0',
-              'size'=>'required',
-             'price'=>'required|integer',
-             'cut_price'=>'required|integer',
-             //'size_stock'=>'required|integer',
+             'price'=>'required|numeric',
+             'cut_price'=>'required|numeric',
+             'cgst'=>'required|numeric',
+             'sgst'=>'required|numeric',
              'min_qty'=>'required|integer|min:1',
              'max_qty'=>'required|integer|min:1',
-             'consumed_units'=>'required|integer|min:1',
-             'is_size_active'=>'required|in:0,1',
+             'can_be_subscribed'=>'required|in:0,1',
+             'subscription_cashback'=>'required|integer',
+             'eligible_goldcash'=>'required|numeric|min:0.0',
+             'delivery_charge'=>'required|integer',
          ]);
 
          $product=Product::where(DB::raw('BINARY name'), $request->name)
              ->where('company', $request->company)
              ->first();
          if($product){
-             $product->update(array_merge($request->only('company', 'description', 'isactive', 'stock_type', 'stock', 'is_offer'), ['is_hotdeal'=>$request->hot_deal, 'is_newarrival'=>$request->new_arrival, 'is_discounted'=>$request->discounted]));
+             $product->update(array_merge($request->only('company', 'isactive', 'stock', 'price','sgst', 'cgst', 'cut_price','min_qty', 'max_qty'), ['can_be_subscribed'=>$request->can_be_subscribed??0, 'subscription_cashback'=>$request->subscription_cashback??0, 'eligible_goldcash'=>$request->eligible_goldcash, 'delivery_charge'=>$request->delivery_charge]));
          }else{
-             $product=Product::create(array_merge($request->only('name', 'company', 'description', 'isactive', 'stock_type', 'stock', 'is_offer'), ['is_hotdeal'=>$request->hot_deal, 'is_newarrival'=>$request->new_arrival, 'is_discounted'=>$request->discounted]));
+             $product=Product::create(array_merge($request->only('name', 'company', 'isactive', 'stock', 'price','sgst', 'cgst', 'cut_price','min_qty', 'max_qty'), ['can_be_subscribed'=>$request->can_be_subscribed??0, 'subscription_cashback'=>$request->subscription_cashback??0, 'eligible_goldcash'=>$request->eligible_goldcash, 'delivery_charge'=>$request->delivery_charge]));
          }
 
         CategoryProduct::where('product_id', $product->id)->delete();
 
         $added_categories=[];
         if($request->sub_category){
-            $subcategories=explode(',', $request->sub_category);
-            $filtered_sub=[];
+            $subcategories=explode('***', $request->sub_category);
+            $filtered_cat=[];
             foreach($subcategories as $s){
                 $s=trim($s);
                 if(!empty($s))
                     $filtered_cat[]=$s;
             }
-            if(!empty($filtered_sub)){
-                $subcategories=SubCategory::active()->whereIn('name', $filtered_sub)->get();
+            //var_dump($filtered_cat);die;
+            if(!empty($filtered_cat)){
+                $subcategories=SubCategory::active()->whereIn('name', $filtered_cat)->get();
                 foreach($subcategories as $sub) {
                     CategoryProduct::create([
                         'category_id' => $sub->category_id,
@@ -436,7 +436,7 @@ class ProductController extends Controller
         }
 
         if($request->category){
-            $categories=explode(',', $request->category);
+            $categories=explode('***', $request->category);
             $filtered_cat=[];
             foreach($categories as $s){
                 $s=trim($s);
@@ -464,44 +464,13 @@ class ProductController extends Controller
             }
 
         }
-
-        if($product){
-            $size=Size::where('product_id', $product->id)
-                ->where(DB::raw('BINARY size'), $request->size)
-                ->first();
-            if($size){
-                $size->update(array_merge($request->only('price', 'cut_price', 'consumed_units', 'min_qty', 'max_qty', 'is_offer'), ['stock'=>$request->stock, 'isactive'=>$request->is_size_active]));
-            }else{
-                $size=Size::create(array_merge($request->only('size', 'price', 'cut_price', 'consumed_units', 'min_qty', 'max_qty', 'is_offer'), ['product_id'=>$product->id, 'stock'=>$request->stock, 'isactive'=>$request->is_size_active]));
-            }
-        }
-
-         if($size){
-            if($request->images){
-
+       if($request->images){
                 foreach($request->images as $image){
-
-                        $img= ProductImage::create([
-                            'size_id' => $size->id,
-                            'product_id' => $product->id,
-                            'image' => '11',
-
-                        ]);
-                        $img->saveImage($image, 'sizeimage');
-
-                        $img->refresh();
-                        if(empty($size->image)){
-                            $size->image=$img->getOriginal('image');
-                            $size->save();
-                        }
-
+                    $product->saveImage($image, 'product');
                 }
 
             }
-         }
-
-
-    }
+     }
 
 
 

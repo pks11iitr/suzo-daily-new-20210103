@@ -14,7 +14,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                            <li class="breadcrumb-item active"><a href="{{route('product.list')}}">Product</a> </li>
+                            <li class="breadcrumb-item active"><a href="{{route('product.list')}}">Product</a></li>
                         </ol>
                     </div>
                 </div>
@@ -34,27 +34,27 @@
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Upload Speadsheet</label>
-                                                <input type="file" name="excel" class="form-control" id="excel" placeholder="Enter Name">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Browse Images</label>
-                                                <input type="file" name="images[]" class="form-control" id="images" placeholder="Enter Name" multiple>
-                                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Upload Speadsheet</label>
+                                            <input type="file" name="excel" class="form-control" id="excel" placeholder="Enter Name">
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Browse Images</label>
+                                            <input type="file" name="images[]" class="form-control" id="images" placeholder="Enter Name" multiple>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                            </div>
                         </div>
                         <!-- /.card -->
                     </div>
@@ -96,6 +96,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
     <script>
+
+        var rows;
+        var row_counter;
+        var image_files;
+
+        $(document).ready(function(){
+
+            $("#submit").click(function(){
+                rows=null
+                row_counter=0;
+                image_files=null
+                file=$('#excel')[0].files
+                var files = file; // FileList object
+                var xl2json = new ExcelToJSON();
+                xl2json.parseExcel(files[0]);
+            })
+
+        })
+
         var ExcelToJSON = function() {
 
             this.parseExcel = function(file) {
@@ -114,72 +133,10 @@
 
                         ajaxerror=false;
 
-                        var files = $('#images')[0].files; //where files
+                        image_files = $('#images')[0].files; //where files
 
-                        rows.forEach(function(row,index){
-                            row=Object.values(row)
-
-                            if(ajaxerror==false){
-
-                                formdata=new FormData()
-                                formdata.append('name',  row[0])
-                                formdata.append('company', row[1])
-                                formdata.append('description', row[2])
-                                formdata.append('stock_type', row[3])
-                                formdata.append('stock',row[4])
-                                formdata.append('is_offer',row[5])
-                                formdata.append('isactive', row[6])
-                                formdata.append('category',row[7])
-                                formdata.append('sub_category',row[8])
-                                formdata.append('size',row[9])
-                                formdata.append('price',row[10])
-                                formdata.append('cut_price',row[11])
-                                formdata.append('min_qty',row[12])
-                                formdata.append('max_qty',row[13])
-                                //formdata.append('size_stock',row[14])
-                                formdata.append('consumed_units',row[14])
-                                formdata.append('is_size_active',row[15])
-                                formdata.append('new_arrival',row[17])
-                                formdata.append('hot_deal',row[18])
-                                formdata.append('discounted',row[19])
-
-
-                                file_count=0;
-                                image_identifier=row[16]
-
-                                //alert(image_identifier)
-                                for (var i = 0; i < files.length; i++) {
-                                    if(files[i].name.search(image_identifier)==0){
-                                        formdata.append('images['+file_count+']', files[i])
-                                        console.log(files[i].name+'matched:'+row[0])
-                                        file_count++
-                                    }
-                                }
-
-                                $.ajax({
-
-                                    url:'{{route('product.bulk.upload')}}',
-                                    data:formdata,
-                                    method:'post',
-                                    async:false,
-                                    cache: false,
-                                    contentType: false,
-                                    processData: false,
-                                    success:function(data1){
-                                        $('#progress-text').html("Last Uploaded Item: ")
-                                        $('#progress-text').append(row[0]+'-->'+row[1]+'-->'+row[9])
-                                    },
-                                    error:function(){
-                                        ajaxerror=true
-                                        $('#progress-text').append('Error Occurred in uploading: '+row[0]+'-->'+row[1]+'-->'+row[9])
-                                    }
-
-                                })
-                            }
-
-                            console.log(row)
-                        })
-                        //jQuery( '#xlx_json' ).val( json_object );
+                        //alert(rows);
+                        uploadProduct()
                     })
                 };
 
@@ -198,25 +155,83 @@
         //     xl2json.parseExcel(files[0]);
         // }
 
+        function uploadProduct(){
+            row=rows[row_counter]
+            row=Object.values(row)
+            console.log(row)
 
-        $(document).ready(function(){
+            if(ajaxerror==false){
 
-            $("#submit").click(function(){
-                file=$('#excel')[0].files
-                var files = file; // FileList object
-                var xl2json = new ExcelToJSON();
-                xl2json.parseExcel(files[0]);
-            })
+                formdata=new FormData()
+                formdata.append('name',  row[0])
+                formdata.append('company', row[1])
+                formdata.append('stock',row[2])
+                formdata.append('isactive', row[3])
+                formdata.append('category',row[4])
+                formdata.append('sub_category',row[5])
+                formdata.append('price',row[6])
+                formdata.append('sgst',row[7])
+                formdata.append('cgst',row[8])
+                formdata.append('cut_price',row[9])
+                formdata.append('min_qty',row[10])
+                formdata.append('max_qty',row[11])
+                formdata.append('can_be_subscribed',row[12])
+                formdata.append('subscription_cashback',row[13])
+                formdata.append('eligible_goldcash',row[14])
+                formdata.append('delivery_charge',row[15])
 
-            // $("#excel").change(function(evt){
-            //
-            //     var files = evt.target.files; // FileList object
-            //     var xl2json = new ExcelToJSON();
-            //     xl2json.parseExcel(files[0]);
-            // })
+                file_count=0;
+                image_identifier=row[16]
+
+                //alert(image_identifier)
+                for (var i = 0; i < image_files.length; i++) {
+                    //console.log(files[i].name.search(image_identifier))
+                    if(image_identifier!='.' && image_files[i].name.indexOf(image_identifier)==0){
+                        formdata.append('images['+file_count+']', image_files[i])
+                        console.log(image_files[i].name+'matched:'+row[0])
+                        file_count++
+                    }
+                }
+
+                $.ajax({
+
+                    url:'{{route('product.bulk.upload')}}',
+                    data:formdata,
+                    method:'post',
+                    async:true,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success:function(data1){
+                        $('#progress-text').html("Last Uploaded Item: ")
+                        $('#progress-text').append(row[0]+'-->'+row[1]+'-->'+row[9])
+                        row_counter++
+                        setTimeout(uploadProduct, 1000);
+                    },
+                    error:function(){
+                        ajaxerror=true
+                        $('#progress-text').append('Error Occurred in uploading: '+row[0]+'-->'+row[1]+'-->'+row[9])
+                    }
+
+                })
+            }
+        }
 
 
-        })
+
+        // var i = 0;
+        // (function loop() {
+        //     i++;
+        //     if (iterations % i === 100) {
+        //         progressbar.set(i); //updates the progressbar, even in loop
+        //     }
+        //     if (i < iterations) {
+        //         setTimeout(loop, 0);
+        //     }
+        // })();
+
+
+
         // document.getElementById('excel').addEventListener('change', handleFileSelect, false);
 
     </script>
