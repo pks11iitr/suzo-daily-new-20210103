@@ -477,10 +477,6 @@ class OrderController extends Controller
 
         if($detail->product->subscription_cashback){
 
-            if($detail->delivered_quantity==0){
-                    //cancel this item if delivery not started
-            }
-
             return [
                 'status'=>'failed',
                 'message'=>'This subscription includes additional benefit of Frestr Cash. Please raise a case in complaints section to cancel this product'
@@ -506,7 +502,7 @@ class OrderController extends Controller
             if($order->coupon_discount-$discount >= $itemcost)
                 return [
                     'status'=>'failed',
-                    'message'=>'This item cannot be cancelled due to heavy coupon discounts applied.'
+                    'message'=>'This order includes coupon discount of Rs. '.$order->coupon_discount.'. Cancellation of this item will cause cancellation of coupon discount, which will cost additional charges of Rs. '.($order->coupon_discount-$discount - $itemcost).'. If you still want to cancel this item please raise a case in complaint section.'
                 ];
 
             $refund_amount= $itemcost - ($order->coupon_discount-$discount);
