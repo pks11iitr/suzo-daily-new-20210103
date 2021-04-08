@@ -10,7 +10,7 @@ class HolidayController extends Controller
     public function get(Request $request){
         $user=$request->user;
 
-        if($user->end_date>=date('Y-m-d')){
+        if($user->holiday_end>=date('Y-m-d')){
 
             $type='yes';
             $start_date=$user->holiday_start;
