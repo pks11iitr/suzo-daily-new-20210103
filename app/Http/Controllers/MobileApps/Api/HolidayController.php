@@ -56,7 +56,7 @@ class HolidayController extends Controller
             'end_date'=>'required|date_format:Y-m-d'
         ]);
 
-        if($user->holiday_start < $user->holiday_end){
+        if($request->holiday_start < $request->holiday_end){
             return [
                 'status'=>'Failed',
                 'message'=>'End date must be greater than Start date'
