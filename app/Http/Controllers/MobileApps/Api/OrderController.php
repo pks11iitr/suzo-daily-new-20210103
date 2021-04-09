@@ -12,6 +12,7 @@ use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderStatus;
+use App\Models\ReturnRequest;
 use App\Models\TimeSlot;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
@@ -262,17 +263,20 @@ class OrderController extends Controller
                 if($c->status=='pending'){
                     $show_cancel=$c->total_quantity>$c->delivered_quantity?1:0;
                     $show_edit=$c->total_quantity>$c->scheduled_quantity?1:0;
+                    $show_return=0;
                     $initial_text='Starting On';
                     $time=date('d M', strtotime($c->start_date)).' '.(isset($c->timeslot->from_time)?date('h:ia', strtotime($c->timeslot->from_time)):'');
 
                 }else if(in_array($c->status, ['partially-completed', 'completed'])){
                     $show_cancel=0;
                     $show_edit=0;
+                    $show_return=0;
                     $initial_text='Started On';
                     $time=date('d M', strtotime($c->start_date)).' '.(isset($c->timeslot->from_time)?date('h:ia', strtotime($c->timeslot->from_time)):'');
                 }else{
                     $show_cancel=0;
                     $show_edit=0;
+                    $show_return=0;
                     $initial_text='Cancelled';
                     $time='';
                 }
@@ -294,6 +298,7 @@ class OrderController extends Controller
                     'date_text'=>$time,
                     'show_cancel'=>$show_cancel,
                     'show_edit'=>$show_edit,
+                    'show_return'=>$show_return,
                     'initial_text'=>$initial_text
                 );
             }else{
@@ -305,17 +310,20 @@ class OrderController extends Controller
                 if($c->status=='pending'){
                     $show_cancel=$c->total_quantity>$c->delivered_quantity?1:0;
                     $show_edit=$c->total_quantity>$c->scheduled_quantity?1:0;
+                    $show_return=0;
                     $initial_text='Arriving By';
                     $time=date('d M', strtotime($c->start_date)).' '.(isset($c->timeslot->from_time)?date('h:ia', strtotime($c->timeslot->from_time)):'');
 
                 }else if(in_array($c->status, ['partially-completed', 'completed'])){
                     $show_cancel=0;
                     $show_edit=0;
+                    $show_return=date('Y-m-d H:i:s', strtotime('+2 days', strtotime($c->last_delivery_at))) > date('Y-m-d H:i:s');
                     $initial_text='Delivered At';
                     $time=date('d M', strtotime($c->last_delivery_at)).' '.(isset($c->last_delivery_at)?date('h:ia', strtotime($c->last_delivery_at)):'');
                 }else{
                     $show_cancel=0;
                     $show_edit=0;
+                    $show_return=0;
                     $initial_text='Cancelled';
                     $time='';
                 }
@@ -338,6 +346,7 @@ class OrderController extends Controller
                     'date_text'=>$time,
                     'show_cancel'=>$show_cancel,
                     'show_edit'=>$show_edit,
+                    'show_return'=>$show_return,
                     'initial_text'=>$initial_text,
                     'status'=>$c->status
                 );
@@ -688,6 +697,56 @@ class OrderController extends Controller
             ];
 
         }
+
+    }
+
+    public function raiseReturn(Request $request, $id){
+        $user=$request->user;
+
+        $request->validate([
+            'quantity'=>'required|integer',
+            'return_reason'=>'required|max:500'
+        ]);
+
+        $detail=OrderDetail::whereHas('order', function($order) use($user){
+            $order->where('user_id', $user->id);
+        })->where('status', 'completed')
+            ->where('type', 'once')
+            ->findOrFail($id);
+
+        if($detail->quantity > $request->quantity)
+            return [
+                'status'=>'failed',
+                'message'=>'Return quantity cannot exceed purchased quantity'
+            ];
+
+        if(date('Y-m-d H:i:s', strtotime('+2 days', strtotime($detail->last_delivery_at))) > date('Y-m-d H:i:s')){
+            return [
+                'status'=>'failed',
+                'message'=>'This product cannot be returned now'
+            ];
+        }
+
+
+        ReturnRequest::updateOrCreate([
+            'order_id'=>$detail->order_id,
+            'delivery_id'=>$detail->deliveries[0]->id??0,
+            'details_id'=>$detail->id,
+            'product_id'=>$detail->product_id,
+        ],[
+            'quantity'=>$request->quantity,
+            'return_reason'=>$request->return_reason,
+            'price'=>$detail->price,
+            'store_id'=>$detail->order->store_id,
+            'user_id'=>$detail->order->user_id,
+            'rider_id'=>$detail->order->rider_id,
+            'return_type'=>'after-delivery'
+        ]);
+
+        return [
+            'status'=>'success',
+            'message'=>'Your return request has been submitted'
+        ];
 
     }
 

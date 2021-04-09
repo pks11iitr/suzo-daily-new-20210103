@@ -79,6 +79,7 @@ $api->group(['middleware' => ['customer-api-auth']], function ($api) {
     $api->get('order-details/{id}', ['as'=>'order.details', 'uses'=>'MobileApps\Api\OrderController@orderdetails']);
     $api->get('deliveries/{detail_id}', ['as'=>'order.deliveries', 'uses'=>'MobileApps\Api\DeliveryController@index']);
     $api->post('cancel-item/{detail_id}', ['as'=>'order.item.cancel', 'uses'=>'MobileApps\Api\OrderController@cancel']);
+    $api->post('return-item/{detail_id}', ['as'=>'order.item.return', 'uses'=>'MobileApps\Api\OrderController@raiseReturn']);
     $api->get('get-schedule/{detail_id}', ['as'=>'order.schedule.get', 'uses'=>'MobileApps\Api\OrderController@getSchedule']);
     $api->post('update-schedule/{detail_id}', ['as'=>'order.schedule.update', 'uses'=>'MobileApps\Api\OrderController@reschedule']);
 

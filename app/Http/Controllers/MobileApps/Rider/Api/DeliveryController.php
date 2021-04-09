@@ -4,6 +4,7 @@ namespace App\Http\Controllers\MobileApps\Rider\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\DailyDelivery;
+use App\Models\ReturnRequest;
 use App\Services\Notification\FCMNotification;
 use Illuminate\Http\Request;
 
@@ -107,10 +108,31 @@ class DeliveryController extends Controller
         $delivery->quantity_not_accepted=$quantity;
         $delivery->save();
 
+        if($status=='returned' || $status=='partially-delivered'){
+            ReturnRequest::updateOrCreate([
+                'order_id'=>$delivery->order_id,
+                'delivery_id'=>$delivery->id,
+                'details_id'=>$delivery->detail_id,
+                'product_id'=>$delivery->product_id,
+        ],[
+                'quantity'=>$request->quantity,
+                'return_reason'=>$request->return_reason,
+                'price'=>$delivery->detail->price,
+                'store_id'=>$delivery->store_id,
+                'user_id'=>$delivery->user_id,
+                'rider_id'=>$delivery->rider_id,
+                'return_type'=>'in-hand'
+            ]);
+        }
+
+
         //mark complete delivery , Partial deliveries will be managed from admin panel
         if( $delivery->status == 'delivered'){
             if($delivery->detail->total_quantity==$delivery->detail->scheduled_quantity) {
-                $delivery->detail->update(['delivered_quantity' => DB::raw('delivered_quantity+' . $delivery->quantity), 'status' => 'completed']);
+                $delivery->detail->update([
+                    'delivered_quantity' => DB::raw('delivered_quantity+' . $delivery->quantity),
+                    'status' => 'completed',
+                    'last_delivery_at'=>date('Y-m-d H:i:s')]);
             }
         }
 
