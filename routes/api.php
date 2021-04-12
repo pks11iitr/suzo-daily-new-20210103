@@ -55,6 +55,8 @@ $api->group(['middleware' => 'mycart'], function ($api) {
 $api->group(['middleware' => ['customer-api-auth']], function ($api) {
 
     //$api->get('stores-list', 'MobileApps\Api\StoreController@index');
+
+    $api->get('profile-status', 'MobileApps\Api\ProfileController@getProfileCompletionStatus');
     $api->get('get-profile', 'MobileApps\Api\ProfileController@index');
     $api->post('update-profile', 'MobileApps\Api\ProfileController@update');
     //$api->get('store-details/{id}', 'MobileApps\Api\StoreController@details');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\MobileApps\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Checkin;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 
@@ -62,6 +63,15 @@ class ProfileController extends Controller
                 'message'=>'Something went wrong. Please try later',
             ];
         }
+
+    }
+
+    public function getProfileCompletionStatus(Request $request){
+
+        return [
+            'status'=>'success',
+            'profile_iscomplete'=>$request->user->name??0,
+        ];
 
     }
 
