@@ -70,7 +70,7 @@ class ProfileController extends Controller
 
         return [
             'status'=>'success',
-            'profile_iscomplete'=>$request->user->name??0,
+            'profile_iscomplete'=>!empty($request->user->name)?1:0,
         ];
 
     }
