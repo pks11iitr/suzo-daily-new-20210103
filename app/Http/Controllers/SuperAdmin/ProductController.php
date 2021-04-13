@@ -404,9 +404,9 @@ class ProductController extends Controller
              ->where('company', $request->company)
              ->first();
          if($product){
-             $product->update(array_merge($request->only('company', 'isactive', 'stock', 'price','sgst', 'cgst', 'cut_price','min_qty', 'max_qty'), ['can_be_subscribed'=>$request->can_be_subscribed??0, 'subscription_cashback'=>$request->subscription_cashback??0, 'eligible_goldcash'=>$request->eligible_goldcash, 'delivery_charge'=>$request->delivery_charge]));
+             $product->update(array_merge($request->only('company', 'isactive', 'stock', 'price','sgst', 'cgst', 'cut_price','min_qty', 'max_qty', 'description', 'unit'), ['can_be_subscribed'=>$request->can_be_subscribed??0, 'subscription_cashback'=>$request->subscription_cashback??0, 'eligible_goldcash'=>$request->eligible_goldcash, 'delivery_charge'=>$request->delivery_charge]));
          }else{
-             $product=Product::create(array_merge($request->only('name', 'company', 'isactive', 'stock', 'price','sgst', 'cgst', 'cut_price','min_qty', 'max_qty'), ['can_be_subscribed'=>$request->can_be_subscribed??0, 'subscription_cashback'=>$request->subscription_cashback??0, 'eligible_goldcash'=>$request->eligible_goldcash, 'delivery_charge'=>$request->delivery_charge]));
+             $product=Product::create(array_merge($request->only('name', 'company', 'isactive', 'stock', 'price','sgst', 'cgst', 'cut_price','min_qty', 'max_qty', 'description', 'unit'), ['can_be_subscribed'=>$request->can_be_subscribed??0, 'subscription_cashback'=>$request->subscription_cashback??0, 'eligible_goldcash'=>$request->eligible_goldcash, 'delivery_charge'=>$request->delivery_charge]));
          }
 
         CategoryProduct::where('product_id', $product->id)->delete();
