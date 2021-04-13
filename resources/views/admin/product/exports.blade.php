@@ -3,6 +3,7 @@
     <tr>
         <th>Name</th>
         <th>Company</th>
+        <th>Unit</th>
         <th>Stock</th>
         <th>Active(0/1)</th>
         <th>Category</th>
@@ -24,6 +25,7 @@
     @foreach($products as $product)
             <tr>
                 <td>{{ $product->name??'.' }}</td>
+                <td>{{ $product->unit??'.' }}</td>
                 <td>{{ $product->company??'.' }}</td>
                 <td>{{ $product->stock??0 }}</td>
                 <td>{{ $product->isactive??0 }}</td>

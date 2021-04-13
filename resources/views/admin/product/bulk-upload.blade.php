@@ -164,24 +164,25 @@
 
                 formdata=new FormData()
                 formdata.append('name',  row[0])
-                formdata.append('company', row[1])
-                formdata.append('stock',row[2])
-                formdata.append('isactive', row[3])
-                formdata.append('category',row[4])
-                formdata.append('sub_category',row[5])
-                formdata.append('price',row[6])
-                formdata.append('sgst',row[7])
-                formdata.append('cgst',row[8])
-                formdata.append('cut_price',row[9])
-                formdata.append('min_qty',row[10])
-                formdata.append('max_qty',row[11])
-                formdata.append('can_be_subscribed',row[12])
-                formdata.append('subscription_cashback',row[13])
-                formdata.append('eligible_goldcash',row[14])
-                formdata.append('delivery_charge',row[15])
+                formdata.append('unit',  row[1])
+                formdata.append('company', row[2])
+                formdata.append('stock',row[3])
+                formdata.append('isactive', row[4])
+                formdata.append('category',row[5])
+                formdata.append('sub_category',row[6])
+                formdata.append('price',row[7])
+                formdata.append('sgst',row[8])
+                formdata.append('cgst',row[9])
+                formdata.append('cut_price',row[10])
+                formdata.append('min_qty',row[11])
+                formdata.append('max_qty',row[12])
+                formdata.append('can_be_subscribed',row[13])
+                formdata.append('subscription_cashback',row[14])
+                formdata.append('eligible_goldcash',row[15])
+                formdata.append('delivery_charge',row[16])
 
                 file_count=0;
-                image_identifier=row[16]
+                image_identifier=row[17]
 
                 //alert(image_identifier)
                 for (var i = 0; i < image_files.length; i++) {
