@@ -106,6 +106,9 @@ class CartController extends Controller
                 'total_quantity'=>($request->type=='subscription')?($request->quantity*($request->no_of_days??0)):$request->quantity,
                 ]);
 
+        $product->cart_type=$request->type;
+        $product->cart_quantity=$request->quantity;
+
         //adjust delivery days
         $cart->days()->sync([]);
         if($request->type=='subscription' && isset($request->days)){
