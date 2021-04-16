@@ -42,7 +42,7 @@ class CartController extends Controller
             'type'=>'required|string|in:once,subscription',
             'no_of_days'=>'required_if:type,subscription',
             'days'=>'required_if:type,subscription|array',
-            'days.*'=>'numeric|min:0|max:6',
+            'days.*'=>'nullable|integer|min:0|max:6',
         ]);
 
         if(!$product->can_be_subscribed  && $request->type =='subscription')
@@ -115,7 +115,7 @@ class CartController extends Controller
             if(!empty($request->days)){
                 $seldays=[];
                 foreach($request->days as $d){
-                    if($d!=='' ){
+                    if(is_numeric($d)){
                         $seldays[]=$d;
                     }
                 }
