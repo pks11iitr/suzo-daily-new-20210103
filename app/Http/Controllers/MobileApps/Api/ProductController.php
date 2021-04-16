@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\MobileApps\Api;
 
 use App\Models\Banner;
+use App\Models\BookDay;
 use App\Models\Cart;
 use App\Models\HomeSectionEntity;
 use App\Models\Product;
@@ -143,11 +144,11 @@ class ProductController extends Controller
                  'max_qty'=>$product->max_qty,
                  'stock'=>$product->stock,
                  'quantity'=>$request->cart[$product->id]['cart_quantity']??0,
-                 'type'=>$request->cart[$product->id]['cart_type']??'subscription',
+                 'type'=>$request->cart[$product->id]['cart_type']??($product->can_be_subscribed?'subscription':'once'),
                  'start_date'=>$item->start_date??$next_slot['date'],
                  'time_slot'=>$item->time_slot_id??$next_slot['id'],
-                 'no_of_days'=>$item->no_of_days??1,
-                 'days'=>$item->days??[],
+                 'no_of_days'=>$item->no_of_days??($product->can_be_subscribed?15:1),
+                 'days'=>$item->days??BookDay::get(),
                  'timeslot'=>$timeslot,
                 'start_date_text'=>date('d M', strtotime($item->start_date??$next_slot['date'])),
                 'time_slot_text'=>isset($item->time_slot_id)?($item->timeslot->name):($next_slot['time']??'NA')
