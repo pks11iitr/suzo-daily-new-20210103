@@ -263,4 +263,8 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
 
 Route::get('invoice/{id}', 'SuperAdmin\InvoiceController@download')->name('download.invoice');
 
+
+Route::get('about-us', 'StaticPagesController@aboutUs');
+Route::get('terms-n-conditions','StaticPagesController@tnc');
+
 require __DIR__.'/auth.php';
