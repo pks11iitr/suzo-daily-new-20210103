@@ -164,7 +164,7 @@ class TimeSlot extends Model
                 return false;
         }else if($time >= '21:00:01' && $time <= '23:59:59'){
             $date=date('Y-m-d', strtotime('+1 days'));
-            if($selecteddate.' '.$this->from_time < $date.' '.'21:00:00')
+            if($selecteddate.' '.$this->from_time < $date.' '.'18:00:00')
                 return false;
         }
 
