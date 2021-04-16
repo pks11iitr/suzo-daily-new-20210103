@@ -103,7 +103,7 @@ class CartController extends Controller
                 'time_slot_id'=>$ts['id'],
                 'no_of_days'=>($request->type=='subscription')?($request->no_of_days):1,
                 'quantity'=>$request->quantity,
-                'total_quantity'=>($request->type=='subscription')?($request->quantity*($request->no_of_days??0)):$request->quantity,
+                'total_quantity'=>($request->type=='subscription')?($request->quantity*($request->no_of_days??15)):$request->quantity,
                 ]);
 
         $product->cart_type=$request->type;
