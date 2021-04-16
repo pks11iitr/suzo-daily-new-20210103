@@ -73,6 +73,14 @@ class OrderController extends Controller
             }
         }
 
+        $address=CustomerAddress::where('delivery_active',1)
+            ->where('user_id',$user->id)
+            ->first();
+        if(!$address)
+            return [
+                'status'=>'failed',
+                'message'=>'Please add an address'
+            ];
 
         $cart=Cart::with('days', 'timeslot', 'product')
             ->where('user_id', $user->id)
@@ -87,10 +95,6 @@ class OrderController extends Controller
             ];
 
         $refid=env('MACHINE_ID').rand(1,9).rand(1,9).date('his').rand(1,9).rand(1,9);
-
-        $address=CustomerAddress::where('delivery_active',1)
-            ->where('user_id',$user->id)
-            ->first();
 
         foreach($cart as $item) {
             if($item->type=='subscription'){
