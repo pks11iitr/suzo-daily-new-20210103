@@ -42,7 +42,7 @@ class CartController extends Controller
             'type'=>'required|string|in:once,subscription',
             'no_of_days'=>'required_if:type,subscription',
             'days'=>'required_if:type,subscription|array',
-            'days.*'=>'nullable|min:0|max:6',
+            'days.*'=>'numeric|min:0|max:6',
         ]);
 
         if(!$product->can_be_subscribed  && $request->type =='subscription')
