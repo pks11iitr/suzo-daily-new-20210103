@@ -117,9 +117,9 @@ class CartController extends Controller
                 foreach($request->days as $d){
                     if($d!=='' ){
                         $seldays[]=$d;
-                        $cart->days()->sync($request->days);
                     }
                 }
+                $cart->days()->sync($seldays);
 
             }
 
