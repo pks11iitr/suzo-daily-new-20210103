@@ -146,6 +146,11 @@ class CartController extends Controller
             $cart->days()->sync([]);
             //BookDay::where('cart_id',$cart->id)->delete();
             $cart->delete();
+        }else{
+            return [
+                'status'=>'failed',
+                'message'=>'Please select quantity'
+            ];
         }
 
         $cart=Cart::getUserCart($user);
