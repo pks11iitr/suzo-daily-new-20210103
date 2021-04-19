@@ -60,12 +60,17 @@ class ProductController extends Controller
 
         $cart_count=$request->item_type_count??0;
 
+        $next_page_url=$productsobj->nextPageUrl();
+        $prev_page_url=$productsobj->previousPageUrl();
+
         return [
             'status'=>'success',
             'products'=>$products,
             'cart_total'=>$request->cart_count,
             'cart_total_price'=>$request->cart_total,
-            'cart_count'=>$cart_count
+            'cart_count'=>$cart_count,
+            'next_page_url'=>$next_page_url,
+            'prev_page_url'=>$prev_page_url
         ];
     }
 
@@ -75,6 +80,9 @@ class ProductController extends Controller
         ->where('home_section_id', $section_id);
 
         $entities=$entities->paginate(20);
+
+        $next_page_url=$entities->nextPageUrl();
+        $prev_page_url=$entities->previousPageUrl();
 
         $products=[];
         foreach($entities as $entity){
@@ -91,7 +99,9 @@ class ProductController extends Controller
             'products'=>$products,
             'cart_total'=>$request->cart_count,
             'cart_total_price'=>$request->cart_total,
-            'cart_count'=>$cart_count
+            'cart_count'=>$cart_count,
+            'next_page_url'=>$next_page_url,
+            'prev_page_url'=>$prev_page_url
         ];
     }
 
@@ -198,6 +208,8 @@ class ProductController extends Controller
         }
 
         $cart_count=$request->item_type_count??0;
+        $next_page_url=$productsobj->nextPageUrl();
+        $prev_page_url=$productsobj->previousPageUrl();
 
         return [
             'status'=>'success',
@@ -205,7 +217,9 @@ class ProductController extends Controller
             'banners'=>$banners,
             'cart_total'=>$request->cart_count,
             'cart_total_price'=>$request->cart_total,
-            'cart_count'=>$cart_count
+            'cart_count'=>$cart_count,
+            'next_page_url'=>$next_page_url,
+            'prev_page_url'=>$prev_page_url
         ];
 
     }
