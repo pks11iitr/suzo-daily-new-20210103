@@ -43,7 +43,7 @@ class HomeController extends Controller
         ];
         $home_sections=HomeSection::active()
             ->with(['entities'=>function($entities){
-                $entities->with('entity')->take(6);
+                $entities->with('entity')->limit(6);
             }])
             ->orderBy('sequence_no', 'asc')
             ->get();
