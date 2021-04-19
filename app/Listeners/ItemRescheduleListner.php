@@ -32,12 +32,12 @@ class ItemRescheduleListner
         $message='Your request to reschedule delivery of '.($event->item->product->name??'').' has been processed';
 
         Notification::create([
-            'user_id'=>$event->order->user_id,
+            'user_id'=>$event->item->order->user_id,
             'title'=>$title,
             'description'=>$message,
             'type'=>'individual'
         ]);
 
-        $event->order->customer->notify(new FCMNotification($title, $message, ['type'=>'order', 'title'=>$title, 'body'=>$message, 'order_id'=>$event->order->id], 'order_details'));
+        $event->item->order->customer->notify(new FCMNotification($title, $message, ['type'=>'order', 'title'=>$title, 'body'=>$message, 'order_id'=>$event->item->order->id], 'order_details'));
     }
 }
