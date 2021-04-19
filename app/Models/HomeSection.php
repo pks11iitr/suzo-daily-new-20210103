@@ -6,10 +6,11 @@ use App\Models\Traits\Active;
 use App\Models\Traits\DocumentUploadTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 
 class HomeSection extends Model
 {
-    use Active,DocumentUploadTrait;
+    use Active,DocumentUploadTrait,HasEagerLimit;
     protected $table='home_sections';
 
     protected $fillable=['sequence_no','name','image','type','isactive','title'];
