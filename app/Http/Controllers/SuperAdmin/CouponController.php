@@ -39,7 +39,7 @@ class CouponController extends Controller
         $coupon->update($request->only(['code','discount_type','minimum_order', 'discount', 'isactive','usage_type','maximum_discount','expiry_date']));
 
         $coupon->categories()->sync($request->sub_categories);
-        $coupon->specialcategories()->sync($request->specialcategories);
+        $coupon->specialcategories()->sync($request->special_categories);
 
         return redirect()->route('coupon.list')->with('success', 'Coupon has been updated');
 
