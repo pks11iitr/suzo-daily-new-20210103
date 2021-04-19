@@ -673,7 +673,7 @@ class OrderController extends Controller
             ]);
 
             $ts=TimeSlot::findOrFail($request->time_slot);
-            if(!$ts->checkTimings($request->date)){
+            if(!$ts->checkTimings($request->start_date)){
                 $next=TimeSlot::getNextDeliverySlot();
                 return [
                     'status'=>'failed',
