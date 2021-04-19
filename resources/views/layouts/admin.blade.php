@@ -187,6 +187,18 @@
                             </a>
                         </li>
                     @endif
+                    @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('category-viewer') || auth()->user()->hasRole('category-editor'))
+
+                        <li class="nav-item">
+                            <a href="{{route('specialcategory.list')}}" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Special Category
+
+                                </p>
+                            </a>
+                        </li>
+                    @endif
                     @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('product-viewer') || auth()->user()->hasRole('product-editor'))
 
                         <li class="nav-item">
