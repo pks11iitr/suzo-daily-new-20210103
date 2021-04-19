@@ -42,7 +42,9 @@ class HomeController extends Controller
             'membership_name'=>isset($user)?($user->membership_expiry>=date('Y-m-d')?$user->membership->name:'Get additional benefits with Frestr Memberships'):'Get additional benefits with Frestr Memberships'
         ];
         $home_sections=HomeSection::active()
-            ->with('entities.entity')
+            ->with(['entities'=>function($entities){
+                $entities->with('entity')->take(6);
+            }])
             ->orderBy('sequence_no', 'asc')
             ->get();
 
