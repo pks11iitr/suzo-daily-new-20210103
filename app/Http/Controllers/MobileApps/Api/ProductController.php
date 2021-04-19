@@ -62,6 +62,8 @@ class ProductController extends Controller
 
         $next_page_url=$productsobj->nextPageUrl();
         $prev_page_url=$productsobj->previousPageUrl();
+        $last_page=$productsobj->lastPage();
+        $last_page_url=$productsobj->url($last_page);
 
         return [
             'status'=>'success',
@@ -70,7 +72,9 @@ class ProductController extends Controller
             'cart_total_price'=>$request->cart_total,
             'cart_count'=>$cart_count,
             'next_page_url'=>$next_page_url,
-            'prev_page_url'=>$prev_page_url
+            'prev_page_url'=>$prev_page_url,
+            'last_page'=>$last_page,
+            'last_page_url'=>$last_page_url
         ];
     }
 
@@ -83,6 +87,8 @@ class ProductController extends Controller
 
         $next_page_url=$entities->nextPageUrl();
         $prev_page_url=$entities->previousPageUrl();
+        $last_page=$entities->lastPage();
+        $last_page_url=$entities->url($last_page);
 
         $products=[];
         foreach($entities as $entity){
@@ -101,7 +107,9 @@ class ProductController extends Controller
             'cart_total_price'=>$request->cart_total,
             'cart_count'=>$cart_count,
             'next_page_url'=>$next_page_url,
-            'prev_page_url'=>$prev_page_url
+            'prev_page_url'=>$prev_page_url,
+            'last_page'=>$last_page,
+            'last_page_url'=>$last_page_url
         ];
     }
 
