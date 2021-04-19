@@ -52,6 +52,7 @@ class HomeController extends Controller
             $new_sec=[];
             switch($section->type){
                 case 'banner':
+                    $new_sec['id']=$section->id;
                     $new_sec['type']='banner';
                     $new_sec['title']='';
                     $new_sec['name']='';
@@ -65,6 +66,7 @@ class HomeController extends Controller
                     $new_sec['subcategory']=[];
                     break;
                 case 'product1':
+                    $new_sec['id']=$section->id;
                     $new_sec['type']='product1';
                     $new_sec['name']=$section->name;
                     $new_sec['bannerdata']=[
@@ -82,6 +84,7 @@ class HomeController extends Controller
                     }
                     break;
                 case 'product2':
+                    $new_sec['id']=$section->id;
                     $new_sec['type']='product2';
                     $new_sec['name']=$section->name;
                     $new_sec['bannerdata']=[
@@ -99,6 +102,7 @@ class HomeController extends Controller
                     }
                     break;
                 case 'subcategory':
+                    $new_sec['id']=$section->id;
                     $new_sec['type']='subcategory';
                     $new_sec['name']=$section->name;
                     $new_sec['products']=[];
