@@ -115,6 +115,22 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <div class="form-group">
+                                                    <label for="exampleInputtitle">Special Category</label>
+                                                    <select class="form-control select2" multiple data-placeholder="Select a subcategory" style="width: 100%;" name="special_categories[]">
+
+                                                        <option value="">Please Select Special Category</option>
+                                                        @foreach($specialcategories as $specialcategory)
+
+                                                            <option value="{{$specialcategory->id}}" @foreach($coupon->specialcategories as $s) @if($s->id==$specialcategory->id){{'selected'}}@endif @endforeach >{{$specialcategory->name}}</option>
+
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- /.card-body -->
