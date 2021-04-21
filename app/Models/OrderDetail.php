@@ -34,7 +34,7 @@ class OrderDetail extends Model
     }
 
     public function returnrequests(){
-        return $this->hasMany('App\Models\ReturnRequest', 'detail_id');
+        return $this->hasMany('App\Models\ReturnRequest', 'details_id');
     }
 
 
