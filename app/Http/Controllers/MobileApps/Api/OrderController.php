@@ -733,7 +733,7 @@ class OrderController extends Controller
             ->where('type', 'once')
             ->findOrFail($id);
 
-        if($detail->quantity > $request->quantity)
+        if($detail->quantity < $request->quantity)
             return [
                 'status'=>'failed',
                 'message'=>'Return quantity cannot exceed purchased quantity'
