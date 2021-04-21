@@ -57,14 +57,14 @@
                                             <td>{{$return->created_at}}</td>
                                             <td>
                                                 @if($return->status=='pending')
-                                                    <a href="{{route('approve.return.request', ['id'=>$return->id])}}" name='status' class="btn btn-success">Approve</a>
+                                                    <a href="{{route('approve.return.request', ['return_id'=>$return->id])}}" name='status' class="btn btn-success">Approve</a>
                                                 @else
                                                     {{$return->status}}
                                                 @endif
                                             </td>
                                             <td>
                                                 @if($return->status=='pending')
-                                                    <form method="POST" action="{{route('cancel.return.request', ['id'=>$return->id])}}">
+                                                    <form method="POST" action="{{route('cancel.return.request', ['return_id'=>$return->id])}}">
                                                         <textarea name="reason"></textarea>
                                                         <button type="submit" class="btn btn-danger">Reject</button>
                                                     </form>
