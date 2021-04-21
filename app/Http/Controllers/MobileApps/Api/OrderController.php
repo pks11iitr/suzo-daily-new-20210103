@@ -376,9 +376,9 @@ class OrderController extends Controller
         return [
             'deliveryaddress'=>$order->deliveryaddress,
             'items'=>$items,
-            'total'=>$order->total_cost,
-            'delivery_charge'=>$order->delivery_charge,
-            'coupon'=>$order->coupon??'',
+            'total'=>$order->total_cost??0,
+            'delivery_charge'=>$order->delivery_charge??0,
+            'coupon'=>$order->coupon??'--',
             'coupon_discount'=>$order->coupon_discount,
             'grand_total'=>$order->total_cost+$order->delivery_charge-$order->coupon_discount,
             'balance_used'=>$order->balance_used,
