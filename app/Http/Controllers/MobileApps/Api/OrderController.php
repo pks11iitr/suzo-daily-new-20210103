@@ -728,8 +728,8 @@ class OrderController extends Controller
         ]);
 
         $detail=OrderDetail::whereHas('order', function($order) use($user){
-            $order->where('user_id', $user->id);
-        })->where('status', 'completed')
+                $order->where('user_id', $user->id);
+            })->where('order_details.status', 'completed')
             ->where('type', 'once')
             ->findOrFail($id);
 
