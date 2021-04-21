@@ -37,10 +37,8 @@
                                         <th>OrderID</th>
                                         <th>Store</th>
                                         <th>Product Name</th>
-                                        <th>Size</th>
                                         <th>Quantity</th>
                                         <th>Reason</th>
-                                        <th>Total After Return</th>
                                         <th>Date & Time</th>
                                         <th>Approve</th>
                                         <th>Reject</th>
@@ -53,11 +51,9 @@
                                             <td>{{$return->order->refid??''}}</td>
                                             <td>{{$return->store->name??''}}</td>
                                             <td>{{$return->product->name??''}}</td>
-                                            <td>{{$return->size->size??''}}</td>
                                             <td>{{$return->quantity}}</td>
 
                                             <td>{{$return->return_reason}}</td>
-                                            <td>{{$return->cost}}</td>
                                             <td>{{$return->created_at}}</td>
                                             <td>
                                                 @if($return->status=='pending')

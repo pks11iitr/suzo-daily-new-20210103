@@ -17,7 +17,7 @@ class ReturnRequestController extends Controller
 {
     public function index(Request $request){
 
-        $returns=ReturnRequest::with(['size', 'product', 'order.details.entity'])
+        $returns=ReturnRequest::with(['product', 'order', 'details', 'delivery', 'store', 'rider'])
             //->has('details')
             ->orderBy('id', 'desc')
             ->paginate(10);
