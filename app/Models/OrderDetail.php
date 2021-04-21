@@ -33,5 +33,9 @@ class OrderDetail extends Model
         return $this->belongsTo('App\Models\Order', 'order_id');
     }
 
+    public function returnrequests(){
+        return $this->hasMany('App\Models\ReturnRequest', 'detail_id');
+    }
+
 
 }

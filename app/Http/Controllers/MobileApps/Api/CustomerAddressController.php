@@ -179,9 +179,12 @@ class CustomerAddressController extends Controller
                 'message'=>'Please login to continue'
             ];
 
-        CustomerAddress::where('user_id',$user->id)->update(['delivery_active'=>0]);
+        CustomerAddress::where('user_id',$user->id)
+            ->update(['delivery_active'=>0]);
 
-        CustomerAddress::where('user_id', $user->id)->where('id', $id)->update(['delivery_active'=>1]);
+        CustomerAddress::where('user_id', $user->id)
+            ->where('id', $id)->first()
+            ->update(['delivery_active'=>1]);
 
         return [
             'status'=>'success',

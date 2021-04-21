@@ -241,7 +241,7 @@ class OrderController extends Controller
 
         $user=$request->user;
 
-        $order=Order::with('details.product', 'details.days', 'details.timeslot', 'deliveryaddress')
+        $order=Order::with('details.product', 'details.days', 'details.timeslot', 'deliveryaddress', 'details.returnrequests')
             ->where('user_id', $user->id)
             ->findOrFail($id);
 
@@ -277,6 +277,12 @@ class OrderController extends Controller
                     $show_return=0;
                     $initial_text='Started On';
                     $time=date('d M', strtotime($c->start_date)).' '.(isset($c->timeslot->from_time)?date('h:ia', strtotime($c->timeslot->from_time)):'');
+                }elseif($c->status=='returned'){
+                    $show_cancel=0;
+                    $show_edit=0;
+                    $show_return=0;
+                    $initial_text='Returned';
+                    $time='';
                 }else{
                     $show_cancel=0;
                     $show_edit=0;
@@ -321,9 +327,18 @@ class OrderController extends Controller
                 }else if(in_array($c->status, ['partially-completed', 'completed'])){
                     $show_cancel=0;
                     $show_edit=0;
-                    $show_return=date('Y-m-d H:i:s', strtotime('+2 days', strtotime($c->last_delivery_at))) > date('Y-m-d H:i:s');
+                    if(empty($c->returnrequests->toArray()) && date('Y-m-d H:i:s', strtotime('+2 days', strtotime($c->last_delivery_at))) > date('Y-m-d H:i:s'))
+                        $show_return=0;
+                    else
+                        $show_return=1;
                     $initial_text='Delivered At';
                     $time=date('d M', strtotime($c->last_delivery_at)).' '.(isset($c->last_delivery_at)?date('h:ia', strtotime($c->last_delivery_at)):'');
+                }elseif($c->status=='returned'){
+                    $show_cancel=0;
+                    $show_edit=0;
+                    $show_return=0;
+                    $initial_text='Returned';
+                    $time='';
                 }else{
                     $show_cancel=0;
                     $show_edit=0;
