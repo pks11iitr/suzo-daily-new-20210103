@@ -22,14 +22,6 @@ class ReturnRequestController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(10);
 
-
-        foreach($returns as $return){
-            if($return->status=='pending')
-                $return->cost=$this->checkTotalAfterReturn($return);
-            else
-                $return->cost=$return->order->total_cost;
-        }
-
         return view('admin.returnrequest.view',['returns'=>$returns]);
 
     }
