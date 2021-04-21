@@ -184,6 +184,16 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
 
     });
 
+    Route::group(['prefix'=>'returnrequest'], function(){
+            Route::get('/', 'SuperAdmin\ReturnRequestController@index')->name('returnrequest.list');
+
+            Route::get('approve-request/{return_id}','SuperAdmin\ReturnRequestController@approveReturnProduct')->name('approve.return.request');
+
+            Route::post('cancel-request/{return_id}','SuperAdmin\ReturnRequestController@cancelReturnRequest')->name('cancel.return.request');
+
+    });
+
+
     Route::group(['prefix'=>'complain'], function(){
             Route::get('/','SuperAdmin\ComplainController@index')->name('complain.list');
             Route::get('view/{id}','SuperAdmin\ComplainController@details')->name('complain.view');

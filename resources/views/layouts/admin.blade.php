@@ -136,6 +136,15 @@
                             </a>
                         </li>
                     @endif
+                    <li class="nav-item">
+                        <a href="{{route('returnrequest.list')}}" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Return Request
+
+                            </p>
+                        </a>
+                    </li>
                     @if(auth()->user()->hasRole('admin'))
                         <li class="nav-item">
                             <a href="{{route('customer.list')}}" class="nav-link">
