@@ -415,10 +415,10 @@ class OrderController extends Controller
 
 
     private function cancelOnce($detail, $message){
-        $order=Order::with('details', function($details) use($detail){
+        $order=Order::with(['details'=> function($details) use($detail){
             $details->with('product.subcategory')
             ->where('order_details.id', '!=', $detail->id);
-        })
+        }])
         ->find($detail->order_id);
 
         $itemcost=$detail->quantity*$detail->price;
