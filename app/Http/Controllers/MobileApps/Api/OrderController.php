@@ -414,7 +414,7 @@ class OrderController extends Controller
     }
 
 
-    private function cancelOnce($detail, $message){
+    private function cancelOnce($user, $detail, $message){
         $order=Order::with(['details'=> function($details) use($detail){
             $details->with('product.subcategory')
             ->where('order_details.id', '!=', $detail->id);
@@ -490,7 +490,7 @@ class OrderController extends Controller
             Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
 
         if($point_return>0)
-        Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
+            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
 
         event(new ItemCancelled($order, $detail));
         return [
@@ -501,7 +501,7 @@ class OrderController extends Controller
     }
 
 
-    private function cancelSubscription($detail,$message){
+    private function cancelSubscription($user, $detail,$message){
 
         if($detail->product->subscription_cashback){
 
