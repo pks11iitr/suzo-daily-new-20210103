@@ -157,6 +157,28 @@ class Cart extends Model
                 }
             }
         }
+        if($amount>0)
+            return $amount;
+
+        $coupon_cat=$coupon->specialcategories->map(function($element){
+            return $element->id;
+        });
+        $coupon_cat=$coupon_cat->toArray();
+        foreach($cart as $detail){
+            if(count($coupon_cat)){
+                $product_cat=$detail->product->specialcategory->map(function($element){
+                    return $element->id;
+                });
+                $product_cat=$product_cat->toArray();
+                if(count(array_intersect($product_cat,$coupon_cat))){
+                    if($detail->type=='subscription'){
+                        $amount=$amount+$detail->price*$detail->total_quantity;
+                    }else{
+                        $amount=$amount+$detail->price*$detail->quantity;
+                    }
+                }
+            }
+        }
         return $amount;
     }
 
