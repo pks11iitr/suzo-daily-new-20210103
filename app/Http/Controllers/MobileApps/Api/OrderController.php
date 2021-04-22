@@ -328,9 +328,9 @@ class OrderController extends Controller
                     $show_cancel=0;
                     $show_edit=0;
                     if(empty($c->returnrequests->toArray()) && date('Y-m-d H:i:s', strtotime('+2 days', strtotime($c->last_delivery_at))) > date('Y-m-d H:i:s'))
-                        $show_return=0;
-                    else
                         $show_return=1;
+                    else
+                        $show_return=0;
                     $initial_text='Delivered At';
                     $time=date('d M', strtotime($c->last_delivery_at)).' '.(isset($c->last_delivery_at)?date('h:ia', strtotime($c->last_delivery_at)):'');
                 }elseif($c->status=='returned'){
