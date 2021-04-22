@@ -70,8 +70,14 @@ class CouponController extends Controller
         $delivery_charge=25;
         //$itemdetails=[];
         foreach($items as $detail){
-            $cost=$cost+$detail->product->price*$detail->quantity;
-            $savings=$savings+($detail->product->cut_price-$detail->product->price)*$detail->quantity;
+//            if($detail->type=='subscription'){
+                $cost=$cost+$detail->product->price*$detail->total_quantity;
+                $savings=$savings+($detail->product->cut_price-$detail->product->price)*$detail->total_quantity;
+//            }else{
+//                $cost=$cost+$detail->product->price*$detail->quantity;
+//                $savings=$savings+($detail->product->cut_price-$detail->product->price)*$detail->quantity;
+//            }
+
         }
 
 
