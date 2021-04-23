@@ -9,6 +9,7 @@ use App\Models\Coupon;
 use App\Models\LogData;
 use App\Models\Order;
 //use App\Models\OrderStatus;
+use App\Models\OrderStatus;
 use App\Models\Wallet;
 use App\Services\Payment\RazorPayService;
 use Illuminate\Http\Request;
@@ -158,6 +159,122 @@ class PaymentController extends Controller
             }else{
                 return $this->initiateGatewayPayment($order);
             }
+        }
+
+    }
+
+    private function payUsingPoints($order){
+        //points can be used for therapy only
+
+        $walletpoints=Wallet::points($order->user_id);
+        $remaining_amount=$order->total_cost+$order->delivery_charge-$order->coupon_discount-$order->balance_used;
+
+        if($walletpoints<=0)
+            return [
+                'status'=>'failed',
+                'remaining_amount'=>$remaining_amount
+            ];
+
+        if($walletpoints >= $remaining_amount){
+            $order->payment_status='paid';
+            $order->status='confirmed';
+            $order->use_points=true;
+            $order->points_used=$remaining_amount;
+            $order->payment_mode='online';
+            $order->save();
+
+            //$order->changeDetailsStatus('confirmed');
+
+//            OrderStatus::create([
+//                'order_id'=>$order->id,
+//                'current_status'=>$order->status
+//            ]);
+
+            if($order->balance_used)
+                Wallet::updatewallet($order->user_id, 'Paid For Order ID: '.$order->refid, 'DEBIT',$order->balance_used, 'CASH', $order->id);
+
+            Wallet::updatewallet($order->user_id, 'Paid For Order ID: '.$order->refid, 'DEBIT',$order->points_used, 'POINT', $order->id);
+
+//            Order::deductInventory($order);
+
+            Cart::where('user_id', $order->user_id)->delete();
+
+            return [
+                'status'=>'success',
+            ];
+        }else{
+
+            $order->use_points=true;
+            $order->points_used=$walletpoints;
+            $order->payment_mode='online';
+            $order->save();
+
+//            OrderStatus::create([
+//                'order_id'=>$order->id,
+//                'current_status'=>$order->status
+//            ]);
+
+            return [
+                'status'=>'failed',
+                'remaining_amount'=>$remaining_amount-$order->points_used
+            ];
+
+        }
+
+
+    }
+
+    private function payUsingBalance($order){
+
+        $walletbalance=Wallet::balance($order->user_id);
+
+        $remaining_amount=$order->total_cost+$order->delivery_charge-$order->coupon_discount;
+
+        if($walletbalance<=0)
+            return [
+                'status'=>'failed',
+                'remaining_amount'=>$remaining_amount
+            ];
+
+        if($walletbalance >= $remaining_amount) {
+            $order->payment_status='paid';
+            $order->status='confirmed';
+            $order->use_balance=true;
+            $order->balance_used=$remaining_amount;
+            $order->payment_mode='online';
+            $order->save();
+
+//            $order->changeDetailsStatus('confirmed');
+
+//            OrderStatus::create([
+//                'order_id'=>$order->id,
+//                'current_status'=>$order->status
+//            ]);
+
+//            if($order->points_used)
+//                Wallet::updatewallet($order->user_id, 'Paid For Order ID: '.$order->refid, 'DEBIT',$order->points_used, 'POINT', $order->id);
+
+            Wallet::updatewallet($order->user_id, 'Paid For Order ID: '.$order->refid, 'DEBIT',$order->balance_used, 'CASH', $order->id);
+
+//            Order::deductInventory($order);
+
+            Cart::where('user_id', $order->user_id)->delete();
+
+            return [
+                'status'=>'success',
+            ];
+        }else {
+
+            $order->use_balance=true;
+            $order->balance_used=$walletbalance;
+            $order->payment_mode='online';
+            $order->save();
+
+            return [
+                'status'=>'failed',
+                'remaining_amount'=>$remaining_amount-$order->balance_used
+            ];
+
         }
 
     }
