@@ -99,7 +99,7 @@ class MemberShipController extends Controller
                     'total'=>($membership->price)*100,
                     'email'=>$user->email,
                     'mobile'=>$user->mobile,
-                    'description'=>'Membership Subscription at HalloBasket',
+                    'description'=>'Membership Subscription at Frestr',
                     //'name'=>$order->name,
                     'currency'=>'INR',
                     'merchantid'=>$this->pay->merchantkey,

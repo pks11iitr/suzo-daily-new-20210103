@@ -155,22 +155,22 @@ class OrderController extends Controller
 
         switch($order->status){
             case 'dispatched':
-                $message='Your order at Hallobasket with  ID:'.$order->refid.' has been dispatched. You will receive your order shortly';
+                $message='Your order at Frestr with  ID:'.$order->refid.' has been dispatched. You will receive your order shortly';
                 $title='Order Dispatched';
                 break;
             case 'delivered':
-                $message='Your order at Hallobasket with  ID:'.$order->refid.' has been delivered.';
+                $message='Your order at Frestr with  ID:'.$order->refid.' has been delivered.';
                 $title='Order Delivered';
                 break;
             case 'cancelled':
-                $message='Your order at Hallobasket with  ID:'.$order->refid.' has been cancelled.';
+                $message='Your order at Frestr with  ID:'.$order->refid.' has been cancelled.';
                 $title='Order Cancelled';
                 break;
 
         }
 
         if($status=='reopen'){
-            $message='Your order at Hallobasket with  ID:'.$order->refid.' has been reopened.';
+            $message='Your order at Frestr with  ID:'.$order->refid.' has been reopened.';
             $title='Order Reopened';
         }
 

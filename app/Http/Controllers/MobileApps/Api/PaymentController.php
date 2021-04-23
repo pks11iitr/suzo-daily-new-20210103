@@ -97,7 +97,7 @@ class PaymentController extends Controller
 
                 return [
                     'status'=>'success',
-                    'message'=>'Congratulations! Your order at Hallobasket is successful',
+                    'message'=>'Congratulations! Your order at Frestr is successful',
                     'data'=>[
                         'payment_done'=>'yes',
                         'ref_id'=>$order->refid,
@@ -116,7 +116,7 @@ class PaymentController extends Controller
 
                 return [
                     'status'=>'success',
-                    'message'=>'Congratulations! Your order at Hallobasket is successful',
+                    'message'=>'Congratulations! Your order at Frestr is successful',
                     'data'=>[
                         'payment_done'=>'yes',
                         'ref_id'=>$order->refid,
@@ -145,7 +145,7 @@ class PaymentController extends Controller
 
             return [
                 'status'=>'success',
-                'message'=>'Congratulations! Your order at Hallobasket is successful',
+                'message'=>'Congratulations! Your order at Frestr is successful',
                 'data'=>[
                     'payment_done'=>'yes',
                     'ref_id'=>$order->refid,
@@ -308,7 +308,7 @@ class PaymentController extends Controller
                     'total'=>($order->total_cost+$order->delivery_charge+$order->extra_amount-$order->coupon_discount-$order->points_used-$order->balance_used)*100,
                     'email'=>$order->email,
                     'mobile'=>$order->mobile,
-                    'description'=>'Product Purchase at HalloBasket',
+                    'description'=>'Product Purchase at Frestr',
                     'name'=>$order->name,
                     'currency'=>'INR',
                     'merchantid'=>$this->pay->merchantkey,
@@ -349,7 +349,7 @@ class PaymentController extends Controller
 
         return [
             'status'=>'success',
-            'message'=>'Congratulations! Your order at HalloBasket is successful',
+            'message'=>'Congratulations! Your order at Frestr is successful',
             'data'=>[
                 'payment_done'=>'yes',
                 'refid'=>$order->refid,
@@ -433,7 +433,7 @@ class PaymentController extends Controller
 
             return [
                 'status'=>'success',
-                'message'=> 'Congratulations! Your order at Hallobasket is successful',
+                'message'=> 'Congratulations! Your order at Frestr is successful',
                 'data'=>[
                     'ref_id'=>$order->refid,
                     'order_id'=>$order->id,

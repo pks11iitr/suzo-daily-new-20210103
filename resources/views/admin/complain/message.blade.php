@@ -73,7 +73,7 @@
                   @if($compalin->type=='admin')
                   <div class="direct-chat-msg right">
                     <div class="direct-chat-infos clearfix">
-                     <span class="direct-chat-name float-right">HalloBasket Admin</span>
+                     <span class="direct-chat-name float-right">Frestr Admin</span>
                       <span class="direct-chat-timestamp float-left">{{$compalin->created_at}}</span>
                     </div>
                     <!-- /.direct-chat-infos -->
