@@ -112,7 +112,7 @@ class PaymentController extends Controller
             $result=$this->payUsingPoints($order);
             if($result['status']=='success'){
 
-                //event(new OrderConfirmed($order));
+                event(new OrderConfirmed($order));
 
                 return [
                     'status'=>'success',
