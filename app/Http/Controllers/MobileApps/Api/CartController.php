@@ -219,10 +219,10 @@ class CartController extends Controller
             }
             $item_type_count++;
             if($c->type=='subscription'){
-                $total=$total+($c->product->price??0)*$c->quantity*$c->no_of_days;
-                $quantity=$quantity+$c->quantity*$c->no_of_days;
-                $price_total=$price_total+($c->product->price??0)*$c->quantity*$c->no_of_days;
-                $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->quantity*$c->no_of_days;
+                $total=$total+($c->product->price??0)*$c->total_quantity;
+                $quantity=$quantity+$c->total_quantity;
+                $price_total=$price_total+($c->product->price??0)*$c->total_quantity;
+                $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->total_quantity;
 
                 $cartitem['subscriptions'][]=array(
                     'id'=>$c->id,
@@ -259,10 +259,10 @@ class CartController extends Controller
 
 
             }else{
-                $total=$total+($c->product->price??0)*$c->quantity;
-                $quantity=$quantity+$c->quantity;
-                $price_total=$price_total+($c->product->price??0)*$c->quantity;
-                $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->quantity;
+                $total=$total+($c->product->price??0)*$c->total_quantity;
+                $quantity=$quantity+$c->total_quantity;
+                $price_total=$price_total+($c->product->price??0)*$c->total_quantity;
+                $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->total_quantity;
                 $cartitem['once'][]=array(
                     'id'=>$c->id,
                     'name'=>$c->product->name??'',
