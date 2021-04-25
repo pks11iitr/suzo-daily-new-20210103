@@ -104,7 +104,7 @@ class OrderController extends Controller
         foreach($cart as $item) {
             if($item->type=='subscription'){
                 $total_cost=$total_cost+$item->quantity*($item->product->price??0)*$item->no_of_days;
-                $savings=$savings+$item->quantity*(($item->product->price??0)-($item->product->cut_price))*$item->no_of_days;
+                $savings=$savings+$item->quantity*(($item->product->cut_price)-($item->product->price??0))*$item->no_of_days;
 
                 if($user->membership_expiry>=$item->start_date){
                     $subscription_days=$item->days->map(function($element){
@@ -118,12 +118,12 @@ class OrderController extends Controller
 
             }
             else{
-                $total_cost=$total_cost+$item->quantity*($item->product->price??0);
-                $savings=$savings+$item->quantity*(($item->product->price??0)-($item->product->cut_price));
+                $total_cost=$total_cost+$item->total_quantity*($item->product->price??0);
+                $savings=$savings+$item->total_quantity*(($item->product->cut_price)-($item->product->price??0));
 
                 if(!isset($daywise_delivery_total))
                     $daywise_delivery_total[$item->start_date]=0;
-                $daywise_delivery_total[$item->start_date]=$daywise_delivery_total[$item->start_date]+$item->product->price*$item->quantity;
+                $daywise_delivery_total[$item->start_date]=$daywise_delivery_total[$item->start_date]+$item->product->price*$item->total_quantity;
 
             }
 
@@ -523,102 +523,117 @@ class OrderController extends Controller
 
             return [
                 'status'=>'failed',
-                'message'=>'This subscription includes additional benefit of Frestr Cash. Please raise a case in complaints section to cancel this product'
+                'message'=>'This subscription includes additional Frestr Cash benefits. Please raise a case in complaints section to cancel this product'
             ];
 
         }
-
-
-        $order=Order::with('details.product.subcategory')
-            ->find($detail->order_id);
-
-        foreach($order->details as $o)
-            if($o->id==$detail->id){
-                $itemcost=($o->total_quantity-$o->delivered_quantity)*$o->price;
-                $o->total_quantity=$o->delivered_quantity;
-            }
-
-        //$itemcost=$detail->total_quantity*$detail->price;
-
-        if($order->coupon){
-            $coupon=Coupon::where('code', $order->coupon)->first();
-            $discount=$order->getCouponDiscount($coupon);
-            if($order->coupon_discount-$discount >= $itemcost)
-                return [
-                    'status'=>'failed',
-                    'message'=>'This order includes coupon discount of Rs. '.$order->coupon_discount.'. Cancellation of this item will cause cancellation of coupon discount, which will cost additional charges of Rs. '.($order->coupon_discount-$discount - $itemcost).'. If you still want to cancel this item please raise a case in complaint section.'
-                ];
-
-            $refund_amount= $itemcost - ($order->coupon_discount-$discount);
-
-
-            if($discount>0){
-                $order->applyCoupon($coupon);
-            }else{
-                $order->coupon=null;
-                $order->coupon_discount=0;
-            }
-            $order->total_cost=$order->total_cost-$itemcost;
-            $order->save();
-
-            $detail->total_quantity=$detail->delivered_quantity;
-            $detail->remark=$message;
-            $detail->status='cancelled';
-            $detail->save();
-
-            $detail->deliveries()
-                ->where('status', 'pending')
-                ->update(['status'=>'cancelled']);
-
-            //Refund Amount to Wallet
-            if($refund_amount>0)
-                Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
-
-            event(new ItemCancelled($order, $detail));
-
-            return [
-                'status'=>'success',
-                'message'=>'Subscription has been cancelled',
-                'order_id'=>$detail->order_id,
-            ];
-        }
-
-        //goldcash %tage in total amount
-        if($order->points_used>0){
-            $percent=$order->total_cost*100/$order->points_used;
-        }else{
-            $percent=0;
-        }
-
-        $refund_amount=$itemcost;
-        $point_return=round($refund_amount*$percent/100, 2);
-        $cash_return=round($order->total_cost-$point_return, 2);
-
-        $order->total_cost=$order->total_cost-$itemcost;
-        $order->save();
 
         $detail->status='cancelled';
         $detail->remark=$message;
+        $detail->cancel_raised=true;
+        $detail->raised_at=date('Y-m-d H:i:s');
         $detail->save();
 
         $detail->deliveries()
             ->where('status', 'pending')
             ->update(['status'=>'cancelled']);
 
-        //Refund Amount to Wallet
-        if($cash_return>0)
-            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
-
-        if($point_return>0)
-            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
-
-        event(new ItemCancelled($order, $detail));
-
         return [
             'status'=>'success',
-            'message'=>'Subscription has been cancelled',
+            'message'=>'Cancellation request has been raised',
             'order_id'=>$detail->order_id,
         ];
+
+//        $order=Order::with('details.product.subcategory')
+//            ->find($detail->order_id);
+//
+//        foreach($order->details as $o)
+//            if($o->id==$detail->id){
+//                $itemcost=($o->total_quantity-$o->delivered_quantity)*$o->price;
+//                $o->total_quantity=$o->delivered_quantity;
+//            }
+//
+//        //$itemcost=$detail->total_quantity*$detail->price;
+//
+//        if($order->coupon){
+//            $coupon=Coupon::where('code', $order->coupon)->first();
+//            $discount=$order->getCouponDiscount($coupon);
+//            if($order->coupon_discount-$discount >= $itemcost)
+//                return [
+//                    'status'=>'failed',
+//                    'message'=>'This order includes coupon discount of Rs. '.$order->coupon_discount.'. Cancellation of this item will cause cancellation of coupon discount, which will cost additional charges of Rs. '.($order->coupon_discount-$discount - $itemcost).'. If you still want to cancel this item please raise a case in complaint section.'
+//                ];
+//
+//            $refund_amount= $itemcost - ($order->coupon_discount-$discount);
+//
+//
+//            if($discount>0){
+//                $order->applyCoupon($coupon);
+//            }else{
+//                $order->coupon=null;
+//                $order->coupon_discount=0;
+//            }
+//            $order->total_cost=$order->total_cost-$itemcost;
+//            $order->save();
+//
+//            $detail->total_quantity=$detail->delivered_quantity;
+//            $detail->remark=$message;
+//            $detail->status='cancelled';
+//            $detail->save();
+//
+//            $detail->deliveries()
+//                ->where('status', 'pending')
+//                ->update(['status'=>'cancelled']);
+//
+//            //Refund Amount to Wallet
+//            if($refund_amount>0)
+//                Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
+//
+//            event(new ItemCancelled($order, $detail));
+//
+//            return [
+//                'status'=>'success',
+//                'message'=>'Subscription has been cancelled',
+//                'order_id'=>$detail->order_id,
+//            ];
+//        }
+//
+//        //goldcash %tage in total amount
+//        if($order->points_used>0){
+//            $percent=$order->total_cost*100/$order->points_used;
+//        }else{
+//            $percent=0;
+//        }
+//
+//        $refund_amount=$itemcost;
+//        $point_return=round($refund_amount*$percent/100, 2);
+//        $cash_return=round($order->total_cost-$point_return, 2);
+//
+//        $order->total_cost=$order->total_cost-$itemcost;
+//        $order->save();
+//
+//        $detail->status='cancelled';
+//        $detail->remark=$message;
+//        $detail->save();
+//
+//        $detail->deliveries()
+//            ->where('status', 'pending')
+//            ->update(['status'=>'cancelled']);
+//
+//        //Refund Amount to Wallet
+//        if($cash_return>0)
+//            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
+//
+//        if($point_return>0)
+//            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
+//
+//        event(new ItemCancelled($order, $detail));
+//
+//        return [
+//            'status'=>'success',
+//            'message'=>'Subscription has been cancelled',
+//            'order_id'=>$detail->order_id,
+//        ];
     }
 
 
