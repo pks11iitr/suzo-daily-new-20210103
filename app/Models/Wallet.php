@@ -52,7 +52,7 @@ class Wallet extends Model
         return [
 
             'balance'=>round(($balances['CASH']['Credit']??0)-($balances['CASH']['Debit']??0),2),
-            'cashback'=>round(($balances['POINTS']['Credit']??0)-($balances['POINTS']['Debit']??0), 2),
+            'cashback'=>round(($balances['POINT']['Credit']??0)-($balances['POINT']['Debit']??0), 2),
 
         ];
     }

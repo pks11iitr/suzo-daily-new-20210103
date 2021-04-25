@@ -300,7 +300,7 @@ class CartController extends Controller
             }
         }
 
-        $cashbackpoints=$eligible_goldcash < $walletdetails['cashback']?$eligible_goldcash:$walletdetails['cashback'];
+        $cashbackpoints=($eligible_goldcash < $walletdetails['cashback'])?$eligible_goldcash:$walletdetails['cashback'];
 
             return [
                 'status'=>'success',
