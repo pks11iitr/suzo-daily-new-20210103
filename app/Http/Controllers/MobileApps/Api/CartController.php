@@ -218,11 +218,14 @@ class CartController extends Controller
                 continue;
             }
             $item_type_count++;
+
+            $total=$total+($c->product->price??0)*$c->total_quantity;
+            $quantity=$quantity+$c->total_quantity;
+            $price_total=$price_total+($c->product->price??0)*$c->total_quantity;
+            $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->total_quantity;
+            $eligible_goldcash=$eligible_goldcash+($c->price*$c->product->eligible_goldcash/100)*$c->total_quantity;
+
             if($c->type=='subscription'){
-                $total=$total+($c->product->price??0)*$c->total_quantity;
-                $quantity=$quantity+$c->total_quantity;
-                $price_total=$price_total+($c->product->price??0)*$c->total_quantity;
-                $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->total_quantity;
 
                 $cartitem['subscriptions'][]=array(
                     'id'=>$c->id,
@@ -236,7 +239,6 @@ class CartController extends Controller
                     'start_date'=>$c->start_date,
                     'time_slot'=>$c->time_slot_id,
                     'no_of_days'=>$c->no_of_days,
-                    //    'discount'=>$c->sizeprice->discount,
                     'price'=>$c->product->price,
                     'cut_price'=>$c->product->cut_price,
                     'days'=>$c->days,
@@ -244,8 +246,6 @@ class CartController extends Controller
                     'stock'=>$c->product->stock,
                     'date_text'=>date('d M', strtotime($c->start_date)).' By'.' 7PM',
                 );
-
-                $eligible_goldcash=$eligible_goldcash+($c->price*$c->product->eligible_goldcash/100)*$c->quantity*$c->no_of_days;
 
                 if($user->membership_expiry>=$c->start_date){
                     $subscription_days=$c->days->map(function($element){
@@ -259,10 +259,7 @@ class CartController extends Controller
 
 
             }else{
-                $total=$total+($c->product->price??0)*$c->total_quantity;
-                $quantity=$quantity+$c->total_quantity;
-                $price_total=$price_total+($c->product->price??0)*$c->total_quantity;
-                $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->total_quantity;
+
                 $cartitem['once'][]=array(
                     'id'=>$c->id,
                     'name'=>$c->product->name??'',
@@ -275,7 +272,6 @@ class CartController extends Controller
                     'start_date'=>$c->start_date,
                     'time_slot'=>$c->time_slot_id,
                     'no_of_days'=>$c->no_of_days,
-                    //    'discount'=>$c->sizeprice->discount,
                     'price'=>$c->product->price,
                     'cut_price'=>$c->product->cut_price,
                     'days'=>$c->days,
@@ -284,7 +280,6 @@ class CartController extends Controller
                     'date_text'=>date('d M', strtotime($c->start_date)).' By'.' 7PM',
                 );
 
-                $eligible_goldcash=$eligible_goldcash+($c->price*$c->product->eligible_goldcash/100)*$c->quantity;
 
                 if(!isset($daywise_delivery_total[$c->start_date]))
                     $daywise_delivery_total[$c->start_date]=0;
@@ -297,44 +292,16 @@ class CartController extends Controller
 
         if(!empty($daywise_delivery_total)){
             foreach($daywise_delivery_total as $key=>$val){
-                if($user->membership_expiry < $key && $val< 399){
+                if($user->membership_expiry < $key && $val< config('myconfig.delivery_charges_min_order')['non_member']){
                     $delivery_charge=$delivery_charge+($delivery->param_value??0);
-                }else if($user->membership_expiry >= $key && $val< 149){
+                }else if($user->membership_expiry >= $key && $val < config('myconfig.delivery_charges_min_order')['member']){
                     $delivery_charge=$delivery_charge+($delivery->param_value??0);
                 }
             }
         }
 
-//        $cashbackpoints=Wallet::calculateEligibleCashback($price_total, $walletdetails['cashback']);
-
         $cashbackpoints=$eligible_goldcash<$walletdetails['cashback']?$eligible_goldcash:$walletdetails['cashback'];
 
-
-        /* $savelaters=SaveLaterProduct::with(['product'=>function($products){
-             $products->where('isactive', true);
-         }])->where('user_id', $user->id)->get();
-         foreach($savelaters as $sl){
-
-
-             $savelater[]=array(
-                 'id'=>$sl->id,
-                 'name'=>$sl->product->name??'',
-                 'company'=>$sl->product->company??'',
-                 'ratings'=>$sl->product->ratings??'',
-                 'image'=>$sl->sizeprice->image,
-                 'product_id'=>$sl->product->id??'',
-                 'size_id'=>$sl->sizeprice->id,
-                 'min_qty'=>$sl->sizeprice->min_qty,
-                 'max_qty'=>$sl->sizeprice->max_qty,
-                 'discount'=>$sl->sizeprice->discount,
-                 'size'=>$sl->sizeprice->size,
-                 'price'=>$sl->sizeprice->price,
-                 'price_str'=>$sl->sizeprice->price_str,
-                 'cut_price'=>$sl->sizeprice->cut_price,
-                 'cut_price_str'=>$sl->sizeprice->cut_price_str,
-                 'stock'=>$sl->sizeprice->stock,
-             );
-         }*/
             return [
                 'status'=>'success',
                 'deliveryaddress'=>$deliveryaddress,

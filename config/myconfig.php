@@ -8,6 +8,11 @@ return [
         '3'=>'New Delhi',
         '4'=>'Delhi',
         '5'=>'Greater Noida'
+    ],
+
+    'delivery_charges_min_order'=>[
+        'member'=>149,
+        'non_member'=>399
     ]
 
 ];
