@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\MobileApps\Api;
 
 use App\Models\Cart;
+use App\Models\Configuration;
 use App\Models\Coupon;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -67,17 +68,37 @@ class CouponController extends Controller
 
         $cost=0;
         $savings=0;
-        $delivery_charge=25;
+        $delivery=Configuration::where('param', 'delivery_charge')->first();
         //$itemdetails=[];
+        $delivery_charge=0;
         foreach($items as $detail){
-//            if($detail->type=='subscription'){
                 $cost=$cost+$detail->product->price*$detail->total_quantity;
                 $savings=$savings+($detail->product->cut_price-$detail->product->price)*$detail->total_quantity;
-//            }else{
-//                $cost=$cost+$detail->product->price*$detail->quantity;
-//                $savings=$savings+($detail->product->cut_price-$detail->product->price)*$detail->quantity;
-//            }
+                if($detail->type=='subscription'){
+                    if($user->membership_expiry>=$detail->start_date){
+                        $subscription_days=$detail->days->map(function($element){
+                            return $element->id;
+                        })->toArray();
+                        $count_free_days=calculateDaysCountBetweenDate($detail->start_date, $user->membership_expiry, $subscription_days);
+                        $delivery_charge=$delivery_charge+($detail->product->delivery_charge*$detail->total_quantity)-$detail->quantity*$detail->product->delivery_charge*$count_free_days;
+                    }else{
+                        $delivery_charge=$delivery_charge+($detail->product->delivery_charge*$detail->total_quantity);
+                    }
+                }else{
+                    if(!isset($daywise_delivery_total[$detail->start_date]))
+                        $daywise_delivery_total[$detail->start_date]=0;
+                    $daywise_delivery_total[$detail->start_date]=$daywise_delivery_total[$detail->start_date]+$detail->product->price*$detail->quantity;
+                }
+        }
 
+        if(!empty($daywise_delivery_total)){
+            foreach($daywise_delivery_total as $key=>$val){
+                if($user->membership_expiry < $key && $val< config('myconfig.delivery_charges_min_order')['non_member']){
+                    $delivery_charge=$delivery_charge+($delivery->param_value??0);
+                }else if($user->membership_expiry >= $key && $val < config('myconfig.delivery_charges_min_order')['member']){
+                    $delivery_charge=$delivery_charge+($delivery->param_value??0);
+                }
+            }
         }
 
 
