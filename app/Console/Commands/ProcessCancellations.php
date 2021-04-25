@@ -70,7 +70,7 @@ class ProcessCancellations extends Command
         }
     }
 
-    public function cancelPartialOrder($order){
+    private function cancelPartialOrder($order){
         $result=$this->calculateTotalAfterCancellation($order);
 
         $order->update([
@@ -98,7 +98,7 @@ class ProcessCancellations extends Command
 
     }
 
-    public function calculateTotalAfterCancellation($order){
+    private function calculateTotalAfterCancellation($order){
 
         $delivery_charge=0;
         $savings=0;
@@ -109,7 +109,7 @@ class ProcessCancellations extends Command
 
         //calculate total cost after cancellation
         foreach($order->details as $item) {
-            if($order->details=='cancelled')
+            if(!in_array($item->status, ['pending', 'completed', 'partially-completed']))
                 continue;
 
             $total_cost=$total_cost+$item->total_quantity*($item->product->price??0);
@@ -176,7 +176,7 @@ class ProcessCancellations extends Command
     }
 
 
-    public function cancelCompleteOrder($order){
+    private function cancelCompleteOrder($order){
         if($order->points_used>0)
             Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$order->points_used, 'POINT', $order->id);
 
