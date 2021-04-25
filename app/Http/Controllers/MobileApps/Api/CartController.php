@@ -223,7 +223,7 @@ class CartController extends Controller
             $quantity=$quantity+$c->total_quantity;
             $price_total=$price_total+($c->product->price??0)*$c->total_quantity;
             $price_total_discount=$price_total_discount+(($c->product->cut_price??0)-($c->product->price??0))*$c->total_quantity;
-            $eligible_goldcash=$eligible_goldcash+($c->price*$c->product->eligible_goldcash/100)*$c->total_quantity;
+            $eligible_goldcash=$eligible_goldcash+($c->product->price*$c->product->eligible_goldcash/100)*$c->total_quantity;
 
             if($c->type=='subscription'){
 
@@ -300,7 +300,7 @@ class CartController extends Controller
             }
         }
 
-        $cashbackpoints=$eligible_goldcash<$walletdetails['cashback']?$eligible_goldcash:$walletdetails['cashback'];
+        $cashbackpoints=$eligible_goldcash < $walletdetails['cashback']?$eligible_goldcash:$walletdetails['cashback'];
 
             return [
                 'status'=>'success',
