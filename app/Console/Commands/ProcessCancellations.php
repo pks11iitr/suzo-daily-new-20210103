@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Events\ItemCancelled;
 use App\Events\LogOrder;
 use App\Events\OrderCancelled;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Wallet;
@@ -69,34 +71,51 @@ class ProcessCancellations extends Command
     }
 
     public function cancelPartialOrder($order){
-        $cancel_items=[];
-        foreach($order->details as $d){
-            if($d->status=='cancelled' && $d->cancel_raised){
-                $cancel_items[]=$d;
-            }
-        }
+        $result=$this->calculateTotalAfterCancellation($order);
 
-        foreach($cancel_items as $detail){
-            if($detail->type=='subscription'){
+        $order->update([
+            'total_cost'=>$result['total_cost'],
+            'savings'=>$result['savings'],
+            'coupon'=>$result['coupon_discount']>0?$order->coupon:null,
+            'coupon_discount'=>$result['coupon_discount'],
+            'delivery_charge'=>$result['delivery_charge'],
+            'use_balance'=>$result['balance_used']>0,
+            'use_points'=>$result['eligible_goldcash']>0,
+            'balance_used'=>$result['balance_used'],
+            'points_used'=>$result['eligible_goldcash']
+        ]);
 
-            }else{
+        $order->details()->update(['cancel_raised'=>false]);
 
-            }
-        }
+        if($result['points_refund'])
+            Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$result['points_refund'], 'POINT', $order->id);
+
+        if($result['cash_refund'])
+            Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$result['cash_refund'], 'CASH', $order->id);
+
+        event(new OrderCancelled($order));
+        event(new LogOrder($order));
 
     }
 
     public function calculateTotalAfterCancellation($order){
+
+        $delivery_charge=0;
+        $savings=0;
+        $total_cost=0;
+        $coupon_discount=0;
+        $eligible_goldcash=0;
+        $balance_used=0;
 
         //calculate total cost after cancellation
         foreach($order->details as $item) {
             if($order->details=='cancelled')
                 continue;
 
-            if($item->type=='subscription'){
-                $total_cost=$total_cost+$item->quantity*($item->product->price??0)*$item->no_of_days;
-                $savings=$savings+$item->quantity*(($item->product->price??0)-($item->product->cut_price))*$item->no_of_days;
+            $total_cost=$total_cost+$item->total_quantity*($item->product->price??0);
+            $savings=$savings+$item->total_quantity*(($item->product->price??0)-($item->product->cut_price));
 
+            if($item->type=='subscription'){
                 if($order->customer->membership_expiry>=$item->start_date){
                     $subscription_days=$item->days->map(function($element){
                         return $element->id;
@@ -106,35 +125,54 @@ class ProcessCancellations extends Command
                 }else{
                     $delivery_charge=$delivery_charge+($item->product->delivery_charge*$item->total_quantity);
                 }
-
             }
             else{
-                $total_cost=$total_cost+$item->quantity*($item->product->price??0);
-                $savings=$savings+$item->quantity*(($item->product->price??0)-($item->product->cut_price));
-
                 if(!isset($daywise_delivery_total))
                     $daywise_delivery_total[$item->start_date]=0;
                 $daywise_delivery_total[$item->start_date]=$daywise_delivery_total[$item->start_date]+$item->product->price*$item->quantity;
-
             }
-
-            $items[]=new OrderDetail(array_merge($item->only('product_id', 'quantity','type','start_date','time_slot_id','no_of_days', 'total_quantity'), ['price'=>$item->product->price, 'cut_price'=>$item->product->cut_price]));
-
-            $days[$item->product_id]=$item->days->map(function($elem){
-                return $elem->id;
-            })->toArray();
-
         }
 
         if(!empty($daywise_delivery_total)){
             foreach($daywise_delivery_total as $key=>$val){
-                if($order->customer->membership_expiry < $key && $val< 399){
+                if($order->customer->membership_expiry < $key && $val< config('myconfig.delivery_charges_min_order')['non_member']){
                     $delivery_charge=$delivery_charge+($delivery->param_value??0);
-                }else if($order->customer->membership_expiry >= $key && $val< 149){
+                }else if($order->customer->membership_expiry >= $key && $val< config('myconfig.delivery_charges_min_order')['member']){
                     $delivery_charge=$delivery_charge+($delivery->param_value??0);
                 }
             }
         }
+
+        //check if counpon applied
+        //find discount by applying coupon
+        if($order->coupon){
+            $coupon_discount=$this->calcCouponDiscount($order);
+        }
+
+        //calculate eligible goldcash
+        if($order->use_points){
+            $eligible_goldcash=$this->calcGoldCash($order);
+        }
+
+
+        if($order->use_balance)
+        {
+            if($order->balance_used > $total_cost+$delivery_charge-$coupon_discount-$eligible_goldcash){
+                $balance_used=$total_cost+$delivery_charge-$coupon_discount-$eligible_goldcash;
+            }else{
+                $balance_used=$order->balance_used;
+            }
+        }else{
+            $balance_used=0;
+        }
+
+        $cash_refund=(($order->total_cost+$delivery_charge-$order->coupon_discount-$order->points_used)-($total_cost+$delivery_charge-$coupon_discount-$eligible_goldcash) >0)?(($order->total_cost+$delivery_charge-$order->coupon_discount-$order->points_used)-($total_cost+$delivery_charge-$coupon_discount-$eligible_goldcash)):0;
+
+        $points_refund=($order->points_used-$eligible_goldcash)>0?($order->points_used-$eligible_goldcash):0;
+
+        return compact('total_cost','savings','delivery_charge','balance_used','cash_refund','points_refund','eligible_goldcash');
+
+
     }
 
 
@@ -164,4 +202,37 @@ class ProcessCancellations extends Command
         event(new OrderCancelled($order));
         event(new LogOrder($order));
     }
+
+
+    private function calcCouponDiscount($order){
+        $coupon_discount=0;
+        $coupon=Coupon::active()
+            ->with(['categories'=>function($categories){
+                $categories->select('sub_category.id');
+            }])
+            ->with(['specialcategories'=>function($specialcategories){
+                $specialcategories->select('special_category.id');
+            }])
+            ->where('code', $order->coupon)->first();
+        if($coupon){
+            $coupon_discount=$order->getCouponDiscount($coupon);
+        }
+        return $coupon_discount;
+    }
+
+    private function calcGoldCash($order){
+
+        $eligible_goldcash=0;
+        foreach($order->details as $d){
+            if($d->status=='cancelled')
+                continue;
+
+            $eligible_goldcash=$eligible_goldcash+($d->price*$d->product->eligible_goldcash/100)*$d->total_quantity;
+
+        }
+
+        return $eligible_goldcash;
+
+    }
+
 }

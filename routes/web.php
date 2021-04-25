@@ -272,12 +272,7 @@ Route::group(['middleware'=>['auth', 'acl'], 'is'=>'admin'], function() {
         Route::get('edit/{id}','SuperAdmin\RiderController@edit')->name('rider.edit');
         Route::post('store','SuperAdmin\RiderController@store')->name('rider.store');
         Route::post('update/{id}','SuperAdmin\RiderController@update')->name('rider.update');
-
-
     });
-
-
-
 });
 
 Route::get('invoice/{id}', 'SuperAdmin\InvoiceController@download')->name('download.invoice');

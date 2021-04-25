@@ -54,6 +54,8 @@ class Order extends Model
         });
         $coupon_cat=$coupon_cat->toArray();
         foreach($this->details as $detail){
+            if($detail->status=='cancelled')
+                continue;
             if(count($coupon_cat)){
                 $product_cat=$detail->product->subcategory->map(function($element){
                     return $element->id;

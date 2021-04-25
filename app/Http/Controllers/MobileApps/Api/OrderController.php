@@ -102,10 +102,11 @@ class OrderController extends Controller
         $refid=env('MACHINE_ID').rand(1,9).rand(1,9).date('his').rand(1,9).rand(1,9);
 
         foreach($cart as $item) {
-            if($item->type=='subscription'){
-                $total_cost=$total_cost+$item->quantity*($item->product->price??0)*$item->no_of_days;
-                $savings=$savings+$item->quantity*(($item->product->cut_price)-($item->product->price??0))*$item->no_of_days;
 
+            $total_cost=$total_cost+$item->total_quantity*($item->product->price??0);
+            $savings=$savings+$item->total_quantity*(($item->product->cut_price)-($item->product->price??0));
+
+            if($item->type=='subscription'){
                 if($user->membership_expiry>=$item->start_date){
                     $subscription_days=$item->days->map(function($element){
                         return $element->id;
@@ -118,8 +119,6 @@ class OrderController extends Controller
 
             }
             else{
-                $total_cost=$total_cost+$item->total_quantity*($item->product->price??0);
-                $savings=$savings+$item->total_quantity*(($item->product->cut_price)-($item->product->price??0));
 
                 if(!isset($daywise_delivery_total))
                     $daywise_delivery_total[$item->start_date]=0;
@@ -137,9 +136,9 @@ class OrderController extends Controller
 
         if(!empty($daywise_delivery_total)){
             foreach($daywise_delivery_total as $key=>$val){
-                if($user->membership_expiry < $key && $val< 399){
+                if($user->membership_expiry < $key && $val< config('myconfig.delivery_charges_min_order')['non_member']){
                     $delivery_charge=$delivery_charge+($delivery->param_value??0);
-                }else if($user->membership_expiry >= $key && $val< 149){
+                }else if($user->membership_expiry >= $key && $val< config('myconfig.delivery_charges_min_order')['member']){
                     $delivery_charge=$delivery_charge+($delivery->param_value??0);
                 }
             }
@@ -183,6 +182,7 @@ class OrderController extends Controller
         }
 
         //use gold cash for remaining amount
+        //only if coupon is not applied
         if(!$request->coupon){
             if($order->total_cost+$order->delivery_charge-$order->balance_used){
                 if($request->use_points==1) {
