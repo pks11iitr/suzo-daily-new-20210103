@@ -4,6 +4,7 @@ namespace App\Http\Controllers\MobileApps\Api;
 
 use App\Events\ItemCancelled;
 use App\Events\ItemRescheduled;
+use App\Events\LogOrder;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Configuration;
@@ -58,7 +59,11 @@ class OrderController extends Controller
         $days=[];
 
         if(!empty($request->coupon)){
-            $coupon=Coupon::active()->where('code', $request->coupon)->first();
+            $coupon=Coupon::active()
+                ->with(['categories'=>function($categories){
+                    $categories->select('sub_category.id');
+                }])
+                ->where('code', $request->coupon)->first();
             if(!$coupon){
                 return [
                     'status'=>'failed',
@@ -173,7 +178,7 @@ class OrderController extends Controller
         //use wallet balance for remaining amount
         if($order->total_cost+$order->delivery_charge-$order->coupon_discount){
             if($request->use_balance==1) {
-                $result=$this->useBalance($order);
+                $this->useBalance($order);
             }
         }
 
@@ -181,13 +186,15 @@ class OrderController extends Controller
         if(!$request->coupon){
             if($order->total_cost+$order->delivery_charge-$order->balance_used){
                 if($request->use_points==1) {
-                    $result=$this->usePoints($order);
+                    $this->usePoints($order);
                 }
             }
         }
 
         //save changes
         $order->save();
+
+        event(new LogOrder($order));
 
         $order_id=$order->id;
 
@@ -287,7 +294,10 @@ class OrderController extends Controller
                     $show_cancel=0;
                     $show_edit=0;
                     $show_return=0;
-                    $initial_text='Cancelled';
+                    if($c->cancel_raised)
+                        $initial_text='Cancellation Raised';
+                    else
+                        $initial_text='Cancelled';
                     $time='';
                 }
 
@@ -343,7 +353,10 @@ class OrderController extends Controller
                     $show_cancel=0;
                     $show_edit=0;
                     $show_return=0;
-                    $initial_text='Cancelled';
+                    if($c->cancel_raised)
+                        $initial_text='Cancellation Raised';
+                    else
+                        $initial_text='Cancelled';
                     $time='';
                 }
 
@@ -415,70 +428,73 @@ class OrderController extends Controller
 
 
     private function cancelOnce($user, $detail, $message){
-        $order=Order::with(['details'=> function($details) use($detail){
-            $details->with('product.subcategory')
-            ->where('order_details.id', '!=', $detail->id);
-        }])
-        ->find($detail->order_id);
+//        $order=Order::with(['details'=> function($details) use($detail){
+//            $details->with('product.subcategory')
+//            ->where('order_details.id', '!=', $detail->id);
+//        }])
+//            ->where('user_id', $user->id)
+//        ->find($detail->order_id);
 
-        $itemcost=$detail->quantity*$detail->price;
-
-        if($order->coupon){
-            $coupon=Coupon::where('code', $order->coupon)->first();
-            $discount=$order->getCouponDiscount($coupon);
-            if($order->coupon_discount-$discount >= $itemcost)
-                return [
-                    'status'=>'failed',
-                    'message'=>'This order includes coupon discount of Rs. '.$order->coupon_discount.'. Cancellation of this item will cause cancellation of coupon discount, which will cost additional charges of Rs. '.($order->coupon_discount-$discount - $itemcost).'. If you still want to cancel this item please raise a case in complaint section.'
-                ];
-            $refund_amount= $itemcost - ($order->coupon_discount-$discount);
-
-            if($discount>0){
-                $order->applyCoupon($coupon);
-            }else{
-                $order->coupon=null;
-                $order->coupon_discount=0;
-            }
-            $order->total_cost=$order->total_cost-$itemcost;
-            $order->save();
-
-            $detail->status='cancelled';
-            $detail->remark=$message;
-            $detail->save();
-
-            $detail->deliveries()
-                ->where('status', 'pending')
-                ->update(['status'=>'cancelled']);
-
-            //Refund Amount to Wallet
-            if($refund_amount>0)
-                Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
-
-            event(new ItemCancelled($order, $detail));
-
-            return [
-                'status'=>'success',
-                'message'=>'Item has been cancelled',
-                'order_id'=>$detail->order_id,
-            ];
-        }
-
-        //goldcash %tage in total amount
-        if($order->points_used>0){
-            $percent=$order->total_cost*100/$order->points_used;
-        }else{
-            $percent=0;
-        }
-
-        $refund_amount=$itemcost;
-        $point_return=round($refund_amount*$percent/100, 2);
-        $cash_return=round($order->total_cost-$point_return, 2);
-
-        $order->total_cost=$order->total_cost-$itemcost;
-        $order->save();
+//        $itemcost=$detail->quantity*$detail->price;
+//
+//        if($order->coupon){
+//            $coupon=Coupon::where('code', $order->coupon)->first();
+//            $discount=$order->getCouponDiscount($coupon);
+//            if($order->coupon_discount-$discount >= $itemcost)
+//                return [
+//                    'status'=>'failed',
+//                    'message'=>'This order includes coupon discount of Rs. '.$order->coupon_discount.'. Cancellation of this item will cause cancellation of coupon discount as well, which will cost additional charges of Rs. '.($order->coupon_discount-$discount - $itemcost).'. If you still want to cancel this item please raise a case in complaint section.'
+//                ];
+//            $refund_amount= $itemcost - ($order->coupon_discount-$discount);
+//
+//            if($discount>0){
+//                $order->applyCoupon($coupon);
+//            }else{
+//                $order->coupon=null;
+//                $order->coupon_discount=0;
+//            }
+//            $order->total_cost=$order->total_cost-$itemcost;
+//            $order->save();
+//
+//            $detail->status='cancelled';
+//            $detail->remark=$message;
+//            $detail->save();
+//
+//            $detail->deliveries()
+//                ->where('status', 'pending')
+//                ->update(['status'=>'cancelled']);
+//
+//            //Refund Amount to Wallet
+//            if($refund_amount>0)
+//                Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
+//
+//            event(new ItemCancelled($order, $detail));
+//
+//            return [
+//                'status'=>'success',
+//                'message'=>'Item has been cancelled',
+//                'order_id'=>$detail->order_id,
+//            ];
+//        }
+//
+//        //goldcash %tage in total amount
+//        if($order->points_used>0){
+//            $percent=$order->total_cost*100/$order->points_used;
+//        }else{
+//            $percent=0;
+//        }
+//
+//        $refund_amount=$itemcost;
+//        $point_return=round($refund_amount*$percent/100, 2);
+//        $cash_return=round($order->total_cost-$point_return, 2);
+//
+//        $order->total_cost=$order->total_cost-$itemcost;
+//        $order->save();
 
         $detail->status='cancelled';
         $detail->remark=$message;
+        $detail->cancel_raised=true;
+        $detail->raised_at=date('Y-m-d H:i:s');
         $detail->save();
 
         $detail->deliveries()
@@ -486,16 +502,16 @@ class OrderController extends Controller
             ->update(['status'=>'cancelled']);
 
         //Refund Amount to Wallet
-        if($cash_return>0)
-            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
+//        if($cash_return>0)
+//            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
+//
+//        if($point_return>0)
+//            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
 
-        if($point_return>0)
-            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
-
-        event(new ItemCancelled($order, $detail));
+        //event(new ItemCancelled($order, $detail));
         return [
             'status'=>'success',
-            'message'=>'Item has been cancelled',
+            'message'=>'Cancellation Request Has Been Raised',
             'order_id'=>$detail->order_id,
         ];
     }
@@ -767,6 +783,93 @@ class OrderController extends Controller
             'message'=>'Your return request has been submitted'
         ];
 
+    }
+
+
+    private function cancelOnceOld($user, $detail, $message){
+        $order=Order::with(['details'=> function($details) use($detail){
+            $details->with('product.subcategory')
+                ->where('order_details.id', '!=', $detail->id);
+        }])
+            ->find($detail->order_id);
+
+        $itemcost=$detail->quantity*$detail->price;
+
+        if($order->coupon){
+            $coupon=Coupon::where('code', $order->coupon)->first();
+            $discount=$order->getCouponDiscount($coupon);
+            if($order->coupon_discount-$discount >= $itemcost)
+                return [
+                    'status'=>'failed',
+                    'message'=>'This order includes coupon discount of Rs. '.$order->coupon_discount.'. Cancellation of this item will cause cancellation of coupon discount as well, which will cost additional charges of Rs. '.($order->coupon_discount-$discount - $itemcost).'. If you still want to cancel this item please raise a case in complaint section.'
+                ];
+            $refund_amount= $itemcost - ($order->coupon_discount-$discount);
+
+            if($discount>0){
+                $order->applyCoupon($coupon);
+            }else{
+                $order->coupon=null;
+                $order->coupon_discount=0;
+            }
+            $order->total_cost=$order->total_cost-$itemcost;
+            $order->save();
+
+            $detail->status='cancelled';
+            $detail->remark=$message;
+            $detail->save();
+
+            $detail->deliveries()
+                ->where('status', 'pending')
+                ->update(['status'=>'cancelled']);
+
+            //Refund Amount to Wallet
+            if($refund_amount>0)
+                Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$refund_amount, 'CASH', $order->id);
+
+            event(new ItemCancelled($order, $detail));
+
+            return [
+                'status'=>'success',
+                'message'=>'Item has been cancelled',
+                'order_id'=>$detail->order_id,
+            ];
+        }
+
+        //goldcash %tage in total amount
+        if($order->points_used>0){
+            $percent=$order->total_cost*100/$order->points_used;
+        }else{
+            $percent=0;
+        }
+
+        $refund_amount=$itemcost;
+        $point_return=round($refund_amount*$percent/100, 2);
+        $cash_return=round($order->total_cost-$point_return, 2);
+
+        $order->total_cost=$order->total_cost-$itemcost;
+        $order->save();
+
+        $detail->status='cancelled';
+        $detail->remark=$message;
+        $detail->save();
+
+        $detail->deliveries()
+            ->where('status', 'pending')
+            ->update(['status'=>'cancelled']);
+
+        //Refund Amount to Wallet
+        if($cash_return>0)
+            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
+
+        if($point_return>0)
+            Wallet::updatewallet($order->user_id, 'Refund for item cancellation from order id: '.$order->refid, 'Credit',$point_return, 'POINT', $order->id);
+
+        event(new ItemCancelled($order, $detail));
+        return [
+            'status'=>'success',
+            'message'=>'Item has been cancelled',
+            'order_id'=>$detail->order_id,
+        ];
     }
 
 }

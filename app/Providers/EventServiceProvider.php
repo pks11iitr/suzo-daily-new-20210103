@@ -37,8 +37,16 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\ItemCancelListner'
         ],
 
+        'App\Events\OrderCancelled'=>[
+            'App\Listeners\OrderCancelListner'
+        ],
+
         'App\Events\ItemRescheduled'=>[
             'App\Listeners\ItemRescheduleListner'
+        ],
+
+        'App\Events\LogOrder'=>[
+            'App\Listeners\LogOrderListner'
         ],
 
     ];

@@ -11,7 +11,7 @@ class OrderDetail extends Model
 
     protected $table='order_details';
 
-    protected $fillable = ['order_id', 'user_id', 'product_id', 'quantity','type','start_date','time_slot_id','no_of_days', 'total_quantity', 'scheduled_quantity', 'delivered_quantity', 'status', 'last_delivery_at', 'remark', 'price','cut_price'];
+    protected $fillable = ['order_id', 'user_id', 'product_id', 'quantity','type','start_date','time_slot_id','no_of_days', 'total_quantity', 'scheduled_quantity', 'delivered_quantity', 'status', 'last_delivery_at', 'remark', 'price','cut_price','cancel_raised', 'raised_at'];
 
     public function product(){
         return $this->belongsTo('App\Models\Product', 'product_id');
