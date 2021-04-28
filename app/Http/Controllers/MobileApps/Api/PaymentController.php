@@ -70,7 +70,7 @@ class PaymentController extends Controller
         }
 
         if(!empty($order->coupon)){
-            $coupon=Coupon::active()->where('code', $order->coupon_applied)->first();
+            $coupon=Coupon::active()->where('code', $order->coupon)->first();
             if(!$coupon){
                 return [
                     'status'=>'failed',
