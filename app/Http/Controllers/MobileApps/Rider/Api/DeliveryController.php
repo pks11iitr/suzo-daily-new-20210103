@@ -83,7 +83,7 @@ class DeliveryController extends Controller
             ];
         }
 
-        if($request->quantity<1 || $request->quantity > $delivery->quantity){
+        if($request->quantity < 1 || $request->quantity > $delivery->quantity){
             return [
                 'status'=>'failed',
                 'message'=>'Invalid Quantity Selected'
@@ -123,12 +123,8 @@ class DeliveryController extends Controller
                 'rider_id'=>$delivery->rider_id,
                 'return_type'=>'in-hand'
             ]);
-        }
-
-
-        //mark complete delivery , Partial deliveries will be managed from admin panel
-        if( $delivery->status == 'delivered'){
-            if($delivery->detail->total_quantity==$delivery->detail->scheduled_quantity) {
+        }else if( $delivery->status == 'delivered'){
+            if($delivery->detail->total_quantity-$delivery->detail->delivered_quantity==$delivery->quantity) {
                 $delivery->detail->update([
                     'delivered_quantity' => DB::raw('delivered_quantity+' . $delivery->quantity),
                     'status' => 'completed',
