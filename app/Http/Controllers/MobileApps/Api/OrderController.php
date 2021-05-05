@@ -492,6 +492,7 @@ class OrderController extends Controller
 //        $order->save();
 
         $detail->status='cancelled';
+        $detail->cancel_returned=$detail->total_quantity;
         $detail->remark=$message;
         $detail->cancel_raised=true;
         $detail->raised_at=date('Y-m-d H:i:s');
@@ -528,7 +529,13 @@ class OrderController extends Controller
 
         }
 
-        $detail->status='cancelled';
+        if($detail->delivered_quantity){
+            $detail->status='partially-completed';
+            $detail->cancel_returned=$detail->total_quantity-$detail->delivered_quantity;
+        }else{
+            $detail->status='cancelled';
+            $detail->cancel_returned=$detail->total_quantity;
+        }
         $detail->remark=$message;
         $detail->cancel_raised=true;
         $detail->raised_at=date('Y-m-d H:i:s');

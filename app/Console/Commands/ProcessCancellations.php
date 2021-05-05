@@ -56,7 +56,7 @@ class ProcessCancellations extends Command
             foreach($order->details as $d){
                 // checking if canllation of complete order,
                 // or selected items are cancelled
-                if($d->status!='cancelled' || ($d->status=='cancelled' && $d->cancel_raised==0) || $d->delivered_quantity > 0){
+                if($d->cancel_raised=='false'){
                     $is_complete=false;
                     break;
                 }
@@ -109,11 +109,8 @@ class ProcessCancellations extends Command
 
         //calculate total cost after cancellation
         foreach($order->details as $item) {
-            if(!in_array($item->status, ['pending', 'completed', 'partially-completed']))
-                continue;
-
-            $total_cost=$total_cost+$item->total_quantity*($item->product->price??0);
-            $savings=$savings+$item->total_quantity*(($item->product->price??0)-($item->product->cut_price));
+            $total_cost=$total_cost+($item->total_quantity-$item->cancel_returned)*($item->product->price??0);
+            $savings=$savings+($item->total_quantity-$item->cancel_returned)*(($item->product->price??0)-($item->product->cut_price));
 
             if($item->type=='subscription'){
                 if($order->customer->membership_expiry>=$item->start_date){
@@ -224,13 +221,8 @@ class ProcessCancellations extends Command
 
         $eligible_goldcash=0;
         foreach($order->details as $d){
-            if($d->status=='cancelled')
-                continue;
-
-            $eligible_goldcash=$eligible_goldcash+($d->price*$d->product->eligible_goldcash/100)*$d->total_quantity;
-
+            $eligible_goldcash=$eligible_goldcash+($d->price*$d->product->eligible_goldcash/100)*($d->total_quantity-$d->cancel_returned);
         }
-
         return $eligible_goldcash;
 
     }
