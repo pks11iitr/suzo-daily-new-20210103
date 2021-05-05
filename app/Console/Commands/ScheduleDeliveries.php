@@ -59,7 +59,7 @@ class ScheduleDeliveries extends Command
         }
         $orders=Order::with(['details'=>function($details) use($ts){
                   $details->with('days')->whereIn('time_slot_id', $ts)
-                      ->where('scheduled_quantity', '<', DB::raw('total_quantity'))
+                      ->where('scheduled_quantity', '<', DB::raw('total_quantity-cancel_returned'))
                       ->where('order_details.status', 'pending');
                 },'customer'=>function($customer){
             $customer->select('id','holiday_start', 'holiday_end');
