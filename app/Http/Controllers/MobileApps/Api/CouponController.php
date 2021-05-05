@@ -114,11 +114,11 @@ class CouponController extends Controller
         }
 
         $prices=[
-            'price_total'=>$cost,
-            'delivery_charge'=>$delivery_charge,
-            'coupon_discount'=>$discount,
-            'price_total_discount'=>$savings+$discount,
-            'total_payble'=>$cost+$delivery_charge-$discount,
+            'price_total'=>round($cost,2),
+            'delivery_charge'=>round($delivery_charge,2),
+            'coupon_discount'=>round($discount,2),
+            'price_total_discount'=>round($savings+$discount, 2),
+            'total_payble'=>round($cost+$delivery_charge-$discount,2)
         ];
 
 
