@@ -167,7 +167,7 @@ class ProcessCancellations extends Command
 
         $points_refund=($order->points_used-$eligible_goldcash)>0?($order->points_used-$eligible_goldcash):0;
 
-        return compact('total_cost','savings','delivery_charge','balance_used','cash_refund','points_refund','eligible_goldcash');
+        return compact('total_cost','savings','delivery_charge','balance_used','cash_refund','points_refund','eligible_goldcash','coupon_discount');
 
 
     }
