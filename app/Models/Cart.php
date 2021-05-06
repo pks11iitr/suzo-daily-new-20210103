@@ -33,7 +33,8 @@ class Cart extends Model
             return [
                 'cart'=>[],
                 'total'=>0,
-                'price_total'=>0
+                'price_total'=>0,
+                'item_type_count'=>0
             ];
         $cart=[];
         $items=Cart::with(['product', 'days'])
@@ -48,14 +49,14 @@ class Cart extends Model
             $cart[$item->product_id]['cart_quantity']=$item->quantity;
             $cart[$item->product_id]['cart_type']=$item->type;
             //$cart[$item->product_id]['in_stock']=$item->product->stock??0;
-            if($item->type=='subscription'){
-                $price_total=$price_total+$item->quantity*($item->product->price??0)*$item->no_of_days;
-                $total=$total+$item->quantity*$item->no_of_days;
-            }
-            else{
-                $price_total=$price_total+$item->quantity*$item->no_of_days;
-                $total=$total+$item->quantity;
-            }
+            ///if($item->type=='subscription'){
+                $price_total=$price_total+($item->product->price??0)*$item->total_quantity;
+                $total=$total+$item->total_quantity;
+//            }
+//            else{
+//                $price_total=$price_total+($item->product->price??0)*$item->total_quantity;
+//                $total=$total+$item->total_quantity;
+//            }
 
             $item_type_count++;
         }
