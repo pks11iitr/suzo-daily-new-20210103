@@ -20,14 +20,14 @@ class ProcessCancellations extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'process:cancellations';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'process cancel request';
 
     /**
      * Create a new command instance.
