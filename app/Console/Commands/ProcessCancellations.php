@@ -52,6 +52,8 @@ class ProcessCancellations extends Command
         {
             $order=Order::with('details')
                 ->find($detail->order_id);
+            echo "Processing ".$order->refid."\n";
+
             $is_complete=true;
             foreach($order->details as $d){
                 // checking if canllation of complete order,
