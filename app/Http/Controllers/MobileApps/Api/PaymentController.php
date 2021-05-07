@@ -24,14 +24,19 @@ class PaymentController extends Controller
     public function getPaymentInfo(Request $request, $order_id){
         $user=$request->user;
 
-        $order=Order::where('user_id', $user->id)
+        $order=Order::with(['details'=>function($details){
+            $details->where('type', 'subscription');
+        }])->where('user_id', $user->id)
             ->findOrFail($order_id);
         $disable_cod='yes';
         if($order->total_cost+$order->delivery_charges-$order->coupon_discount-$order->cashback_used-$order->balance_used==0){
             $disable_cod='yes';
         }else{
             if($user->allow_cod){
-                $disable_cod="no";
+                if(count($order->details))
+                    $disable_cod="yes";
+                else
+                    $disable_cod="no";
             }
         }
 
