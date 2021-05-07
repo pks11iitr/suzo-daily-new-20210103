@@ -26,12 +26,13 @@ class PaymentController extends Controller
 
         $order=Order::where('user_id', $user->id)
             ->findOrFail($order_id);
-        $disable_cod='no';
+        $disable_cod='yes';
         if($order->total_cost+$order->delivery_charges-$order->coupon_discount-$order->cashback_used-$order->balance_used==0){
             $disable_cod='yes';
-        }
-        if($user->allow_cod){
-            $disable_cod="no";
+        }else{
+            if($user->allow_cod){
+                $disable_cod="no";
+            }
         }
 
         $payment_info=[
