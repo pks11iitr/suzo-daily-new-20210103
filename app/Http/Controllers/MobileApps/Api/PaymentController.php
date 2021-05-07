@@ -30,6 +30,10 @@ class PaymentController extends Controller
         if($order->total_cost+$order->delivery_charges-$order->coupon_discount-$order->cashback_used-$order->balance_used==0){
             $disable_cod='yes';
         }
+        if($user->allow_cod){
+            $disable_cod="no";
+        }
+
         $payment_info=[
             'total'=>$order->total_cost,
             'delivery_charge'=>$order->delivery_charge,
@@ -38,7 +42,7 @@ class PaymentController extends Controller
             'gold_cash'=>$order->points_used,
             'to_be_paid'=>$order->total_cost+$order->delivery_charges-$order->coupon_discount-$order->cashback_used-$order->balance_used,
             'savings'=>$order->savings,
-            'disable_cod'=>'yes'
+            'disable_cod'=>$disable_cod
         ];
 
         return [
@@ -155,7 +159,12 @@ class PaymentController extends Controller
 
         }else{
             if($request->type=='cod'){
-                return $this->initiateCODPayment($order);
+                if($user->allow_cod)
+                    return $this->initiateCODPayment($order);
+                return [
+                    'status'=>'failed',
+                    'message'=>'COD orders are disabled now'
+                ];
             }else{
                 return $this->initiateGatewayPayment($order);
             }
@@ -337,13 +346,13 @@ class PaymentController extends Controller
         $order->status='confirmed';
         $order->save();
 
-        if($order->points_used > 0)
-            Wallet::updatewallet($order->user_id, 'Paid For Order ID: '.$order->refid, 'DEBIT',$order->points_used, 'POINT', $order->id);
-
         if($order->balance_used > 0)
             Wallet::updatewallet($order->user_id, 'Paid For Order ID: '.$order->refid, 'DEBIT',$order->balance_used, 'CASH', $order->id);
 
-        //event(new OrderConfirmed($order));
+        if($order->points_used > 0)
+            Wallet::updatewallet($order->user_id, 'Paid For Order ID: '.$order->refid, 'DEBIT',$order->points_used, 'POINT', $order->id);
+
+        event(new OrderConfirmed($order));
 
         Cart::deleteUserCart($user->id);
 

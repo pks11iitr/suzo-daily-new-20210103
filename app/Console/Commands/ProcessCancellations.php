@@ -93,7 +93,13 @@ class ProcessCancellations extends Command
             Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$result['points_refund'], 'POINT', $order->id);
 
         if($result['cash_refund'])
-            Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$result['cash_refund'], 'CASH', $order->id);
+            if($order->payment_status=='paid'){
+                Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$result['cash_refund'], 'CASH', $order->id);
+            }else{
+                if($order->balance_used > $result['balance_used'])
+                    Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',($order->balance_used-$result['balance_used']), 'CASH', $order->id);
+            }
+
 
         event(new OrderCancelled($order));
         event(new LogOrder($order));
@@ -179,7 +185,11 @@ class ProcessCancellations extends Command
         if($order->points_used>0)
             Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$order->points_used, 'POINT', $order->id);
 
-        $cash_return=$order->total_cost+$order->delivery_charge-$order->coupon_discount-$order->points_used;
+        if($order->payment_status=='paid'){
+            $cash_return=$order->total_cost+$order->delivery_charge-$order->coupon_discount-$order->points_used;
+        }else{
+            $cash_return=$order->balance_used;
+        }
         if($cash_return>0)
             Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
 
