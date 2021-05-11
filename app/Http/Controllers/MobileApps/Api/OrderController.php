@@ -37,7 +37,7 @@ class OrderController extends Controller
                 'price'=>$order->total_cost,
                 'refid'=>$order->refid,
                 'order_text'=>($order->details[0]->product->name??'').' '.(count($order->details)>1?'+'.(count($order->details)-1).' more items':''),
-                 'date_time'=>date('D, d M,Y')
+                 'date_time'=>date('D, d M,Y', strtotime($order->created_at))
             ];
         }
 
