@@ -62,16 +62,20 @@ class AvailableLocationController extends Controller
             $json = json_decode($location, true);
             if (count($json) >= 4) {
                 $json = array_reverse($json);
-                $locality1 = $json[2]['value'] ?? '';
-                $locality2 = $json[3]['value'] ?? '';
-                $locality3 = $json[4]['value'] ?? '';
+                $locality1 = $json[3]['long_name'] ?? '';
+                $locality2 = $json[4]['long_name'] ?? '';
+                $locality3 = $json[5]['long_name'] ?? '';
+                $locality4 = $json[6]['long_name'] ?? '';
+                $locality5 = $json[7]['long_name'] ?? '';
 
                 $location = Area::active()
-                    ->where(function ($query) use ($locality1, $locality2, $locality3)
+                    ->where(function ($query) use ($locality1, $locality2, $locality3, $locality4,$locality5)
                     {
                         $query->where('name', $locality1)
                             ->orWhere('name', $locality2)
-                            ->orWhere('name', $locality3);
+                            ->orWhere('name', $locality3)
+                            ->orWhere('name', $locality4)
+                            ->orWhere('name', $locality5);
                     })
                     ->where('city_id', $city_id)
                     ->first();

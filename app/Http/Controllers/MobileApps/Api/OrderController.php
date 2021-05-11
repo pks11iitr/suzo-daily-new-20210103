@@ -34,7 +34,7 @@ class OrderController extends Controller
             $orders[]=[
                 'id'=>$order->id,
                 'image'=>$order->details[0]->product->image??'',
-                'price'=>$order->total_cost,
+                'price'=>$order->total_cost+$order->delivery_charge,
                 'refid'=>$order->refid,
                 'order_text'=>($order->details[0]->product->name??'').' '.(count($order->details)>1?'+'.(count($order->details)-1).' more items':''),
                  'date_time'=>date('D, d M,Y', strtotime($order->created_at))
