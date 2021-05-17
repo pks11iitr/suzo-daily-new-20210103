@@ -72,8 +72,39 @@ class ProcessCancellations extends Command
         }
     }
 
+    private function cancelCompleteOrder($order){
+        if($order->points_used>0)
+            Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$order->points_used, 'POINT', $order->id);
+
+        if($order->payment_status=='paid'){
+            $cash_return=$order->total_cost+$order->delivery_charge-$order->coupon_discount-$order->points_used;
+        }else{
+            $cash_return=$order->balance_used;
+        }
+        if($cash_return>0)
+            Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
+
+        $order->details()->update(['cancel_raised'=>false]);
+
+        $order->update([
+            //'status'=>'cancelled',
+            'total_cost'=>0,
+            'savings'=>0,
+            'coupon'=>null,
+            'coupon_discount'=>0,
+            'delivery_charge'=>0,
+            'use_balance'=>false,
+            'use_points'=>false,
+            'balance_used'=>0,
+            'points_used'=>0
+        ]);
+
+        event(new OrderCancelled($order));
+        event(new LogOrder($order));
+    }
+
     private function cancelPartialOrder($order){
-        $result=$this->calculateTotalAfterCancellation($order);
+        $result=$this->calculateOrderTotalAfterCancellation($order);
 
         $order->update([
             'total_cost'=>$result['total_cost'],
@@ -106,7 +137,7 @@ class ProcessCancellations extends Command
 
     }
 
-    private function calculateTotalAfterCancellation($order){
+    private function calculateOrderTotalAfterCancellation($order){
 
         $delivery_charge=0;
         $savings=0;
@@ -179,39 +210,6 @@ class ProcessCancellations extends Command
 
 
     }
-
-
-    private function cancelCompleteOrder($order){
-        if($order->points_used>0)
-            Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$order->points_used, 'POINT', $order->id);
-
-        if($order->payment_status=='paid'){
-            $cash_return=$order->total_cost+$order->delivery_charge-$order->coupon_discount-$order->points_used;
-        }else{
-            $cash_return=$order->balance_used;
-        }
-        if($cash_return>0)
-            Wallet::updatewallet($order->user_id, 'Refund for order cancellation from order id: '.$order->refid, 'Credit',$cash_return, 'CASH', $order->id);
-
-        $order->details()->update(['cancel_raised'=>false]);
-
-        $order->update([
-            'status'=>'cancelled',
-            'total_cost'=>0,
-            'savings'=>0,
-            'coupon'=>null,
-            'coupon_discount'=>0,
-            'delivery_charge'=>0,
-            'use_balance'=>false,
-            'use_points'=>false,
-            'balance_used'=>0,
-            'points_used'=>0
-        ]);
-
-        event(new OrderCancelled($order));
-        event(new LogOrder($order));
-    }
-
 
     private function calcCouponDiscount($order){
         $coupon_discount=0;

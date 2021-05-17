@@ -64,7 +64,7 @@ class ScheduleDeliveries extends Command
                 },'customer'=>function($customer){
             $customer->select('id','holiday_start', 'holiday_end');
         }])
-                ->whereNotIn('orders.status', ['pending'])
+                ->whereNotIn('orders.status', 'confirmed')
                 ->get();
 
         $riders=[];
@@ -76,14 +76,15 @@ class ScheduleDeliveries extends Command
 
                     if($d->type=='once'){
 
-                        if(!isset($riders[$order->rider_id])){
-                            $riders[$order->rider_id]=0;
-                        }
-                        $riders[$order->rider_id]++;
+                        if($d->scheduled_quantity < $d->total_quantity){
+                            if(!isset($riders[$order->rider_id])){
+                                $riders[$order->rider_id]=0;
+                            }
+                            $riders[$order->rider_id]++;
 
-                        $quantity=$d->quantity;
-                        if($quantity>0){
-                            $delivery=DailyDelivery::create([
+                            $quantity=$d->total_quantity - $d->scheduled_quantity;
+                            //if($quantity > 0){
+                            DailyDelivery::create([
                                 'user_id'=>$order->user_id,
                                 'order_id'=>$order->id,
                                 'detail_id'=>$d->id,
@@ -97,46 +98,51 @@ class ScheduleDeliveries extends Command
                                 'area_id'=>$order->deliveryaddress->area_id,
                             ]);
                             $d->update(['scheduled_quantity'=>DB::raw('scheduled_quantity+'.$quantity)]);
+                            //}
                         }
-
                     }else{
-                        $day=date('w', strtotime($delivery_date));
-                        $subcription_days=$d->days->map(function($element){
-                            return $element->id;
-                        })->toArray();
-                        if(in_array($day, $subcription_days)){
-                            if(!($delivery_date >= $order->customer->holiday_start && $delivery_date <= $order->customer->holiday_end)){
-                                if(!isset($riders[$order->rider_id])){
-                                    $riders[$order->rider_id]=0;
-                                }
-                                $riders[$order->rider_id]++;
-
-                                if($d->total_quantity-$d->scheduled_quantity >= $d->quantity){
-                                    $quantity=$d->quantity;
-                                }else{
-                                    $quantity=$d->total_quantity-$d->scheduled_quantity;
-                                }
-                                if($quantity>0){
-                                    $delivery=DailyDelivery::create([
-                                        'user_id'=>$order->user_id,
-                                        'order_id'=>$order->id,
-                                        'detail_id'=>$d->id,
-                                        'product_id'=>$d->product_id,
-                                        'quantity'=>$quantity,
-                                        'delivery_date'=>$delivery_date,
-                                        'delivery_time_slot'=>$d->time_slot_id,
-                                        'address_id'=>$order->address_id,
-                                        'rider_id'=>$order->rider_id,
-                                        'store_id'=>$order->store_id,
-                                        'area_id'=>$order->deliveryaddress->area_id,
-                                    ]);
-
-                                    $d->update(['scheduled_quantity'=>DB::raw('scheduled_quantity+'.$quantity)]);
-                                }
-
+                        if($d->scheduled_quantity < $d->total_quantity) {
+                            if ($d->total_quantity - $d->scheduled_quantity >= $d->quantity) {
+                                $quantity = $d->quantity;
+                            } else {
+                                $quantity = $d->total_quantity - $d->scheduled_quantity;
                             }
+                            if ($quantity > 0) {
+                                $day = date('w', strtotime($delivery_date));
+                                $subscription_days = $d->days->map(function ($element) {
+                                    return $element->id;
+                                })->toArray();
+                                if (in_array($day, $subscription_days)) {
+                                    if (!($delivery_date >= $order->customer->holiday_start && $delivery_date <= $order->customer->holiday_end)) {
+                                        if (!isset($riders[$order->rider_id])) {
+                                            $riders[$order->rider_id] = 0;
+                                        }
+                                        $riders[$order->rider_id]++;
 
+//                                    if($quantity>0){
+                                        DailyDelivery::create([
+                                            'user_id' => $order->user_id,
+                                            'order_id' => $order->id,
+                                            'detail_id' => $d->id,
+                                            'product_id' => $d->product_id,
+                                            'quantity' => $quantity,
+                                            'delivery_date' => $delivery_date,
+                                            'delivery_time_slot' => $d->time_slot_id,
+                                            'address_id' => $order->address_id,
+                                            'rider_id' => $order->rider_id,
+                                            'store_id' => $order->store_id,
+                                            'area_id' => $order->deliveryaddress->area_id,
+                                        ]);
+
+                                        $d->update(['scheduled_quantity' => DB::raw('scheduled_quantity+' . $quantity)]);
+//                                    }
+
+                                    }
+
+                                }
+                            }
                         }
+
                     }
 
 //                    if($delivery){

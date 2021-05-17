@@ -48,6 +48,46 @@ class DeliveryController extends Controller
 
     }
 
+    public function pastDeliveries(Request $request){
+
+        $user=$request->user;
+        $deliveriesobj=DailyDelivery::with(['product'=>function($product){
+            $product->select('id', 'name', 'image');
+        },'deliveryaddress', 'order'=>function($order){
+            $order->select('id','refid');
+        },'timeslot'=>function($ts){
+            $ts->select('id','name');
+        }])
+            ->where("status", '!=', 'pending')
+            ->where('rider_id', $user->id)
+            ->orderBy('area_id', 'asc')
+            ->get();
+
+        $deliveries=[];
+        foreach ($deliveriesobj as $del){
+            $deliveries[]=[
+                'id'=>$del->id,
+                'delivery_id'=>($del->order->refid??'').'/'.$del->id,
+                'product_name'=>$del->product->name??'',
+                'product_image'=>$del->product->image??'',
+                'quantity'=>$del->quantity,
+                'date'=>$del->delivery_date,
+                'time'=>$del->timeslot->name??'',
+                'deliveryaddress'=>$del->deliveryaddress,
+                'status'=>$del->status,
+                'area'=>$del->area
+
+            ];
+        }
+
+
+        return [
+            'status'=>'success',
+            'data'=>compact('deliveries')
+        ];
+
+    }
+
     public function updateDeliveryStatus(Request $request, $id){
 
         $request->validate([
@@ -114,7 +154,7 @@ class DeliveryController extends Controller
                 'delivery_id'=>$delivery->id,
                 'details_id'=>$delivery->detail_id,
                 'product_id'=>$delivery->product_id,
-        ],[
+            ],[
                 'quantity'=>$request->quantity,
                 'return_reason'=>$request->return_reason,
                 'price'=>$delivery->detail->price,
@@ -145,47 +185,6 @@ class DeliveryController extends Controller
         return [
             'status'=>'success',
             'message'=>'Status has been Updated'
-        ];
-
-    }
-
-
-    public function pastDeliveries(Request $request){
-
-        $user=$request->user;
-        $deliveriesobj=DailyDelivery::with(['product'=>function($product){
-            $product->select('id', 'name', 'image');
-        },'deliveryaddress', 'order'=>function($order){
-            $order->select('id','refid');
-        },'timeslot'=>function($ts){
-            $ts->select('id','name');
-        }])
-            ->where("status", '!=', 'pending')
-            ->where('rider_id', $user->id)
-            ->orderBy('area_id', 'asc')
-            ->get();
-
-        $deliveries=[];
-        foreach ($deliveriesobj as $del){
-            $deliveries[]=[
-                'id'=>$del->id,
-                'delivery_id'=>($del->order->refid??'').'/'.$del->id,
-                'product_name'=>$del->product->name??'',
-                'product_image'=>$del->product->image??'',
-                'quantity'=>$del->quantity,
-                'date'=>$del->delivery_date,
-                'time'=>$del->timeslot->name??'',
-                'deliveryaddress'=>$del->deliveryaddress,
-                'status'=>$del->status,
-                'area'=>$del->area
-
-            ];
-        }
-
-
-        return [
-            'status'=>'success',
-            'data'=>compact('deliveries')
         ];
 
     }
